@@ -10,7 +10,7 @@
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Mitr',sans-serif;}
         body{background:var(--bg);display:flex;justify-content:center;color:#efefef;}
 
-        .container{ max-width:500px; width:100%; padding:20px 15px 120px; } /* เพิ่ม Padding ล่างกันเมนูบัง */
+        .container{ max-width:500px; width:100%; padding:20px 15px 120px; }
 
         .section{background:var(--white);border-radius:20px;padding:25px 20px;margin-bottom:20px;box-shadow:0 8px 20px rgba(0,0,0,0.3);border:2px solid var(--main);}
         h1,h2,h3{color:var(--main);}
@@ -47,22 +47,21 @@
         .btn-main{display:block;text-align:center;padding:14px;border-radius:25px;text-decoration:none;margin-top:15px;font-weight:500; background:var(--main);color:#fff;}
         .small{font-size:12px;opacity:.7;margin-top:10px;color:var(--dark);white-space: pre-line;}
 
-        /* --- ปรับปรุงสไตล์ Bottom Nav ใหม่ (Floating & Rounded) --- */
+        /* Bottom Nav แบบติดขอบล่าง */
         .bottom-nav { 
             position: fixed; 
-            bottom: 20px; 
+            bottom: 0; 
             left: 50%; 
             transform: translateX(-50%); 
-            width: calc(100% - 40px); 
-            max-width: 400px; 
-            background: rgba(37, 37, 37, 0.95); 
-            backdrop-filter: blur(10px); 
+            width: 100%; 
+            max-width: 500px; 
+            background: #252525; 
             display: flex; 
             justify-content: space-around; 
-            padding: 10px 0; 
-            border-radius: 30px; 
-            border: 1px solid var(--main); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            padding: 12px 0 20px; 
+            border-radius: 20px 20px 0 0; 
+            border-top: 2px solid var(--main); 
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.3); 
             z-index: 1000; 
         }
 
@@ -72,40 +71,27 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            font-size: 10px; 
+            font-size: 11px; 
             cursor: pointer; 
             flex: 1; 
-            transition: 0.3s;
             background: none;
             border: none;
             outline: none;
         }
 
-        .nav-item.active { 
-            color: var(--main); 
-        }
-
-        .nav-icon { 
-            font-size: 18px; 
-            margin-bottom: 2px; 
-        }
-
-        .nav-item:active {
-            transform: scale(0.9);
-        }
+        .nav-item.active { color: var(--main); }
+        .nav-icon { font-size: 20px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- HEADER -->
     <div class="section center" style="border:none;box-shadow:none;background:transparent; padding-top: 10px;">
         <div class="logo"><img src="https://via.placeholder.com/150" alt="logo" id="disp-logo"></div>
         <h1 id="disp-name">Premium Store</h1>
         <p id="disp-slogan" style="color:var(--dark);opacity:.8;margin:5px 0 15px;">แหล่งรวมแอปพรีเมียม ราคาถูก พร้อมประกัน</p>
     </div>
 
-    <!-- รายการแอป -->
     <div class="section">
         <h2 style="margin-bottom: 15px; font-size: 18px;">🔥 รายการสินค้าพร้อมส่ง</h2>
         <div id="app-list-container">
@@ -113,7 +99,6 @@
         </div>
     </div>
 
-    <!-- กฎ/เงื่อนไข -->
     <div class="section">
         <h2>📍 เงื่อนไขการรับประกัน</h2>
         <p id="disp-rules" class="small" style="text-align:left;"></p>
@@ -125,7 +110,6 @@
     </div>
 </div>
 
-<!-- --- โครงสร้าง Bottom Nav ใหม่ --- -->
 <nav class="bottom-nav">
     <a href="index.html" class="nav-item active">
         <span class="nav-icon">🏠</span>
@@ -160,10 +144,7 @@
         if(savedData.products && savedData.products.length > 0) {
             savedData.products.forEach(product => {
                 const isOut = parseInt(product.stock) <= 0;
-                
-                let displayImg = product.img ? 
-                    `<img src="${product.img}" alt="icon">` : 
-                    (product.cat === 'streaming' ? '🎬' : product.cat === 'working' ? '💼' : '📚');
+                let displayImg = product.img ? `<img src="${product.img}" alt="icon">` : (product.cat === 'streaming' ? '🎬' : product.cat === 'working' ? '💼' : '📚');
 
                 const itemHTML = `
                     <div class="app-item ${isOut ? 'out-of-stock' : ''}">
@@ -178,12 +159,9 @@
                         <a href="${isOut ? '#' : savedData.line}" class="btn-buy ${isOut ? 'btn-out' : ''}">
                             ${isOut ? 'หมด' : 'สั่งซื้อ'}
                         </a>
-                    </div>
-                `;
+                    </div>`;
                 container.innerHTML += itemHTML;
             });
-        } else {
-            container.innerHTML = '<p style="text-align:center; font-size:14px; color:#888;">ยังไม่มีสินค้าในขณะนี้</p>';
         }
     }
 
