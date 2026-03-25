@@ -18,29 +18,12 @@
         .logo{width:120px;height:120px;border-radius:30px;overflow:hidden;margin:0 auto 20px;box-shadow:0 6px 20px var(--glow);border:2px solid var(--main);}
         .logo img{width:100%;height:100%;object-fit:cover;}
 
-        #app-list-container { margin-top: 15px; }
-        .app-item { display: flex; align-items: center; background: #2d2d2d; padding: 15px; border-radius: 18px; margin-bottom: 12px; border: 1px solid transparent; transition: 0.3s; }
-        .app-icon { width: 55px; height: 55px; border-radius: 12px; margin-right: 15px; background: #3d3d3d; display: flex; align-items: center; justify-content: center; font-size: 24px; overflow: hidden; }
-        .app-icon img { width: 100%; height: 100%; object-fit: cover; }
-        .app-info { flex-grow: 1; }
-        .app-name { font-weight: 500; font-size: 16px; color: #fff; display: block; }
-        .app-price { color: var(--main); font-size: 14px; font-weight: bold; }
-        .stock-tag { font-size: 11px; color: var(--green); margin-top: 2px; }
-        
-        .out-of-stock { opacity: 0.6; filter: grayscale(0.8); }
-        .out-of-stock .stock-tag { color: var(--red); }
-        .btn-buy { background: var(--main); color: #fff; padding: 6px 15px; border-radius: 20px; text-decoration: none; font-size: 13px; font-weight: 500; }
-        .btn-out { background: #555; }
-
-        .btn-main{display:block;text-align:center;padding:14px;border-radius:25px;text-decoration:none;margin-top:15px;font-weight:500; background:var(--main);color:#fff;}
-        .small{font-size:12px;opacity:.7;margin-top:10px;color:var(--dark);white-space: pre-line;}
-
-        /* --- Sidebar & Hamburger Style --- */
+        /* --- Sidebar & Hamburger (Improved) --- */
         .hamburger {
             position: fixed;
             top: 20px;
             right: 20px;
-            z-index: 1001;
+            z-index: 1100; /* อยู่สูงกว่า Sidebar */
             background: var(--main);
             width: 45px;
             height: 45px;
@@ -52,14 +35,22 @@
             gap: 5px;
             cursor: pointer;
             box-shadow: 0 4px 15px var(--glow);
+            transition: 0.3s;
         }
+
         .hamburger span {
             width: 25px;
             height: 3px;
             background: #fff;
             border-radius: 2px;
-            transition: 0.3s;
+            transition: 0.3s ease-in-out;
+            display: block;
         }
+
+        /* Animation กากบาท */
+        .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; transform: translateX(20px); }
+        .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
         .sidebar {
             position: fixed;
@@ -68,31 +59,13 @@
             width: 280px;
             height: 100%;
             background: #252525;
-            z-index: 1000;
+            z-index: 1050; /* ต่ำกว่าปุ่ม Hamburger เล็กน้อย */
             padding: 80px 20px 20px;
             transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: -5px 0 25px rgba(0,0,0,0.5);
             border-left: 2px solid var(--main);
         }
         .sidebar.active { right: 0; }
-
-        .nav-item {
-            text-decoration: none;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            border-radius: 15px;
-            font-size: 16px;
-            transition: 0.3s;
-            gap: 15px;
-        }
-        .nav-item:hover, .nav-item.active {
-            background: rgba(157, 129, 225, 0.1);
-            color: var(--main);
-        }
-        .nav-icon { font-size: 20px; }
 
         .overlay {
             position: fixed;
@@ -107,26 +80,29 @@
         }
         .overlay.active { display: block; }
 
-        .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-        .hamburger.active span:nth-child(2) { opacity: 0; }
-        .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+        /* --- Rest of Styles (App List, Modal, etc.) --- */
+        #app-list-container { margin-top: 15px; }
+        .app-item { display: flex; align-items: center; background: #2d2d2d; padding: 15px; border-radius: 18px; margin-bottom: 12px; border: 1px solid transparent; transition: 0.3s; }
+        .app-icon { width: 55px; height: 55px; border-radius: 12px; margin-right: 15px; background: #3d3d3d; display: flex; align-items: center; justify-content: center; font-size: 24px; overflow: hidden; }
+        .app-icon img { width: 100%; height: 100%; object-fit: cover; }
+        .app-info { flex-grow: 1; }
+        .app-name { font-weight: 500; font-size: 16px; color: #fff; display: block; }
+        .app-price { color: var(--main); font-size: 14px; font-weight: bold; }
+        .stock-tag { font-size: 11px; color: var(--green); margin-top: 2px; }
+        .out-of-stock { opacity: 0.6; filter: grayscale(0.8); }
+        .out-of-stock .stock-tag { color: var(--red); }
+        .btn-buy { background: var(--main); color: #fff; padding: 6px 15px; border-radius: 20px; text-decoration: none; font-size: 13px; font-weight: 500; }
+        .btn-out { background: #555; }
+        .nav-item { text-decoration: none; color: var(--dark); display: flex; align-items: center; padding: 15px 20px; margin-bottom: 10px; border-radius: 15px; font-size: 16px; transition: 0.3s; gap: 15px; }
+        .nav-item:hover, .nav-item.active { background: rgba(157, 129, 225, 0.1); color: var(--main); }
+        .nav-icon { font-size: 20px; }
+        .btn-main{display:block;text-align:center;padding:14px;border-radius:25px;text-decoration:none;margin-top:15px;font-weight:500; background:var(--main);color:#fff;}
+        .small{font-size:12px;opacity:.7;margin-top:10px;color:var(--dark);white-space: pre-line;}
 
-        /* --- Admin Login Modal Style --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px;
-        }
-        .modal-content {
-            background: var(--white); border: 2px solid var(--main); border-radius: 25px; padding: 30px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 40px var(--glow); animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes modalPop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .modal-content h3 { margin-bottom: 15px; }
-        
-        #adminPassInput {
-            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #333; color: #fff; 
-            outline: none; margin-bottom: 20px;
-            -webkit-text-security: disc; text-align: center; font-size: 24px; letter-spacing: 10px;
-        }
-
+        /* Admin Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
+        .modal-content { background: var(--white); border: 2px solid var(--main); border-radius: 25px; padding: 30px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 40px var(--glow); }
+        #adminPassInput { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #333; color: #fff; outline: none; margin-bottom: 20px; -webkit-text-security: disc; text-align: center; font-size: 24px; letter-spacing: 10px; }
         .modal-btns { display: flex; gap: 10px; }
         .btn-modal { flex: 1; padding: 12px; border-radius: 15px; border: none; cursor: pointer; font-family: 'Mitr'; font-weight: 500; }
         .btn-confirm { background: var(--main); color: #fff; }
@@ -135,17 +111,14 @@
 </head>
 <body>
 
-<!-- ปุ่ม Hamburger -->
 <div class="hamburger" onclick="toggleMenu()">
     <span></span>
     <span></span>
     <span></span>
 </div>
 
-<!-- พื้นหลังมืด -->
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-<!-- แถบเมนูข้าง -->
 <nav class="sidebar" id="sidebar">
     <a href="index.html" class="nav-item active">
         <span class="nav-icon">🏠</span><span>หน้าหลัก</span>
@@ -182,17 +155,12 @@
     </div>
 </div>
 
+<!-- Modal Login -->
 <div class="modal-overlay" id="loginModal">
     <div class="modal-content">
         <h3>🔐 Admin Login</h3>
         <p style="font-size: 12px; color: var(--dark); margin-bottom: 15px;">กรุณากรอกรหัสผ่านเพื่อเข้าสู่โหมดจัดการ</p>
-        
-        <input type="tel" id="adminPassInput" 
-               placeholder="••••" 
-               maxlength="4" 
-               inputmode="numeric" 
-               autocomplete="off"> 
-
+        <input type="tel" id="adminPassInput" placeholder="••••" maxlength="4" inputmode="numeric" autocomplete="off"> 
         <div class="modal-btns">
             <button type="button" class="btn-modal btn-cancel" onclick="closeModal()">ยกเลิก</button>
             <button type="button" class="btn-modal btn-confirm" onclick="checkAdminPass()">ตกลง</button>
@@ -203,73 +171,69 @@
 <script>
     const PIN = "2003";
 
-    // ฟังก์ชันเปิด-ปิดเมนู Sidebar
     function toggleMenu() {
         document.getElementById('sidebar').classList.toggle('active');
         document.getElementById('overlay').classList.toggle('active');
         document.querySelector('.hamburger').classList.toggle('active');
     }
 
-    // ดึงข้อมูลแสดงหน้าเว็บ
-    const savedData = JSON.parse(localStorage.getItem('shopData'));
-    if(savedData) {
-        document.getElementById('disp-name').innerText = savedData.name || "Premium Store";
-        document.getElementById('disp-rules').innerText = savedData.rules || "";
-        document.getElementById('link-line-btn').href = savedData.line || '#';
-        const container = document.getElementById('app-list-container');
-        if(container) {
-            container.innerHTML = ''; 
-            if(savedData.products && savedData.products.length > 0) {
-                savedData.products.forEach(product => {
-                    const isOut = parseInt(product.stock) <= 0;
-                    let displayImg = product.img ? `<img src="${product.img}">` : '🎬';
-                    container.innerHTML += `
-                        <div class="app-item ${isOut ? 'out-of-stock' : ''}">
-                            <div class="app-icon">${displayImg}</div>
-                            <div class="app-info">
-                                <span class="app-name">${product.name}</span>
-                                <span class="app-price">${product.price}.-</span>
-                                <div class="stock-tag">${isOut ? '❌ หมด' : '✅ สต็อก: ' + product.stock}</div>
-                            </div>
-                            <a href="${isOut ? '#' : savedData.line}" class="btn-buy ${isOut ? 'btn-out' : ''}">${isOut ? 'หมด' : 'สั่งซื้อ'}</a>
-                        </div>`;
-                });
+    // โหลดข้อมูลสินค้า
+    function loadContent() {
+        const savedData = JSON.parse(localStorage.getItem('shopData'));
+        if(savedData) {
+            document.getElementById('disp-name').innerText = savedData.name || "Premium Store";
+            document.getElementById('disp-rules').innerText = savedData.rules || "";
+            document.getElementById('link-line-btn').href = savedData.line || '#';
+            const container = document.getElementById('app-list-container');
+            if(container) {
+                container.innerHTML = ''; 
+                if(savedData.products && savedData.products.length > 0) {
+                    savedData.products.forEach(product => {
+                        const isOut = parseInt(product.stock) <= 0;
+                        let displayImg = product.img ? `<img src="${product.img}">` : '🎬';
+                        container.innerHTML += `
+                            <div class="app-item ${isOut ? 'out-of-stock' : ''}">
+                                <div class="app-icon">${displayImg}</div>
+                                <div class="app-info">
+                                    <span class="app-name">${product.name}</span>
+                                    <span class="app-price">${product.price}.-</span>
+                                    <div class="stock-tag">${isOut ? '❌ หมด' : '✅ สต็อก: ' + product.stock}</div>
+                                </div>
+                                <a href="${isOut ? '#' : savedData.line}" class="btn-buy ${isOut ? 'btn-out' : ''}">${isOut ? 'หมด' : 'สั่งซื้อ'}</a>
+                            </div>`;
+                    });
+                } else {
+                    container.innerHTML = '<p style="text-align:center; color:#888;">ยังไม่มีสินค้าในขณะนี้</p>';
+                }
             }
         }
     }
 
     function checkAdminPass() {
         const inputField = document.getElementById('adminPassInput');
-        const inputVal = inputField.value;
-        if (inputVal === PIN) {
+        if (inputField.value === PIN) {
             sessionStorage.setItem("isLoggedIn", "true");
             window.location.href = "admin.html";
         } else {
             alert("❌ รหัสผ่านไม่ถูกต้อง!");
             inputField.value = '';
-            inputField.focus(); 
         }
     }
 
     function openAdminModal() {
-        sessionStorage.removeItem("isLoggedIn"); 
         document.getElementById('loginModal').style.display = 'flex';
-        const input = document.getElementById('adminPassInput');
-        input.value = ''; 
-        setTimeout(() => { input.focus(); }, 200);
+        setTimeout(() => document.getElementById('adminPassInput').focus(), 200);
     }
 
     function closeModal() {
         document.getElementById('loginModal').style.display = 'none';
-        document.getElementById('adminPassInput').value = '';
     }
 
     document.getElementById('adminPassInput').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault(); 
-            checkAdminPass();
-        }
+        if (e.key === 'Enter') checkAdminPass();
     });
+
+    window.onload = loadContent;
 </script>
 </body>
 </html>
