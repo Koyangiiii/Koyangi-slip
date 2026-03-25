@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium App Store</title>
+    <title>Premium App Store - สินค้าทั้งหมด</title>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root{ --bg:#1a1a1a; --main:#9d81e1; --dark:#d1c4e9; --white:#252525; --glow:rgba(157,129,225,0.3); --green:#4caf50; --red:#ff5252; }
@@ -38,74 +38,61 @@
         .btn-main{display:block;text-align:center;padding:14px;border-radius:25px;text-decoration:none;margin-top:15px;font-weight:500; background:var(--main);color:#fff;}
         .small{font-size:12px;opacity:.7;margin-top:10px;color:var(--dark);white-space: pre-line;}
 
-        /* --- Bottom Navigation Style (Updated) --- */
-        .bottom-nav { 
-            position: fixed; 
-            bottom: 0; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            width: 100%; 
-            max-width: 500px; 
-            background: #252525; 
-            display: flex; 
-            justify-content: space-around; 
-            padding: 10px 0 12px; 
-            border-radius: 20px 20px 0 0; 
-            border-top: 2px solid var(--main); 
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
-            z-index: 1000; 
+        /* --- Sidebar & Hamburger Style (เหมือนหน้าแรก) --- */
+        .hamburger {
+            position: fixed; top: 20px; right: 20px; z-index: 1001;
+            background: var(--main); width: 45px; height: 45px; border-radius: 12px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+            cursor: pointer; box-shadow: 0 4px 15px var(--glow);
         }
+        .hamburger span { width: 25px; height: 3px; background: #fff; border-radius: 2px; transition: 0.3s; }
+        .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
-        .nav-item { 
-            text-decoration: none; 
-            color: var(--dark); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center;
-            font-size: 10px; 
-            cursor: pointer; 
-            flex: 1; 
-            transition: 0.3s;
-            border: none;
-            background: none;
-            gap: 4px; 
+        .sidebar {
+            position: fixed; top: 0; right: -280px; width: 280px; height: 100%;
+            background: #252525; z-index: 1000; padding: 80px 20px 20px;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -5px 0 25px rgba(0,0,0,0.5); border-left: 2px solid var(--main);
         }
+        .sidebar.active { right: 0; }
 
-        /* สีเมื่อเมนูถูกเลือก (Active) */
-        .nav-item.active { 
-            color: var(--main); 
-            font-weight: 500;
+        .nav-item {
+            text-decoration: none; color: var(--dark); display: flex; align-items: center;
+            padding: 15px 20px; margin-bottom: 10px; border-radius: 15px; font-size: 16px;
+            transition: 0.3s; gap: 15px;
         }
+        .nav-item:hover, .nav-item.active { background: rgba(157, 129, 225, 0.1); color: var(--main); }
+        .nav-icon { font-size: 20px; }
 
-        .nav-icon { 
-            font-size: 18px; 
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); display: none; z-index: 999; backdrop-filter: blur(3px);
         }
+        .overlay.active { display: block; }
 
-        /* --- Login Modal --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
-        .modal-content { background: var(--white); border: 2px solid var(--main); border-radius: 25px; padding: 30px; width: 100%; max-width: 350px; text-align: center; }
-        
-        #adminPassInput { 
-            width: 100%; 
-            padding: 12px; 
-            border-radius: 12px; 
-            border: 1px solid #444; 
-            background: #333; 
-            color: var(--main); 
-            text-align: center; 
-            font-size: 24px; 
-            letter-spacing: 10px; 
-            margin-bottom: 20px; 
-            outline: none; 
+        /* --- Login Modal Style --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px;
+        }
+        .modal-content {
+            background: var(--white); border: 2px solid var(--main); border-radius: 25px;
+            padding: 30px; width: 100%; max-width: 350px; text-align: center;
+            box-shadow: 0 10px 40px var(--glow);
+            animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes modalPop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        #adminPassInput {
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444;
+            background: #333; color: var(--main); text-align: center;
+            font-size: 24px; letter-spacing: 10px; margin-bottom: 20px; outline: none;
             -webkit-text-security: disc;
         }
-
-        #adminPassInput::placeholder {
-            color: #666;
-            letter-spacing: 5px;
-            -webkit-text-security: none;
-        }
+        #adminPassInput::placeholder { -webkit-text-security: none; color: #666; letter-spacing: 5px; }
 
         .modal-btns { display: flex; gap: 10px; }
         .btn-modal { flex: 1; padding: 12px; border-radius: 15px; border: none; cursor: pointer; font-family: 'Mitr'; font-weight: 500; }
@@ -115,16 +102,38 @@
 </head>
 <body>
 
+<!-- เมนู Sidebar & Hamburger -->
+<div class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+</div>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+<nav class="sidebar" id="sidebar">
+    <a href="index.html" class="nav-item">
+        <span class="nav-icon">🏠</span><span>หน้าหลัก</span>
+    </a>
+    <a href="portfolio.html" class="nav-item active">
+        <span class="nav-icon">📦</span><span>สินค้า</span>
+    </a>
+    <a href="contact.html" class="nav-item">
+        <span class="nav-icon">💬</span><span>ติดต่อเรา</span>
+    </a>
+    <div onclick="openAdminModal(); toggleMenu();" class="nav-item" style="cursor:pointer;">
+        <span class="nav-icon">⚙️</span><span>ตั้งค่าระบบ</span>
+    </div>
+</nav>
+
 <div class="container">
-    <div class="section center" style="border:none;box-shadow:none;background:transparent;">
+    <div class="section center" style="border:none;box-shadow:none;background:transparent; padding-top: 10px;">
         <div class="logo"><img src="https://via.placeholder.com/150" alt="logo" id="disp-logo"></div>
         <h1 id="disp-name">Premium Store</h1>
-        <p id="disp-slogan" style="color:var(--dark);opacity:.8;margin:5px 0 15px;">แหล่งรวมแอปพรีเมียม ราคาถูก พร้อมประกัน</p>
+        <p id="disp-slogan" style="color:var(--dark);opacity:.8;margin:5px 0 15px;">รายการสินค้าทั้งหมดแบ่งตามหมวดหมู่</p>
     </div>
 
     <div class="section">
-        <h2 style="margin-bottom: 20px; font-size: 18px;">🔥 รายการสินค้า</h2>
-        <div id="app-list-container"></div>
+        <h2 style="margin-bottom: 20px; font-size: 18px;">🔥 หมวดหมู่สินค้า</h2>
+        <div id="app-list-container">
+            <p style="text-align:center; font-size:14px; color:#888;">กำลังโหลดสินค้า...</p>
+        </div>
     </div>
 
     <div class="section">
@@ -134,40 +143,12 @@
     </div>
 </div>
 
-<!-- Bottom Navigation (Updated HTML) -->
-<nav class="bottom-nav">
-    <a href="index.html" class="nav-item">
-        <span class="nav-icon">🏠</span>
-        <span>หน้าหลัก</span>
-    </a>
-    
-    <a href="portfolio.html" class="nav-item active">
-        <span class="nav-icon">📦</span>
-        <span>สินค้า</span>
-    </a>
-    
-    <a href="contact.html" class="nav-item">
-        <span class="nav-icon">💬</span>
-        <span>ติดต่อ</span>
-    </a>
-    
-    <div onclick="openAdminModal()" class="nav-item">
-        <span class="nav-icon">⚙️</span>
-        <span>ตั้งค่า</span>
-    </div>
-</nav>
-
+<!-- Modal Login -->
 <div class="modal-overlay" id="loginModal">
     <div class="modal-content">
         <h3>🔐 Admin Login</h3>
         <p style="font-size: 12px; color: var(--dark); margin-bottom: 15px;">กรุณากรอกรหัสผ่านเพื่อเข้าสู่โหมดจัดการ</p>
-        
-        <input type="tel" id="adminPassInput" 
-               placeholder="...." 
-               maxlength="4" 
-               inputmode="numeric" 
-               autocomplete="off"> 
-
+        <input type="tel" id="adminPassInput" placeholder="••••" maxlength="4" inputmode="numeric"> 
         <div class="modal-btns">
             <button class="btn-modal btn-cancel" onclick="closeModal()">ยกเลิก</button>
             <button class="btn-modal btn-confirm" onclick="checkAdminPass()">ตกลง</button>
@@ -178,11 +159,16 @@
 <script>
     const PIN = "2003";
 
+    function toggleMenu() {
+        document.getElementById('sidebar').classList.toggle('active');
+        document.getElementById('overlay').classList.toggle('active');
+        document.querySelector('.hamburger').classList.toggle('active');
+    }
+
     function openAdminModal() { 
         sessionStorage.removeItem("isLoggedIn");
-        const modal = document.getElementById('loginModal');
+        document.getElementById('loginModal').style.display = 'flex'; 
         const input = document.getElementById('adminPassInput');
-        modal.style.display = 'flex'; 
         input.value = '';
         setTimeout(() => { input.focus(); }, 200);
     }
@@ -201,10 +187,7 @@
         }
     }
 
-    document.getElementById('adminPassInput').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') { checkAdminPass(); }
-    });
-
+    // โหลดข้อมูลสินค้าและหมวดหมู่
     const categories = [
         { id: 'streaming', title: 'Streaming Apps', icon: '📺' },
         { id: 'working', title: 'Working Tools', icon: '💼' },
@@ -216,8 +199,10 @@
         document.getElementById('disp-name').innerText = savedData.name || "Premium Store";
         document.getElementById('disp-rules').innerText = savedData.rules || "";
         document.getElementById('link-line-btn').href = savedData.line || '#';
+        
         const container = document.getElementById('app-list-container');
         container.innerHTML = '';
+
         categories.forEach(cat => {
             const catItems = savedData.products.filter(p => p.cat === cat.id);
             if(catItems.length > 0) {
@@ -241,6 +226,10 @@
             }
         });
     }
+
+    document.getElementById('adminPassInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') checkAdminPass();
+    });
 </script>
 </body>
 </html>
