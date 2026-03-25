@@ -10,18 +10,21 @@
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Mitr',sans-serif;}
         body { background: var(--bg); color: #fff; display: flex; justify-content: center; min-height: 100vh; }
         
-        /* --- Sidebar & Hamburger (เหมือนหน้าแรก) --- */
+        /* --- 🍔 Hamburger & Sidebar (Standardized) --- */
         .hamburger {
-            position: fixed; top: 20px; right: 20px; z-index: 1001;
+            position: fixed; top: 20px; right: 20px; z-index: 1100;
             background: var(--main); width: 45px; height: 45px; border-radius: 12px;
             display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
-            cursor: pointer; box-shadow: 0 4px 15px var(--glow);
+            cursor: pointer; box-shadow: 0 4px 15px var(--glow); transition: 0.3s;
         }
-        .hamburger span { width: 25px; height: 3px; background: #fff; border-radius: 2px; transition: 0.3s; }
-        
+        .hamburger span { width: 25px; height: 3px; background: #fff; border-radius: 2px; transition: 0.3s ease-in-out; display: block; }
+        .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; transform: translateX(20px); }
+        .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
         .sidebar {
             position: fixed; top: 0; right: -280px; width: 280px; height: 100%;
-            background: #252525; z-index: 1000; padding: 80px 20px 20px;
+            background: #252525; z-index: 1050; padding: 80px 20px 20px;
             transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: -5px 0 25px rgba(0,0,0,0.5); border-left: 2px solid var(--main);
         }
@@ -29,56 +32,53 @@
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 999; backdrop-filter: blur(3px); }
         .overlay.active { display: block; }
 
-        .nav-item {
-            text-decoration: none; color: var(--dark); display: flex; align-items: center;
-            padding: 15px 20px; margin-bottom: 10px; border-radius: 15px; font-size: 16px;
-            transition: 0.3s; gap: 15px; cursor: pointer;
-        }
+        .nav-item { text-decoration: none; color: var(--dark); display: flex; align-items: center; padding: 15px 20px; margin-bottom: 10px; border-radius: 15px; font-size: 16px; transition: 0.3s; gap: 15px; cursor: pointer; }
         .nav-item:hover, .nav-item.active { background: rgba(157, 129, 225, 0.1); color: var(--main); }
-        .nav-icon { font-size: 20px; }
 
-        .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-        .hamburger.active span:nth-child(2) { opacity: 0; }
-        .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-
-        /* --- Login Modal --- */
-        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); z-index: 9999; display: flex; justify-content: center; align-items: center; }
+        /* --- Login Modal (Security Layer) --- */
+        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 9999; display: flex; justify-content: center; align-items: center; }
         .login-card { background: var(--white); padding: 40px 30px; border-radius: 30px; width: 90%; max-width: 360px; border: 2px solid var(--main); box-shadow: 0 0 30px var(--glow); text-align: center; }
-        .login-input { width: 100%; padding: 15px; background: #1a1a1a; border: 1.5px solid #444; border-radius: 15px; color: #fff; font-size: 24px; text-align: center; outline: none; margin-bottom: 20px; letter-spacing: 5px; }
+        .login-input { width: 100%; padding: 15px; background: #1a1a1a; border: 1.5px solid #444; border-radius: 15px; color: var(--main); font-size: 32px; text-align: center; outline: none; margin-bottom: 20px; letter-spacing: 10px; -webkit-text-security: disc; }
 
-        /* --- Main Admin Container --- */
-        .admin-container { width: 100%; max-width: 480px; padding: 80px 15px 50px; }
-        .header-section { text-align: center; margin-bottom: 20px; }
-        .header-section h1 { color: var(--main); font-size: 24px; }
+        /* --- Admin Dashboard --- */
+        .admin-container { width: 100%; max-width: 500px; padding: 80px 15px 50px; }
+        .header-section { text-align: center; margin-bottom: 30px; }
+        .header-section h1 { color: var(--main); font-size: 26px; letter-spacing: 1px; }
 
-        .search-box { position: relative; margin-bottom: 20px; }
+        .search-box { position: relative; margin-bottom: 25px; }
         .search-box input { width: 100%; padding: 15px 20px 15px 45px; background: var(--white); border: 1.5px solid #444; border-radius: 18px; color: #fff; outline: none; transition: 0.3s; }
         .search-box input:focus { border-color: var(--main); box-shadow: 0 0 15px var(--glow); }
-        .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--main); font-size: 18px; }
+        .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--main); }
 
-        .stock-item { background: var(--white); border-radius: 22px; padding: 20px; margin-bottom: 20px; border: 1px solid #333; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        /* --- Stock Card --- */
+        .stock-item { background: var(--white); border-radius: 25px; padding: 20px; margin-bottom: 20px; border: 1px solid #333; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.3); transition: 0.3s; }
+        .stock-item:hover { border-color: var(--main); }
         .stock-item.hidden { display: none; }
         
         .item-header { display: flex; gap: 15px; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #3d3d3d; }
-        .img-box { position: relative; width: 80px; height: 80px; flex-shrink: 0; }
-        .img-preview { width: 100%; height: 100%; border-radius: 15px; object-fit: cover; background: #333; border: 1.5px solid var(--main); }
-        .file-label { position: absolute; bottom: -5px; right: -5px; background: var(--main); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; border: 2px solid var(--white); }
+        .img-box { position: relative; width: 85px; height: 85px; flex-shrink: 0; }
+        .img-preview { width: 100%; height: 100%; border-radius: 18px; object-fit: cover; background: #1a1a1a; border: 2px solid #444; }
+        .file-label { position: absolute; bottom: -5px; right: -5px; background: var(--main); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; border: 2px solid var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
         
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        label { display: block; font-size: 12px; color: var(--dark); margin-bottom: 6px; }
-        input, select { width: 100%; padding: 12px 15px; background: #1a1a1a; border: 1px solid #444; border-radius: 12px; color: #fff; outline: none; font-size: 14px; }
+        label { display: block; font-size: 11px; color: var(--dark); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+        input, select { width: 100%; padding: 12px 15px; background: #1a1a1a; border: 1px solid #444; border-radius: 12px; color: #fff; outline: none; font-size: 14px; transition: 0.3s; }
+        input:focus { border-color: var(--main); }
 
-        .btn { border: none; border-radius: 15px; font-weight: 500; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
-        .btn-save { background: var(--main); color: white; padding: 15px; font-size: 16px; margin-top: 10px; border-radius: 20px; }
-        .btn-add { background: #333; color: var(--main); border: 1.5px dashed var(--main); padding: 12px; margin-bottom: 20px; }
-        .btn-del { background: rgba(255, 82, 82, 0.1); color: var(--red); padding: 8px; font-size: 13px; margin-top: 5px; border-radius: 12px; }
+        .btn { border: none; border-radius: 18px; font-weight: 500; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
+        .btn-save { background: var(--main); color: white; padding: 16px; font-size: 16px; margin-top: 15px; box-shadow: 0 4px 15px var(--glow); }
+        .btn-add { background: transparent; color: var(--main); border: 2px dashed var(--main); padding: 14px; margin-bottom: 20px; }
+        .btn-add:hover { background: rgba(157, 129, 225, 0.1); }
+        .btn-del { background: rgba(255, 82, 82, 0.1); color: var(--red); padding: 10px; font-size: 13px; margin-top: 10px; border-radius: 12px; }
+        .btn-del:hover { background: var(--red); color: #fff; }
         
-        .preview-link { display: block; text-align: center; color: var(--dark); text-decoration: none; margin-top: 20px; font-size: 14px; opacity: 0.7; }
+        .preview-link { display: block; text-align: center; color: var(--dark); text-decoration: none; margin-top: 25px; font-size: 14px; opacity: 0.7; transition: 0.3s; }
+        .preview-link:hover { opacity: 1; color: var(--main); }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar Menu (เหมือนหน้าแรก) -->
+    <!-- 🍔 Navigation Elements -->
     <div class="hamburger" onclick="toggleMenu()">
         <span></span><span></span><span></span>
     </div>
@@ -99,26 +99,26 @@
         </div>
     </nav>
 
-    <!-- Login Modal -->
+    <!-- 🔐 Login Modal -->
     <div id="login-overlay">
         <div class="login-card">
-            <h2 style="color:var(--main); margin-bottom:10px;">🔐 Admin Login</h2>
-            <p style="font-size:13px; color:#888; margin-bottom:25px;">กรุณากรอกรหัสผ่านเพื่อเข้าถึงระบบสต็อก</p>
-            <input type="password" id="passInput" class="login-input" placeholder="••••" autocomplete="off">
-            <button class="btn btn-save" onclick="checkPass()">ตกลง</button>
+            <h2 style="color:var(--main); margin-bottom:10px;">🔐 Admin Access</h2>
+            <p style="font-size:13px; color:#888; margin-bottom:25px;">กรุณากรอกรหัสผ่านเพื่อจัดการสต็อก</p>
+            <input type="tel" id="passInput" class="login-input" placeholder="••••" maxlength="4" inputmode="numeric">
+            <button class="btn btn-save" onclick="checkPass()">ปลดล็อกระบบ</button>
         </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- 🛠️ Main Dashboard -->
     <div id="main-admin" class="admin-container" style="display:none;">
         <div class="header-section">
             <h1>📦 Stock Management</h1>
-            <p style="font-size: 12px; color: var(--dark);">ค้นหาและแก้ไขข้อมูลสินค้าของคุณ</p>
+            <p style="font-size: 13px; color: var(--dark); margin-top: 5px;">จัดการคลังสินค้าแบบเรียลไทม์</p>
         </div>
 
         <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input type="text" id="searchInput" placeholder="พิมพ์ชื่อสินค้า..." onkeyup="filterProducts()">
+            <input type="text" id="searchInput" placeholder="ค้นหาชื่อสินค้าเพื่อแก้ไข..." onkeyup="filterProducts()">
         </div>
 
         <div id="stock-container"></div>
@@ -128,7 +128,7 @@
         </button>
 
         <button class="btn btn-save" onclick="saveData()">
-            <span>💾 บันทึกการเปลี่ยนแปลง</span>
+            <span>💾 บันทึกการเปลี่ยนแปลงทั้งหมด</span>
         </button>
         
         <a href="index.html" class="preview-link">👁️ กลับไปหน้าหลักเพื่อดูผลลัพธ์</a>
@@ -137,7 +137,7 @@
     <script>
         const PIN = "2003";
 
-        // Sidebar Toggle
+        // ✅ Toggle Menu Logic
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('overlay').classList.toggle('active');
@@ -157,6 +157,7 @@
             } else { 
                 alert("❌ รหัสผ่านไม่ถูกต้อง!"); 
                 input.value = "";
+                input.focus();
             }
         }
 
@@ -214,24 +215,24 @@
                             📷 <input type="file" accept="image/*" style="display:none" onchange="handleFileSelect(this)">
                         </label>
                     </div>
-                    <div class="item-title-group">
+                    <div style="flex-grow:1;">
                         <label>ชื่อแอปพรีเมียม</label>
-                        <input type="text" class="app-name" placeholder="ชื่อแอป..." value="${name}">
+                        <input type="text" class="app-name" placeholder="เช่น YouTube Premium" value="${name}">
                     </div>
                 </div>
                 <div class="form-grid">
-                    <div class="form-group"><label>ราคา (บาท)</label><input type="number" class="app-price" value="${price}"></div>
-                    <div class="form-group"><label>สต็อก</label><input type="number" class="app-stock" value="${stock}"></div>
+                    <div class="form-group"><label>ราคา (บาท)</label><input type="number" class="app-price" value="${price}" placeholder="0"></div>
+                    <div class="form-group"><label>สต็อกพร้อมส่ง</label><input type="number" class="app-stock" value="${stock}" placeholder="0"></div>
                     <div class="form-group" style="grid-column: span 2">
-                        <label>หมวดหมู่</label>
+                        <label>หมวดหมู่สินค้า</label>
                         <select class="app-cat">
-                            <option value="streaming" ${cat==='streaming'?'selected':''}>📺 Streaming</option>
-                            <option value="working" ${cat==='working'?'selected':''}>💼 Working</option>
+                            <option value="streaming" ${cat==='streaming'?'selected':''}>📺 Streaming Apps</option>
+                            <option value="working" ${cat==='working'?'selected':''}>💼 Working Tools</option>
                             <option value="education" ${cat==='education'?'selected':''}>🎓 Education</option>
                         </select>
                     </div>
                 </div>
-                <button class="btn btn-del" onclick="if(confirm('ลบรายการนี้?')) { this.closest('.stock-item').remove(); saveData(); }">🗑️ ลบ</button>
+                <button class="btn btn-del" onclick="if(confirm('ยืนยันการลบรายการนี้หรือไม่?')) { this.closest('.stock-item').remove(); saveData(); }">🗑️ ลบรายการนี้</button>
             `;
             container.appendChild(itemDiv);
         }
@@ -245,16 +246,16 @@
                     price: item.querySelector('.app-price').value,
                     stock: item.querySelector('.app-stock').value,
                     cat: item.querySelector('.app-cat').value,
-                    img: imgPreview.dataset.base64 || ''
+                    img: imgPreview.dataset.base64 || imgPreview.src
                 });
             });
             let existingData = JSON.parse(localStorage.getItem('shopData')) || {};
             existingData.products = appItems;
             try {
                 localStorage.setItem('shopData', JSON.stringify(existingData));
-                alert('✅ บันทึกสต็อกเรียบร้อยแล้ว!');
+                alert('✅ บันทึกและอัปเดตสต็อกเรียบร้อยแล้ว!');
             } catch (e) {
-                alert('❌ พื้นที่เต็ม!');
+                alert('❌ พื้นที่เก็บข้อมูลเต็ม! (ลองลดขนาดไฟล์ภาพลง)');
             }
         }
 
