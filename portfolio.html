@@ -38,19 +38,54 @@
         .btn-main{display:block;text-align:center;padding:14px;border-radius:25px;text-decoration:none;margin-top:15px;font-weight:500; background:var(--main);color:#fff;}
         .small{font-size:12px;opacity:.7;margin-top:10px;color:var(--dark);white-space: pre-line;}
 
-        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; background: #252525; display: flex; justify-content: space-around; padding: 10px 0 12px; border-radius: 20px 20px 0 0; border-top: 2px solid var(--main); box-shadow: 0 -5px 20px rgba(0,0,0,0.5); z-index: 1000; }
-        .nav-item { text-decoration: none; color: var(--dark); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; flex: 1; transition: 0.3s; border: none; background: none; gap: 4px; }
-        
-        /* เมนูที่สว่าง (Active) จะเป็นสีม่วง */
-        .nav-item.active { color: var(--main); font-weight: 500; }
+        /* --- Bottom Navigation Style (Updated) --- */
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 100%; 
+            max-width: 500px; 
+            background: #252525; 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 10px 0 12px; 
+            border-radius: 20px 20px 0 0; 
+            border-top: 2px solid var(--main); 
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+            z-index: 1000; 
+        }
 
-        .nav-icon { font-size: 18px; }
+        .nav-item { 
+            text-decoration: none; 
+            color: var(--dark); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 10px; 
+            cursor: pointer; 
+            flex: 1; 
+            transition: 0.3s;
+            border: none;
+            background: none;
+            gap: 4px; 
+        }
+
+        /* สีเมื่อเมนูถูกเลือก (Active) */
+        .nav-item.active { 
+            color: var(--main); 
+            font-weight: 500;
+        }
+
+        .nav-icon { 
+            font-size: 18px; 
+        }
 
         /* --- Login Modal --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
         .modal-content { background: var(--white); border: 2px solid var(--main); border-radius: 25px; padding: 30px; width: 100%; max-width: 350px; text-align: center; }
         
-        /* สไตล์ช่องกรอกรหัส: ซ่อนตัวเลขที่พิมพ์ */
         #adminPassInput { 
             width: 100%; 
             padding: 12px; 
@@ -63,13 +98,13 @@
             letter-spacing: 10px; 
             margin-bottom: 20px; 
             outline: none; 
-            -webkit-text-security: disc; /* เปลี่ยนตัวเลขเป็นจุดกลม */
+            -webkit-text-security: disc;
         }
 
         #adminPassInput::placeholder {
             color: #666;
             letter-spacing: 5px;
-            -webkit-text-security: none; /* ทำให้ Placeholder ไม่โดนซ่อนไปด้วย */
+            -webkit-text-security: none;
         }
 
         .modal-btns { display: flex; gap: 10px; }
@@ -99,20 +134,26 @@
     </div>
 </div>
 
+<!-- Bottom Navigation (Updated HTML) -->
 <nav class="bottom-nav">
-    <!-- หน้าหลักเปลี่ยนเป็นสีปกติ -->
     <a href="index.html" class="nav-item">
-        <span class="nav-icon">🏠</span><span>หน้าหลัก</span>
+        <span class="nav-icon">🏠</span>
+        <span>หน้าหลัก</span>
     </a>
-    <!-- หน้าสินค้าเปลี่ยนเป็นสีม่วง (Active) -->
+    
     <a href="portfolio.html" class="nav-item active">
-        <span class="nav-icon">📦</span><span>สินค้า</span>
+        <span class="nav-icon">📦</span>
+        <span>สินค้า</span>
     </a>
+    
     <a href="contact.html" class="nav-item">
-        <span class="nav-icon">💬</span><span>ติดต่อ</span>
+        <span class="nav-icon">💬</span>
+        <span>ติดต่อ</span>
     </a>
+    
     <div onclick="openAdminModal()" class="nav-item">
-        <span class="nav-icon">⚙️</span><span>ตั้งค่า</span>
+        <span class="nav-icon">⚙️</span>
+        <span>ตั้งค่า</span>
     </div>
 </nav>
 
@@ -164,7 +205,6 @@
         if (e.key === 'Enter') { checkAdminPass(); }
     });
 
-    // --- โหลดข้อมูลสินค้า ---
     const categories = [
         { id: 'streaming', title: 'Streaming Apps', icon: '📺' },
         { id: 'working', title: 'Working Tools', icon: '💼' },
