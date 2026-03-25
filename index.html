@@ -1,125 +1,38 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium App Store</title>
-    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-        :root{ --bg:#1a1a1a; --main:#9d81e1; --dark:#d1c4e9; --white:#252525; --glow:rgba(157,129,225,0.3); --green:#4caf50; --red:#ff5252; }
-        *{margin:0;padding:0;box-sizing:border-box;font-family:'Mitr',sans-serif;}
-        body{background:var(--bg);display:flex;justify-content:center;color:#efefef;}
-
-        .container{ max-width:500px; width:100%; padding:20px 15px 100px; }
-
-        .section{background:var(--white);border-radius:20px;padding:25px 20px;margin-bottom:20px;box-shadow:0 8px 20px rgba(0,0,0,0.3);border:2px solid var(--main);}
-        h1,h2,h3{color:var(--main);}
-        .center{text-align:center;}
-        
-        .logo{width:120px;height:120px;border-radius:30px;overflow:hidden;margin:0 auto 20px;box-shadow:0 6px 20px var(--glow);border:2px solid var(--main);}
-        .logo img{width:100%;height:100%;object-fit:cover;}
-
-        /* App Card สไตล์ใหม่ที่ดึงข้อมูลจาก JS */
-        #app-list-container { margin-top: 15px; }
-        .app-item {
-            display: flex;
-            align-items: center;
-            background: #2d2d2d;
-            padding: 15px;
-            border-radius: 18px;
-            margin-bottom: 12px;
-            border: 1px solid transparent;
-            transition: 0.3s;
-        }
-        .app-icon { width: 50px; height: 50px; border-radius: 12px; margin-right: 15px; background: #3d3d3d; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-        .app-info { flex-grow: 1; }
-        .app-name { font-weight: 500; font-size: 16px; color: #fff; display: block; }
-        .app-price { color: var(--main); font-size: 14px; font-weight: bold; }
-        .stock-tag { font-size: 11px; color: var(--green); margin-top: 2px; }
-        
-        /* สถานะสินค้าหมด */
-        .out-of-stock { opacity: 0.6; filter: grayscale(0.8); }
-        .out-of-stock .stock-tag { color: var(--red); }
-        .btn-buy { background: var(--main); color: #fff; padding: 6px 15px; border-radius: 20px; text-decoration: none; font-size: 13px; font-weight: 500; }
-        .btn-out { background: #555; }
-
-        .btn-main{display:block;text-align:center;padding:14px;border-radius:25px;text-decoration:none;margin-top:15px;font-weight:500; background:var(--main);color:#fff;}
-        .small{font-size:12px;opacity:.7;margin-top:10px;color:var(--dark);white-space: pre-line;}
-
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; background: #252525; display: flex; justify-content: space-around; padding: 12px 0; border-top: 2px solid var(--main); z-index: 1000; }
-        .nav-item { text-decoration: none; color: var(--dark); display: flex; flex-direction: column; align-items: center; font-size: 11px; }
-        .nav-item.active { color: var(--main); }
-        .nav-icon { font-size: 20px; margin-bottom: 4px; }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <!-- HEADER -->
-    <div class="section center" style="border:none;box-shadow:none;background:transparent; padding-top: 10px;">
-        <div class="logo"><img src="https://via.placeholder.com/150" alt="logo" id="disp-logo"></div>
-        <h1 id="disp-name">Premium Store</h1>
-        <p id="disp-slogan" style="color:var(--dark);opacity:.8;margin:5px 0 15px;">แหล่งรวมแอปพรีเมียม ราคาถูก พร้อมประกัน</p>
-    </div>
-
-    <!-- รายการแอป (ดึงข้อมูลจาก Admin) -->
-    <div class="section">
-        <h2 style="margin-bottom: 15px; font-size: 18px;">🔥 รายการสินค้าพร้อมส่ง</h2>
-        <div id="app-list-container">
-            <!-- ข้อมูลจะถูกฉีดเข้าตรงนี้จาก JavaScript -->
-            <p style="text-align:center; font-size:14px; color:#888;">กำลังโหลดสินค้า...</p>
-        </div>
-    </div>
-
-    <!-- กฎ/เงื่อนไข -->
-    <div class="section">
-        <h2>📍 เงื่อนไขการรับประกัน</h2>
-        <p id="disp-rules" class="small" style="text-align:left;"></p>
-        <a id="link-line-btn" href="#" class="btn-main">แจ้งปัญหา / สอบถามเพิ่มเติม 💬</a>
-    </div>
-
-    <div class="footer" style="padding-bottom: 20px; text-align: center;">
-        <p class="small">© 2026 <span id="disp-footer-name"></span><br>ขอบคุณที่ใช้บริการค่ะ</p>
-    </div>
-</div>
-
+<!-- ส่วน Navigation ที่แก้ไข -->
 <nav class="bottom-nav">
     <a href="index.html" class="nav-item active"><span class="nav-icon">🏠</span><span>หน้าหลัก</span></a>
     <a href="portfolio.html" class="nav-item"><span class="nav-icon">📦</span><span>สินค้า</span></a>
     <a href="contact.html" class="nav-item"><span class="nav-icon">💬</span><span>ติดต่อ</span></a>
-    <a href="admin.html" class="nav-item"><span class="nav-icon">⚙️</span><span>ตั้งค่า</span></a>
+    <!-- ลบ href ออกแล้วใส่ onclick แทน -->
+    <a href="javascript:void(0)" class="nav-item" onclick="checkAdminAccess()">
+        <span class="nav-icon">⚙️</span><span>ตั้งค่า</span>
+    </a>
 </nav>
 
 <script>
-    // 1. ดึงข้อมูลจาก LocalStorage ที่บันทึกมาจากหน้า Admin
+    // --- โค้ดเดิมของคุณ (ดึงข้อมูลมาแสดงผล) ---
     const savedData = JSON.parse(localStorage.getItem('shopData'));
-
     if(savedData) {
-        // อัปเดตข้อมูลทั่วไป
         document.getElementById('disp-name').innerText = savedData.name || "Premium Store";
         document.getElementById('disp-footer-name').innerText = savedData.name || 'Store';
-        document.getElementById('disp-slogan').innerText = savedData.slogan || "";
         document.getElementById('disp-rules').innerText = savedData.rules || "";
         document.getElementById('link-line-btn').href = savedData.line || '#';
 
-        // 2. ฟังก์ชันแสดงรายการสินค้า
         const container = document.getElementById('app-list-container');
-        container.innerHTML = ''; // ล้างข้อความ "กำลังโหลด"
+        container.innerHTML = ''; 
 
         if(savedData.products && savedData.products.length > 0) {
             savedData.products.forEach(product => {
                 const isOut = parseInt(product.stock) <= 0;
                 
-                // กำหนด Emoji ตามหมวดหมู่
-                let icon = '📦';
-                if(product.cat === 'streaming') icon = '🎬';
-                if(product.cat === 'working') icon = '💼';
-                if(product.cat === 'education') icon = '📚';
+                // ใช้รูปภาพ Base64 จาก Admin ถ้าไม่มีให้ใช้ Emoji ตามหมวดหมู่
+                let displayImg = product.img ? 
+                    `<img src="${product.img}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">` : 
+                    (product.cat === 'streaming' ? '🎬' : product.cat === 'working' ? '💼' : '📚');
 
                 const itemHTML = `
                     <div class="app-item ${isOut ? 'out-of-stock' : ''}">
-                        <div class="app-icon">${icon}</div>
+                        <div class="app-icon">${displayImg}</div>
                         <div class="app-info">
                             <span class="app-name">${product.name}</span>
                             <span class="app-price">${product.price}.-</span>
@@ -134,11 +47,27 @@
                 `;
                 container.innerHTML += itemHTML;
             });
-        } else {
-            container.innerHTML = '<p style="text-align:center; font-size:14px; color:#888;">ยังไม่มีสินค้าในขณะนี้</p>';
+        }
+    }
+
+    // --- ส่วนที่เพิ่มใหม่: ฟังก์ชันเช็ครหัสผ่านก่อนเข้าหน้า Admin ---
+    function checkAdminAccess() {
+        const PIN = "2003";
+        
+        // ถ้าเคย Login แล้วในเซสชันนี้ ให้เข้าไปได้เลย
+        if (sessionStorage.getItem("isLoggedIn") === "true") {
+            window.location.href = "admin.html";
+            return;
+        }
+
+        // ถามรหัสผ่าน
+        const pass = prompt("🔐 กรุณากรอกรหัสผ่านเพื่อเข้าสู่โหมดตั้งค่า:");
+        
+        if (pass === PIN) {
+            sessionStorage.setItem("isLoggedIn", "true");
+            window.location.href = "admin.html";
+        } else if (pass !== null) { // ถ้ากด Cancel จะไม่ขึ้น Alert
+            alert("❌ รหัสผ่านไม่ถูกต้อง!");
         }
     }
 </script>
-
-</body>
-</html>
