@@ -35,10 +35,81 @@
         .btn-main{display:block;text-align:center;padding:14px;border-radius:25px;text-decoration:none;margin-top:15px;font-weight:500; background:var(--main);color:#fff;}
         .small{font-size:12px;opacity:.7;margin-top:10px;color:var(--dark);white-space: pre-line;}
 
-        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 450px; background: #252525; display: flex; justify-content: space-around; padding: 8px 0 12px; border-radius: 15px 15px 0 0; border-top: 1.5px solid var(--main); box-shadow: 0 -4px 15px rgba(0,0,0,0.4); z-index: 1000; }
-        .nav-item { text-decoration: none; color: var(--dark); display: flex; flex-direction: column; align-items: center; font-size: 9px; cursor: pointer; flex: 1; transition: 0.3s; }
-        .nav-item.active { color: var(--main); }
-        .nav-icon { font-size: 16px; margin-bottom: 2px; }
+        /* --- Sidebar & Hamburger Style --- */
+        .hamburger {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            background: var(--main);
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--glow);
+        }
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #fff;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -280px; 
+            width: 280px;
+            height: 100%;
+            background: #252525;
+            z-index: 1000;
+            padding: 80px 20px 20px;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -5px 0 25px rgba(0,0,0,0.5);
+            border-left: 2px solid var(--main);
+        }
+        .sidebar.active { right: 0; }
+
+        .nav-item {
+            text-decoration: none;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 15px;
+            font-size: 16px;
+            transition: 0.3s;
+            gap: 15px;
+        }
+        .nav-item:hover, .nav-item.active {
+            background: rgba(157, 129, 225, 0.1);
+            color: var(--main);
+        }
+        .nav-icon { font-size: 20px; }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            z-index: 999;
+            backdrop-filter: blur(3px);
+        }
+        .overlay.active { display: block; }
+
+        .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
         /* --- Admin Login Modal Style --- */
         .modal-overlay {
@@ -50,7 +121,6 @@
         @keyframes modalPop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .modal-content h3 { margin-bottom: 15px; }
         
-        /* สไตล์ใหม่สำหรับช่องกรอกรหัส */
         #adminPassInput {
             width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #333; color: #fff; 
             outline: none; margin-bottom: 20px;
@@ -64,6 +134,32 @@
     </style>
 </head>
 <body>
+
+<!-- ปุ่ม Hamburger -->
+<div class="hamburger" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+<!-- พื้นหลังมืด -->
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<!-- แถบเมนูข้าง -->
+<nav class="sidebar" id="sidebar">
+    <a href="index.html" class="nav-item active">
+        <span class="nav-icon">🏠</span><span>หน้าหลัก</span>
+    </a>
+    <a href="portfolio.html" class="nav-item">
+        <span class="nav-icon">📦</span><span>สินค้า</span>
+    </a>
+    <a href="contact.html" class="nav-item">
+        <span class="nav-icon">💬</span><span>ติดต่อเรา</span>
+    </a>
+    <div onclick="openAdminModal(); toggleMenu();" class="nav-item" style="cursor: pointer;">
+        <span class="nav-icon">⚙️</span><span>ตั้งค่าระบบ</span>
+    </div>
+</nav>
 
 <div class="container">
     <div class="section center" style="border:none;box-shadow:none;background:transparent; padding-top: 10px;">
@@ -86,27 +182,16 @@
     </div>
 </div>
 
-<nav class="bottom-nav">
-    <a href="index.html" class="nav-item active"><span class="nav-icon">🏠</span><span>หน้าหลัก</span></a>
-    <a href="portfolio.html" class="nav-item"><span class="nav-icon">📦</span><span>สินค้า</span></a>
-    <a href="contact.html" class="nav-item"><span class="nav-icon">💬</span><span>ติดต่อ</span></a>
-    <div onclick="openAdminModal()" class="nav-item"><span class="nav-icon">⚙️</span><span>ตั้งค่า</span></div>
-</nav>
-
 <div class="modal-overlay" id="loginModal">
     <div class="modal-content">
         <h3>🔐 Admin Login</h3>
         <p style="font-size: 12px; color: var(--dark); margin-bottom: 15px;">กรุณากรอกรหัสผ่านเพื่อเข้าสู่โหมดจัดการ</p>
         
-        <!-- ช่องกรอกรหัสแบบใหม่ที่เน้น Numeric Keypad -->
         <input type="tel" id="adminPassInput" 
                placeholder="••••" 
                maxlength="4" 
                inputmode="numeric" 
-               autocomplete="off" 
-               autocorrect="off" 
-               autocapitalize="off" 
-               spellcheck="false"> 
+               autocomplete="off"> 
 
         <div class="modal-btns">
             <button type="button" class="btn-modal btn-cancel" onclick="closeModal()">ยกเลิก</button>
@@ -117,6 +202,13 @@
 
 <script>
     const PIN = "2003";
+
+    // ฟังก์ชันเปิด-ปิดเมนู Sidebar
+    function toggleMenu() {
+        document.getElementById('sidebar').classList.toggle('active');
+        document.getElementById('overlay').classList.toggle('active');
+        document.querySelector('.hamburger').classList.toggle('active');
+    }
 
     // ดึงข้อมูลแสดงหน้าเว็บ
     const savedData = JSON.parse(localStorage.getItem('shopData'));
@@ -146,11 +238,9 @@
         }
     }
 
-    /* --- ฟังก์ชันใหม่: ตรวจสอบรหัส --- */
     function checkAdminPass() {
         const inputField = document.getElementById('adminPassInput');
         const inputVal = inputField.value;
-
         if (inputVal === PIN) {
             sessionStorage.setItem("isLoggedIn", "true");
             window.location.href = "admin.html";
@@ -161,25 +251,19 @@
         }
     }
 
-    /* --- ฟังก์ชันใหม่: เปิด Modal --- */
     function openAdminModal() {
         sessionStorage.removeItem("isLoggedIn"); 
         document.getElementById('loginModal').style.display = 'flex';
-        
         const input = document.getElementById('adminPassInput');
         input.value = ''; 
-        
-        setTimeout(() => {
-            input.focus();
-        }, 200);
+        setTimeout(() => { input.focus(); }, 200);
     }
 
     function closeModal() {
         document.getElementById('loginModal').style.display = 'none';
         document.getElementById('adminPassInput').value = '';
-}
+    }
 
-    /* --- ฟังก์ชันใหม่: ดักจับการกด Enter --- */
     document.getElementById('adminPassInput').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             e.preventDefault(); 
