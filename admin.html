@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - จัดการข้อมูลร้าน</title>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        body { background: #1a1a1a; color: #fff; font-family: 'Mitr', sans-serif; padding: 20px; display: flex; justify-content: center; }
+        .admin-card { background: #252525; padding: 30px; border-radius: 20px; width: 100%; max-width: 500px; border: 1px solid #9d81e1; }
+        h1 { color: #9d81e1; font-size: 24px; margin-bottom: 20px; text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 14px; margin-bottom: 5px; color: #d1c4e9; }
+        input, textarea { width: 100%; padding: 12px; background: #333; border: 1px solid #444; border-radius: 10px; color: #fff; font-family: inherit; }
+        button { width: 100%; padding: 15px; background: #9d81e1; border: none; border-radius: 25px; color: #fff; font-weight: 500; cursor: pointer; margin-top: 10px; font-size: 16px; }
+        .preview-btn { background: transparent; border: 2px solid #9d81e1; color: #9d81e1; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="admin-card">
+        <h1>⚙️ จัดการข้อมูลร้าน</h1>
+        
+        <div class="form-group">
+            <label>ชื่อร้าน</label>
+            <input type="text" id="shopName" value="𝐊𝐨𝐲𝐚𝐧𝐠𝐢 𝜗𝜚˚⋆">
+        </div>
+        
+        <div class="form-group">
+            <label>คำโปรย</label>
+            <input type="text" id="shopSlogan" value="รับออกแบบป้าย ลายน้ำ Google Sheet เว็บไซต์⭐️">
+        </div>
+
+        <div class="form-group">
+            <label>เงื่อนไข/กฎของร้าน</label>
+            <textarea id="shopRules" rows="4">• โอนเงินแล้วไม่คืนเงินทุกกรณี
+• ยกเลิกหลังเริ่มงาน คืนเงิน 50%
+• ยกเลิกหลังเช็คงาน = ไม่คืนเงินและส่งงานปกติ</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>ลิงก์ Facebook</label>
+            <input type="text" id="fbLink" placeholder="https://facebook.com/...">
+        </div>
+
+        <div class="form-group">
+            <label>ลิงก์ Line</label>
+            <input type="text" id="lineLink" placeholder="https://line.me/...">
+        </div>
+
+        <button onclick="saveData()">💾 บันทึกข้อมูล</button>
+        <button class="preview-btn" onclick="goToPreview()">👁️ ดูหน้าเว็บของคุณ</button>
+    </div>
+
+    <script>
+        function saveData() {
+            const data = {
+                name: document.getElementById('shopName').value,
+                slogan: document.getElementById('shopSlogan').value,
+                rules: document.getElementById('shopRules').value,
+                fb: document.getElementById('fbLink').value,
+                line: document.getElementById('lineLink').value
+            };
+            localStorage.setItem('shopData', JSON.stringify(data));
+            alert('บันทึกข้อมูลเรียบร้อยแล้ว!');
+        }
+
+        function goToPreview() {
+            window.location.href = 'index.html'; // ลิงก์ไปยังหน้าแสดงผล
+        }
+    </script>
+</body>
+</html>
