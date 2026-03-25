@@ -32,7 +32,6 @@
         .del-btn { background: #ff5252; padding: 8px; font-size: 12px; margin-top: 5px; width: auto; display: inline-block; }
         .preview-btn { background: transparent; border: 2px solid var(--main); color: var(--main); text-decoration: none; display: block; text-align: center; margin-top: 10px; padding: 12px; border-radius: 25px; }
 
-        /* --- ปรับปรุงสไตล์ Bottom Nav ให้กะทัดรัด (Compact) --- */
         .bottom-nav { 
             position: fixed; 
             bottom: 0; 
@@ -70,11 +69,11 @@
 </head>
 <body>
 
-    <!-- ล็อกอิน -->
+    <!-- ล็อกอิน (ซ่อนรหัสผ่านใน Placeholder แล้ว) -->
     <div id="login-overlay">
         <div class="admin-card">
             <h1>🔐 Admin Login</h1>
-            <input type="password" id="passInput" placeholder="กรอกรหัสผ่าน 2003...">
+            <input type="password" id="passInput" placeholder="กรุณากรอกรหัสผ่านเพื่อดำเนินการ">
             <button onclick="checkPass()">ตกลง</button>
         </div>
     </div>
@@ -90,7 +89,7 @@
         </div>
     </div>
 
-    <!-- แถบเมนู Bottom Nav ใหม่ -->
+    <!-- แถบเมนู Bottom Nav -->
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item">
             <span class="nav-icon">🏠</span>
@@ -111,7 +110,7 @@
     </nav>
 
     <script>
-        const PIN = "2003";
+        const PIN = "2003"; // รหัสผ่านยังคงเป็นตัวเดิม
 
         window.onload = function() {
             if (sessionStorage.getItem("isLoggedIn") === "true") unlockAdmin();
@@ -121,7 +120,10 @@
             if (document.getElementById("passInput").value === PIN) {
                 sessionStorage.setItem("isLoggedIn", "true");
                 unlockAdmin();
-            } else { alert("รหัสผิด!"); }
+            } else { 
+                alert("❌ รหัสผ่านไม่ถูกต้อง!"); // ตัดการบอกรหัสผ่านออก
+                document.getElementById("passInput").value = "";
+            }
         }
 
         function unlockAdmin() {
@@ -130,10 +132,9 @@
             loadData();
         }
 
-        // ฟังก์ชันเช็คการล็อกอินซ้ำ (ใช้สำหรับปุ่มใน Nav)
         function checkAdminAccess() {
             if (sessionStorage.getItem("isLoggedIn") === "true") {
-                location.reload(); // ถ้าอยู่หน้าเดิมให้รีโหลด
+                location.reload();
             } else {
                 document.getElementById("login-overlay").style.display = "flex";
             }
@@ -165,7 +166,6 @@
                         <label class="file-input-label">📸 เลือกรูปภาพ
                             <input type="file" accept="image/*" onchange="handleFileSelect(this)">
                         </label>
-                        <p style="font-size:10px; color:#aaa; margin-top:5px;">แนะนำ: รูปสี่เหลี่ยมจัตุรัส</p>
                     </div>
                 </div>
                 <div class="form-group"><label>ชื่อแอป</label><input type="text" class="app-name" value="${name}"></div>
@@ -204,9 +204,9 @@
 
             try {
                 localStorage.setItem('shopData', JSON.stringify(existingData));
-                alert('บันทึกเรียบร้อย!');
+                alert('✅ บันทึกสต็อกเรียบร้อย!');
             } catch (e) {
-                alert('ข้อผิดพลาด: ไฟล์รูปอาจใหญ่เกินไป (รวมไม่ควรเกิน 5MB)');
+                alert('⚠️ พื้นที่เต็ม! แนะนำให้ลดขนาดรูปภาพลงก่อนบันทึก');
             }
         }
 
