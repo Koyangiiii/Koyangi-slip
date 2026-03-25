@@ -6,11 +6,16 @@
 <title>Official Store</title>
 <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-/* CSS เดิมทั้งหมดของคุณ */
 :root{ --bg:#1a1a1a; --main:#9d81e1; --dark:#d1c4e9; --white:#252525; --glow:rgba(157,129,225,0.3); }
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Mitr',sans-serif;}
 body{background:var(--bg);display:flex;justify-content:center;color:#efefef;}
-.container{max-width:500px;width:100%;padding:20px 15px 40px;}
+
+.container{
+    max-width:500px;
+    width:100%;
+    padding:20px 15px 100px; /* เพิ่ม padding ล่างกันโดนแถบ nav ทับ */
+}
+
 .section{background:var(--white);border-radius:20px;padding:25px 20px;margin-bottom:20px;box-shadow:0 8px 20px rgba(0,0,0,0.3);border:2px solid var(--main);}
 h1,h2,h3{color:var(--main);}
 .center{text-align:center;}
@@ -29,10 +34,48 @@ h1,h2,h3{color:var(--main);}
 .socials{display:flex;gap:8px;justify-content:center;margin-top:15px;}
 .socials a{flex:1;max-width:100px;text-align:center;padding:8px;border-radius:25px;background:#333;text-decoration:none;color:var(--dark);font-size:13px;border:1px solid var(--main);}
 .small{font-size:12px;opacity:.7;margin-top:10px;color:var(--dark);white-space: pre-line;}
+
+/* --- แถบเมนูด้านล่าง (Bottom Nav) --- */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 500px;
+    background: #252525;
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+    border-top: 2px solid var(--main);
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.3);
+    z-index: 1000;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: var(--dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 11px;
+    transition: 0.3s;
+}
+
+.nav-item:hover, .nav-item.active {
+    color: var(--main);
+}
+
+.nav-icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
 </style>
 </head>
 <body>
+
 <div class="container">
+    <!-- HEADER -->
     <div class="section center" style="border:none;box-shadow:none;background:transparent;">
         <div class="logo"><img src="logo.jpg" alt="logo"></div>
         <h1 id="disp-name">𝐊𝐨𝐲𝐚𝐧𝐠𝐢 𝜗𝜚˚⋆</h1>
@@ -45,6 +88,7 @@ h1,h2,h3{color:var(--main);}
         <a id="link-line-main" href="#" class="btn btn-outline">เช็คคิวงาน/สอบถาม ✨</a>
     </div>
 
+    <!-- ขั้นตอนการสั่ง -->
     <div class="section">
         <h2>📋 ขั้นตอนการสั่ง</h2>
         <div class="step"><div class="step-num">1</div><div>กรอกฟอร์ม เขียนรายละเอียดร้านค้า</div></div>
@@ -54,6 +98,7 @@ h1,h2,h3{color:var(--main);}
         <a href="#" class="btn btn-main">⭐ ดูตัวอย่างงานทั้งหมด</a>
     </div>
 
+    <!-- กฎ/เงื่อนไข -->
     <div class="section">
         <h2>📍 กฎของร้าน & เงื่อนไข</h2>
         <div class="price-row"><span>ระยะเวลารองาน</span><span class="price-tag">4-8 ชม.</span></div>
@@ -72,19 +117,40 @@ h1,h2,h3{color:var(--main);}
     </div>
 </div>
 
+<!-- --- BOTTOM NAVIGATION BAR --- -->
+<nav class="bottom-nav">
+    <a href="index.html" class="nav-item active">
+        <span class="nav-icon">🏠</span>
+        <span>หน้าหลัก</span>
+    </a>
+    <a href="portfolio.html" class="nav-item">
+        <span class="nav-icon">🖼️</span>
+        <span>ผลงาน</span>
+    </a>
+    <a href="contact.html" class="nav-item">
+        <span class="nav-icon">💬</span>
+        <span>ติดต่อ</span>
+    </a>
+    <a href="admin.html" class="nav-item">
+        <span class="nav-icon">⚙️</span>
+        <span>ตั้งค่า</span>
+    </a>
+</nav>
+
 <script>
-    // ดึงข้อมูลมาแสดงผล
+    // ดึงข้อมูลมาแสดงผลจาก LocalStorage
     const savedData = JSON.parse(localStorage.getItem('shopData'));
     if(savedData) {
         document.getElementById('disp-name').innerText = savedData.name;
-        document.getElementById('disp-footer-name').innerText = savedData.name;
+        document.getElementById('disp-footer-name').innerText = savedData.name || 'Store';
         document.getElementById('disp-slogan').innerText = savedData.slogan;
         document.getElementById('disp-rules').innerText = savedData.rules;
-        document.getElementById('link-fb').href = savedData.fb;
-        document.getElementById('link-line-main').href = savedData.line;
-        document.getElementById('link-line-btn').href = savedData.line;
-        document.getElementById('link-line-foot').href = savedData.line;
+        document.getElementById('link-fb').href = savedData.fb || '#';
+        document.getElementById('link-line-main').href = savedData.line || '#';
+        document.getElementById('link-line-btn').href = savedData.line || '#';
+        document.getElementById('link-line-foot').href = savedData.line || '#';
     }
 </script>
+
 </body>
 </html>
