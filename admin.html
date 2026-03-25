@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Manage Premium Store</title>
+    <title>Admin - Stock Management</title>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root{ --bg:#1a1a1a; --main:#9d81e1; --dark:#d1c4e9; --white:#252525; --green:#4caf50; }
@@ -22,7 +22,6 @@
         .stock-item { background: #1e1e1e; padding: 15px; border-radius: 15px; margin-bottom: 10px; border: 1px dashed #555; position: relative; }
         .row { display: flex; gap: 10px; margin-bottom: 10px; }
         
-        /* สไตล์ส่วนรูปภาพ */
         .img-preview { width: 60px; height: 60px; border-radius: 10px; background: #333; object-fit: cover; margin-bottom: 10px; border: 1px solid var(--main); }
         .img-container { display: flex; gap: 15px; align-items: flex-end; }
 
@@ -50,26 +49,19 @@
     <!-- Main Content -->
     <div id="main-admin" style="display:none; width: 100%; max-width: 500px;">
         <div class="admin-card">
-            <h2>🏠 ข้อมูลร้านค้า</h2>
-            <div class="form-group"><label>ชื่อร้าน</label><input type="text" id="shopName"></div>
-            <div class="form-group"><label>ลิงก์ LINE (สำหรับกดซื้อ)</label><input type="text" id="lineLink"></div>
-            <div class="form-group"><label>เงื่อนไข/กฎของร้าน</label><textarea id="shopRules" rows="3"></textarea></div>
-        </div>
-
-        <div class="admin-card">
             <h2>📦 จัดการสินค้า (สต็อก)</h2>
             <div id="stock-container">
                 <!-- รายการสินค้าจะงอกที่นี่ -->
             </div>
             <button class="add-btn" onclick="addAppItem()">➕ เพิ่มสินค้าใหม่</button>
-            <button onclick="saveData()">💾 บันทึกข้อมูลทั้งหมด</button>
-            <a href="index.html" class="preview-btn">👁️ ไปหน้าบ้าน</a>
+            <button onclick="saveData()">💾 บันทึกสต็อกสินค้า</button>
+            <a href="index.html" class="preview-btn">👁️ กลับหน้าหลัก</a>
         </div>
     </div>
 
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item"><span>🏠</span><span>หน้าหลัก</span></a>
-        <a href="#" class="nav-item active"><span>⚙️</span><span>ตั้งค่า</span></a>
+        <a href="#" class="nav-item active"><span>⚙️</span><span>จัดการสต็อก</span></a>
     </nav>
 
     <script>
@@ -92,19 +84,16 @@
             loadData();
         }
 
-        // ฟังก์ชันช่วยอัปเดตรูป Preview เมื่อพิมพ์ URL
         function updatePreview(input) {
             const img = input.parentElement.parentElement.querySelector('.img-preview');
             img.src = input.value || 'https://via.placeholder.com/150';
         }
 
-        // เพิ่มช่องกรอกสินค้าใหม่
         function addAppItem(name = '', price = '', stock = '', cat = 'streaming', img = '') {
             const container = document.getElementById('stock-container');
             const itemDiv = document.createElement('div');
             itemDiv.className = 'stock-item';
             
-            // ใช้รูป Placeholder ถ้าไม่มี URL
             const displayImg = img || 'https://via.placeholder.com/150';
 
             itemDiv.innerHTML = `
@@ -141,31 +130,25 @@
                     price: item.querySelector('.app-price').value,
                     stock: item.querySelector('.app-stock').value,
                     cat: item.querySelector('.app-cat').value,
-                    img: item.querySelector('.app-img').value // บันทึก URL รูปภาพ
+                    img: item.querySelector('.app-img').value
                 });
             });
 
-            const data = {
-                name: document.getElementById('shopName').value,
-                line: document.getElementById('lineLink').value,
-                rules: document.getElementById('shopRules').value,
-                products: appItems
-            };
+            // ดึงข้อมูลเดิมมาเพื่อรักษาค่าชื่อร้าน/ไลน์ ที่ตั้งไว้จากหน้าอื่น
+            let existingData = JSON.parse(localStorage.getItem('shopData')) || {};
+            
+            // อัปเดตเฉพาะรายการสินค้า
+            existingData.products = appItems;
 
-            localStorage.setItem('shopData', JSON.stringify(data));
-            alert('บันทึกข้อมูลและสต็อกเรียบร้อย!');
+            localStorage.setItem('shopData', JSON.stringify(existingData));
+            alert('บันทึกรายการสินค้าเรียบร้อย!');
         }
 
         function loadData() {
             const savedData = JSON.parse(localStorage.getItem('shopData'));
-            if(savedData) {
-                document.getElementById('shopName').value = savedData.name || '';
-                document.getElementById('lineLink').value = savedData.line || '';
-                document.getElementById('shopRules').value = savedData.rules || '';
-                if(savedData.products) {
-                    document.getElementById('stock-container').innerHTML = ''; // ล้างก่อนโหลด
-                    savedData.products.forEach(p => addAppItem(p.name, p.price, p.stock, p.cat, p.img));
-                }
+            if(savedData && savedData.products) {
+                document.getElementById('stock-container').innerHTML = '';
+                savedData.products.forEach(p => addAppItem(p.name, p.price, p.stock, p.cat, p.img));
             }
         }
     </script>
