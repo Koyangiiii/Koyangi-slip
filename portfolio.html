@@ -18,7 +18,7 @@
         .logo{width:120px;height:120px;border-radius:30px;overflow:hidden;margin:0 auto 20px;box-shadow:0 6px 20px var(--glow);border:2px solid var(--main);}
         .logo img{width:100%;height:100%;object-fit:cover;}
 
-        /* --- Category Grouping Styles --- */
+        /* --- Category Styles --- */
         .cat-group { margin-bottom: 25px; }
         .cat-title { font-size: 16px; color: var(--main); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px dashed #444; padding-bottom: 5px; }
         
@@ -38,9 +38,20 @@
         .btn-main{display:block;text-align:center;padding:14px;border-radius:25px;text-decoration:none;margin-top:15px;font-weight:500; background:var(--main);color:#fff;}
         .small{font-size:12px;opacity:.7;margin-top:10px;color:var(--dark);white-space: pre-line;}
 
-        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 450px; background: #252525; display: flex; justify-content: space-around; padding: 8px 0 12px; border-radius: 15px 15px 0 0; border-top: 1.5px solid var(--main); z-index: 1000; }
-        .nav-item { text-decoration: none; color: var(--dark); display: flex; flex-direction: column; align-items: center; font-size: 9px; cursor: pointer; flex: 1; }
+        /* --- New Bottom Nav Styles --- */
+        .bottom-nav { 
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; 
+            max-width: 500px; background: #252525; display: flex; justify-content: space-around; 
+            padding: 10px 0 12px; border-radius: 20px 20px 0 0; border-top: 2px solid var(--main); 
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5); z-index: 1000; 
+        }
+        .nav-item { 
+            text-decoration: none; color: var(--dark); display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; font-size: 10px; cursor: pointer; 
+            flex: 1; transition: 0.3s; border: none; background: none; gap: 4px; 
+        }
         .nav-item.active { color: var(--main); }
+        .nav-icon { font-size: 18px; }
 
         /* --- Login Modal --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
@@ -63,9 +74,7 @@
 
     <div class="section">
         <h2 style="margin-bottom: 20px; font-size: 18px;">🔥 รายการสินค้า</h2>
-        <div id="app-list-container">
-            <!-- สินค้าจะถูกแยกหมวดหมู่มาแสดงที่นี่ -->
-        </div>
+        <div id="app-list-container"></div>
     </div>
 
     <div class="section">
@@ -75,11 +84,24 @@
     </div>
 </div>
 
+<!-- โครงสร้าง Bottom Nav ใหม่ -->
 <nav class="bottom-nav">
-    <a href="index.html" class="nav-item active">🏠<br>หน้าหลัก</a>
-    <a href="portfolio.html" class="nav-item">📦<br>สินค้า</a>
-    <a href="contact.html" class="nav-item">💬<br>ติดต่อ</a>
-    <div onclick="openAdminModal()" class="nav-item">⚙️<br>ตั้งค่า</div>
+    <a href="index.html" class="nav-item active">
+        <span class="nav-icon">🏠</span>
+        <span>หน้าหลัก</span>
+    </a>
+    <a href="portfolio.html" class="nav-item">
+        <span class="nav-icon">📦</span>
+        <span>สินค้า</span>
+    </a>
+    <a href="contact.html" class="nav-item">
+        <span class="nav-icon">💬</span>
+        <span>ติดต่อ</span>
+    </a>
+    <div onclick="openAdminModal()" class="nav-item">
+        <span class="nav-icon">⚙️</span>
+        <span>ตั้งค่า</span>
+    </div>
 </nav>
 
 <div class="modal-overlay" id="loginModal">
@@ -97,7 +119,6 @@
 <script>
     const PIN = "2003";
 
-    // กำหนดชื่อหมวดและไอคอน
     const categories = [
         { id: 'streaming', title: 'Streaming Apps', icon: '📺' },
         { id: 'working', title: 'Working Tools', icon: '💼' },
@@ -105,27 +126,16 @@
     ];
 
     const savedData = JSON.parse(localStorage.getItem('shopData'));
-    
     if(savedData) {
         document.getElementById('disp-name').innerText = savedData.name || "Premium Store";
         document.getElementById('disp-rules').innerText = savedData.rules || "";
         document.getElementById('link-line-btn').href = savedData.line || '#';
-        
         const container = document.getElementById('app-list-container');
         container.innerHTML = '';
-
-        // วนลูปตามหมวดหมู่ที่เรากำหนดไว้
         categories.forEach(cat => {
             const catItems = savedData.products.filter(p => p.cat === cat.id);
-            
-            // แสดงเฉพาะหมวดที่มีสินค้าเท่านั้น
             if(catItems.length > 0) {
-                let catHtml = `
-                    <div class="cat-group">
-                        <div class="cat-title">${cat.icon} ${cat.title}</div>
-                        <div class="cat-items-list">
-                `;
-
+                let catHtml = `<div class="cat-group"><div class="cat-title">${cat.icon} ${cat.title}</div>`;
                 catItems.forEach(product => {
                     const isOut = parseInt(product.stock) <= 0;
                     let displayImg = product.img ? `<img src="${product.img}">` : '🎬';
@@ -140,18 +150,12 @@
                             <a href="${isOut ? '#' : savedData.line}" class="btn-buy ${isOut ? 'btn-out' : ''}">${isOut ? 'หมด' : 'สั่งซื้อ'}</a>
                         </div>`;
                 });
-
-                catHtml += `</div></div>`;
+                catHtml += `</div>`;
                 container.innerHTML += catHtml;
             }
         });
-
-        if(container.innerHTML === '') {
-            container.innerHTML = '<p style="text-align:center; color:#888;">ยังไม่มีสินค้าในขณะนี้</p>';
-        }
     }
 
-    // --- Admin Functions ---
     function openAdminModal() { document.getElementById('loginModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('loginModal').style.display = 'none'; }
     function checkAdminPass() {
