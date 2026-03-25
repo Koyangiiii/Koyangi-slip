@@ -3,33 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Restricted Access</title>
+    <title>Admin - Manage Premium Store</title>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        :root{ --bg:#1a1a1a; --main:#9d81e1; --dark:#d1c4e9; --white:#252525; }
+        :root{ --bg:#1a1a1a; --main:#9d81e1; --dark:#d1c4e9; --white:#252525; --green:#4caf50; }
+        body { background: var(--bg); color: #fff; font-family: 'Mitr', sans-serif; padding: 20px 20px 120px; display: flex; justify-content: center; }
         
-        body { background: var(--bg); color: #fff; font-family: 'Mitr', sans-serif; padding: 20px 20px 100px; display: flex; justify-content: center; min-height: 100vh; align-items: flex-start; }
+        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 9999; display: flex; justify-content: center; align-items: center; }
+        .admin-card { background: var(--white); padding: 25px; border-radius: 20px; width: 100%; max-width: 500px; border: 1px solid var(--main); box-shadow: 0 8px 20px rgba(0,0,0,0.3); margin-bottom: 20px; }
         
-        /* สไตล์หน้า Login บังจอ */
-        #login-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); z-index: 9999; display: flex; justify-content: center; align-items: center;
-        }
+        h1, h2 { color: var(--main); text-align: center; margin-bottom: 20px; }
+        h2 { font-size: 18px; text-align: left; border-bottom: 1px solid #444; padding-bottom: 10px; }
 
-        .admin-card { background: var(--white); padding: 30px; border-radius: 20px; width: 90%; max-width: 450px; border: 1px solid var(--main); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
-        
-        h1 { color: var(--main); font-size: 24px; margin-bottom: 20px; text-align: center; }
         .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 14px; margin-bottom: 5px; color: var(--dark); }
-        input, textarea { width: 100%; padding: 12px; background: #333; border: 1px solid #444; border-radius: 10px; color: #fff; font-family: inherit; outline: none; }
-        input:focus { border-color: var(--main); }
+        label { display: block; font-size: 13px; margin-bottom: 5px; color: var(--dark); }
+        input, textarea, select { width: 100%; padding: 12px; background: #333; border: 1px solid #444; border-radius: 10px; color: #fff; font-family: inherit; outline: none; }
         
-        button { width: 100%; padding: 15px; background: var(--main); border: none; border-radius: 25px; color: #fff; font-weight: 500; cursor: pointer; margin-top: 10px; font-size: 16px; transition: 0.3s; }
-        button:hover { opacity: 0.9; }
+        .stock-item { background: #1e1e1e; padding: 15px; border-radius: 15px; margin-bottom: 10px; border: 1px dashed #555; }
+        .row { display: flex; gap: 10px; margin-bottom: 10px; }
         
-        .preview-btn { background: transparent; border: 2px solid var(--main); color: var(--main); margin-top: 10px; display: block; text-align: center; text-decoration: none; padding: 12px; border-radius: 25px; font-size: 14px; }
+        button { width: 100%; padding: 15px; background: var(--main); border: none; border-radius: 25px; color: #fff; font-weight: 500; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .add-btn { background: var(--green); margin-bottom: 20px; padding: 10px; font-size: 14px; }
+        .del-btn { background: #ff5252; padding: 8px; font-size: 12px; margin-top: 5px; width: auto; display: inline-block; }
+        .preview-btn { background: transparent; border: 2px solid var(--main); color: var(--main); text-decoration: none; display: block; text-align: center; margin-top: 10px; padding: 12px; border-radius: 25px; }
 
-        /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; background: #252525; display: flex; justify-content: space-around; padding: 12px 0; border-top: 2px solid var(--main); z-index: 1000; }
         .nav-item { text-decoration: none; color: var(--dark); display: flex; flex-direction: column; align-items: center; font-size: 11px; }
         .nav-item.active { color: var(--main); }
@@ -37,77 +34,52 @@
 </head>
 <body>
 
-    <!-- ส่วนล็อครหัสผ่าน -->
+    <!-- Login -->
     <div id="login-overlay">
         <div class="admin-card">
-            <h1>🔐 เจ้าของเว็บเท่านั้น</h1>
-            <div class="form-group">
-                <label>กรอกรหัสผ่านเพื่อจัดการข้อมูล</label>
-                <input type="password" id="passInput" placeholder="กรอกรหัสผ่านที่นี่...">
-            </div>
-            <button onclick="checkPass()">เข้าสู่ระบบ</button>
-            <a href="index.html" class="preview-btn">กลับหน้าหลัก</a>
+            <h1>🔐 Admin Login</h1>
+            <input type="password" id="passInput" placeholder="กรอกรหัสผ่าน 2003...">
+            <button onclick="checkPass()">ตกลง</button>
         </div>
     </div>
 
-    <!-- ส่วนเนื้อหาหลัก (Admin) -->
-    <div class="admin-card" id="main-admin" style="display:none;">
-        <h1>⚙️ จัดการข้อมูลร้าน</h1>
-        
-        <div class="form-group">
-            <label>ชื่อร้าน</label>
-            <input type="text" id="shopName">
-        </div>
-        
-        <div class="form-group">
-            <label>คำโปรย</label>
-            <input type="text" id="shopSlogan">
+    <!-- Main Content -->
+    <div id="main-admin" style="display:none; width: 100%; max-width: 500px;">
+        <div class="admin-card">
+            <h2>🏠 ข้อมูลร้านค้า</h2>
+            <div class="form-group"><label>ชื่อร้าน</label><input type="text" id="shopName"></div>
+            <div class="form-group"><label>ลิงก์ LINE (สำหรับกดซื้อ)</label><input type="text" id="lineLink"></div>
+            <div class="form-group"><label>เงื่อนไข/กฎของร้าน</label><textarea id="shopRules" rows="3"></textarea></div>
         </div>
 
-        <div class="form-group">
-            <label>เงื่อนไข/กฎของร้าน</label>
-            <textarea id="shopRules" rows="4"></textarea>
+        <div class="admin-card">
+            <h2>📦 จัดการสินค้า (สต็อก)</h2>
+            <div id="stock-container">
+                <!-- รายการสินค้าจะงอกที่นี่ -->
+            </div>
+            <button class="add-btn" onclick="addAppItem()">➕ เพิ่มสินค้าใหม่</button>
+            <button onclick="saveData()">💾 บันทึกข้อมูลทั้งหมด</button>
+            <a href="index.html" class="preview-btn">👁️ ไปหน้าบ้าน</a>
         </div>
-
-        <div class="form-group">
-            <label>ลิงก์ Facebook</label>
-            <input type="text" id="fbLink">
-        </div>
-
-        <div class="form-group">
-            <label>ลิงก์ Line</label>
-            <input type="text" id="lineLink">
-        </div>
-
-        <button onclick="saveData()">💾 บันทึกข้อมูล</button>
-        <button class="preview-btn" onclick="goToPreview()">👁️ ดูหน้าเว็บของคุณ</button>
     </div>
 
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item"><span>🏠</span><span>หน้าหลัก</span></a>
-        <a href="portfolio.html" class="nav-item"><span>🖼️</span><span>ผลงาน</span></a>
-        <a href="contact.html" class="nav-item"><span>💬</span><span>ติดต่อ</span></a>
-        <a href="admin.html" class="nav-item active"><span>⚙️</span><span>ตั้งค่า</span></a>
+        <a href="#" class="nav-item active"><span>⚙️</span><span>ตั้งค่า</span></a>
     </nav>
 
     <script>
-        const PIN = "2003"; // รหัสผ่านของคุณ
+        const PIN = "2003";
 
-        // ตรวจสอบสถานะการ Login
         window.onload = function() {
-            if (sessionStorage.getItem("isLoggedIn") === "true") {
-                unlockAdmin();
-            }
+            if (sessionStorage.getItem("isLoggedIn") === "true") unlockAdmin();
         }
 
         function checkPass() {
-            const input = document.getElementById("passInput").value;
-            if (input === PIN) {
+            if (document.getElementById("passInput").value === PIN) {
                 sessionStorage.setItem("isLoggedIn", "true");
                 unlockAdmin();
-            } else {
-                alert("รหัสผ่านไม่ถูกต้อง!");
-            }
+            } else { alert("รหัสผิด!"); }
         }
 
         function unlockAdmin() {
@@ -116,30 +88,63 @@
             loadData();
         }
 
+        // เพิ่มช่องกรอกสินค้าใหม่
+        function addAppItem(name = '', price = '', stock = '', cat = 'streaming') {
+            const container = document.getElementById('stock-container');
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'stock-item';
+            itemDiv.innerHTML = `
+                <div class="form-group"><label>ชื่อแอป</label><input type="text" class="app-name" value="${name}"></div>
+                <div class="row">
+                    <div><label>ราคา</label><input type="text" class="app-price" value="${price}"></div>
+                    <div><label>สต็อก</label><input type="number" class="app-stock" value="${stock}"></div>
+                </div>
+                <div class="form-group">
+                    <label>หมวดหมู่</label>
+                    <select class="app-cat">
+                        <option value="streaming" ${cat==='streaming'?'selected':''}>Streaming</option>
+                        <option value="working" ${cat==='working'?'selected':''}>Working</option>
+                        <option value="education" ${cat==='education'?'selected':''}>Education</option>
+                    </select>
+                </div>
+                <button class="del-btn" onclick="this.parentElement.remove()">❌ ลบรายการนี้</button>
+            `;
+            container.appendChild(itemDiv);
+        }
+
+        function saveData() {
+            const appItems = [];
+            document.querySelectorAll('.stock-item').forEach(item => {
+                appItems.push({
+                    name: item.querySelector('.app-name').value,
+                    price: item.querySelector('.app-price').value,
+                    stock: item.querySelector('.app-stock').value,
+                    cat: item.querySelector('.app-cat').value
+                });
+            });
+
+            const data = {
+                name: document.getElementById('shopName').value,
+                line: document.getElementById('lineLink').value,
+                rules: document.getElementById('shopRules').value,
+                products: appItems
+            };
+
+            localStorage.setItem('shopData', JSON.stringify(data));
+            alert('บันทึกข้อมูลและสต็อกเรียบร้อย!');
+        }
+
         function loadData() {
             const savedData = JSON.parse(localStorage.getItem('shopData'));
             if(savedData) {
                 document.getElementById('shopName').value = savedData.name || '';
-                document.getElementById('shopSlogan').value = savedData.slogan || '';
-                document.getElementById('shopRules').value = savedData.rules || '';
-                document.getElementById('fbLink').value = savedData.fb || '';
                 document.getElementById('lineLink').value = savedData.line || '';
+                document.getElementById('shopRules').value = savedData.rules || '';
+                if(savedData.products) {
+                    savedData.products.forEach(p => addAppItem(p.name, p.price, p.stock, p.cat));
+                }
             }
         }
-
-        function saveData() {
-            const data = {
-                name: document.getElementById('shopName').value,
-                slogan: document.getElementById('shopSlogan').value,
-                rules: document.getElementById('shopRules').value,
-                fb: document.getElementById('fbLink').value,
-                line: document.getElementById('lineLink').value
-            };
-            localStorage.setItem('shopData', JSON.stringify(data));
-            alert('บันทึกข้อมูลเรียบร้อยแล้ว!');
-        }
-
-        function goToPreview() { window.location.href = 'index.html'; }
     </script>
 </body>
 </html>
