@@ -9,7 +9,6 @@
 
 <style>
 :root{
-/* ปรับโทนสีเป็น ดำ-ม่วง ตามที่ระบุ */
 --bg:#1a1a1a; 
 --main:#9d81e1;
 --dark:#d1c4e9;
@@ -73,6 +72,20 @@ color:var(--dark);
 border: 1px solid var(--main);
 }
 
+/* เพิ่ม Style สำหรับ Input ให้กรอกข้อมูลได้ */
+input.edit-inline, textarea.edit-inline {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    width: 100%;
+    text-align: inherit;
+    outline: none;
+    border-bottom: 1px dashed rgba(157,129,225,0.2);
+}
+textarea.edit-inline { resize: none; height: auto; }
+
 .btn{
 display:block;
 text-align:center;
@@ -82,6 +95,7 @@ text-decoration:none;
 margin-top:15px;
 font-weight:500;
 transition: 0.3s;
+cursor: pointer;
 }
 
 .btn-outline{
@@ -93,6 +107,8 @@ color:var(--main);
 .btn-main{
 background:var(--main);
 color:#fff;
+border: none;
+width: 100%;
 }
 
 .step{
@@ -158,86 +174,84 @@ border:1px solid var(--main);
 }
 
 .small{font-size:12px;opacity:.7;margin-top:10px;color:var(--dark);}
-
-/* รักษาส่วนประกอบสำคัญตามเงื่อนไข */
 </style>
 </head>
 
 <body>
 <div class="container">
 
-<!-- ================================================= -->
-<!-- =============== EDIT AREA START ================ -->
-<!-- ================================================= -->
-
-<!-- ====== HEADER ====== -->
+<!-- ====== HEADER (แก้ไขชื่อร้าน/คำโปรย) ====== -->
 <div class="section center" style="border:none;box-shadow:none;background:transparent;">
 
 <div class="logo">
-<img src="logo.jpg" alt="logo"> <!-- เปลี่ยนไฟล์โลโก้ที่นี่ -->
+<img src="logo.jpg" alt="logo">
 </div>
 
-<h1>𝐊𝐨𝐲𝐚𝐧𝐠𝐢 𝜗𝜚˚⋆</h1>
+<h1><input type="text" class="edit-inline" value="𝐊𝐨𝐲𝐚𝐧𝐠𝐢 𝜗𝜚˚⋆"></h1>
 <p style="color:var(--dark);opacity:.8;margin:10px 0 20px;">
-รับออกแบบป้าย ลายน้ำ Google Sheet เว็บไซต์⭐️
+<input type="text" class="edit-inline" value="รับออกแบบป้าย ลายน้ำ Google Sheet เว็บไซต์⭐️">
 </p>
 
 <!-- ส่วน Badges คงไว้ 100% -->
 <div class="badges">
-<div class="badge">🎨 ป้าย/โลโก้</div>
-<div class="badge">📊 Google Sheet</div>
-<div class="badge">🌐 Website</div>
+<div class="badge"><input type="text" class="edit-inline" style="width:80px" value="🎨 ป้าย/โลโก้"></div>
+<div class="badge"><input type="text" class="edit-inline" style="width:100px" value="📊 Google Sheet"></div>
+<div class="badge"><input type="text" class="edit-inline" style="width:80px" value="🌐 Website"></div>
 </div>
 
 <!-- ปุ่มเช็คคิวงานแบบเส้นประ คงไว้ 100% -->
-<a href="https://line.me/ti/p/LfBtdhlrVa" class="btn btn-outline">
-เช็คคิวงาน/สอบถาม ✨
+<a href="#" class="btn btn-outline">
+<input type="text" class="edit-inline" style="color:var(--main)" value="เช็คคิวงาน/สอบถาม ✨">
 </a>
 </div>
 
-<!-- ====== ขั้นตอน (Status Bar / Work Flow) ====== -->
+<!-- ====== ขั้นตอน (แก้ไขเนื้อหาได้) ====== -->
 <div class="section">
-<h2>📋 ขั้นตอนการสั่ง</h2>
+<h2>📋 <input type="text" class="edit-inline" style="width:80%;" value="ขั้นตอนการสั่ง"></h2>
 
-<div class="step"><div class="step-num">1</div><div>กรอกฟอร์ม เขียนรายละเอียดร้านค้า</div></div>
-<div class="step"><div class="step-num">2</div><div>ใส่ลิงก์ตัวอย่างงาน/แนบโลโก้</div></div>
-<div class="step"><div class="step-num">3</div><div>ส่งงานให้เช็ค แจ้งยอด ชำระเงิน</div></div>
-<div class="step"><div class="step-num">4</div><div>รอรับลิงก์ได้เลยค่า</div></div>
+<div class="step"><div class="step-num">1</div><div><input type="text" class="edit-inline" value="กรอกฟอร์ม เขียนรายละเอียดร้านค้า"></div></div>
+<div class="step"><div class="step-num">2</div><div><input type="text" class="edit-inline" value="ใส่ลิงก์ตัวอย่างงาน/แนบโลโก้"></div></div>
+<div class="step"><div class="step-num">3</div><div><input type="text" class="edit-inline" value="ส่งงานให้เช็ค แจ้งยอด ชำระเงิน"></div></div>
+<div class="step"><div class="step-num">4</div><div><input type="text" class="edit-inline" value="รอรับลิงก์ได้เลยค่า"></div></div>
 
-<a href="https://julie-vwb.github.io/pinkjulie-land/" class="btn btn-main">⭐ ดูตัวอย่างงานทั้งหมด</a>
+<a href="#" class="btn btn-main">⭐ <input type="text" class="edit-inline" style="width:150px; color:#fff;" value="ดูตัวอย่างงานทั้งหมด"></a>
 </div>
 
-<!-- ====== รายละเอียด/เงื่อนไข ====== -->
+<!-- ====== รายละเอียด/เงื่อนไข (แก้ไขเนื้อหาได้) ====== -->
 <div class="section">
-<h2>📍 กฎของร้าน & เงื่อนไข</h2>
+<h2>📍 <input type="text" class="edit-inline" style="width:80%;" value="กฎของร้าน & เงื่อนไข"></h2>
 
-<div class="price-row"><span>ระยะเวลารองาน</span><span class="price-tag">4-8 ชม.</span></div>
-<div class="price-row"><span>งานเร่งด่วน</span><span class="price-tag">*2 ของราคา</span></div>
-<p class="small" style="margin-top:15px; text-align:left;">
-• โอนเงินแล้วไม่คืนเงินทุกกรณี<br>
-• ยกเลิกหลังเริ่มงาน คืนเงิน 50%<br>
-• ยกเลิกหลังเช็คงาน = ไม่คืนเงินและส่งงานปกติ
-</p>
+<div class="price-row">
+    <span><input type="text" class="edit-inline" value="ระยะเวลารองาน"></span>
+    <span class="price-tag"><input type="text" class="edit-inline" style="width:60px; color:#fff;" value="4-8 ชม."></span>
+</div>
+<div class="price-row">
+    <span><input type="text" class="edit-inline" value="งานเร่งด่วน"></span>
+    <span class="price-tag"><input type="text" class="edit-inline" style="width:80px; color:#fff;" value="*2 ของราคา"></span>
+</div>
 
-<a href="https://line.me/ti/p/LfBtdhlrVa" class="btn btn-main">สั่งงานคลิกเลย 🎀</a>
+<div style="margin-top:15px;">
+<textarea class="edit-inline small" rows="4" style="text-align:left;">
+• โอนเงินแล้วไม่คืนเงินทุกกรณี
+• ยกเลิกหลังเริ่มงาน คืนเงิน 50%
+• ยกเลิกหลังเช็คงาน = ไม่คืนเงินและส่งงานปกติ</textarea>
+</div>
+
+<a href="#" class="btn btn-main"><input type="text" class="edit-inline" style="width:150px; color:#fff;" value="สั่งงานคลิกเลย 🎀"></a>
 </div>
 
 <!-- ====== ติดต่อ ====== -->
 <div class="footer">
 <div class="socials">
-<a href="https://www.facebook.com/profile.php?id=61554192600355">Facebook</a>
-<a href="https://www.instagram.com/k0yangi_ii">Instagram</a>
-<a href="https://line.me/ti/p/LfBtdhlrVa">LINE</a>
+<a href="#">Facebook</a>
+<a href="#">Instagram</a>
+<a href="#">LINE</a>
 </div>
 
 <p class="small">
-© 2026 𝐊𝐨𝐲𝐚𝐧𝐠𝐢 𝜗𝜚˚⋆
+© 2026 <input type="text" class="edit-inline" style="width:100px" value="𝐊𝐨𝐲𝐚𝐧𝐠𝐢 𝜗𝜚˚⋆">
 </p>
 </div>
-
-<!-- ================================================= -->
-<!-- ================= EDIT AREA END ================= -->
-<!-- ================================================= -->
 
 </div>
 </body>
