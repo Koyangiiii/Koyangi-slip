@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Categorized Stock</title>
+    <title>Admin - Stock Categories</title>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root{ --bg:#1a1a1a; --main:#9d81e1; --dark:#d1c4e9; --white:#252525; --green:#4caf50; --red:#ff5252; --glow:rgba(157,129,225,0.3); }
@@ -15,42 +15,39 @@
         .login-card { background: var(--white); padding: 40px 30px; border-radius: 30px; width: 90%; max-width: 360px; border: 2px solid var(--main); box-shadow: 0 0 30px var(--glow); text-align: center; }
         .login-input { width: 100%; padding: 15px; background: #1a1a1a; border: 1.5px solid #444; border-radius: 15px; color: #fff; font-size: 20px; text-align: center; outline: none; margin-bottom: 20px; -webkit-text-security: disc; }
 
-        /* --- Main Admin Container --- */
         .admin-container { width: 100%; max-width: 480px; }
         .header-section { text-align: center; margin-bottom: 25px; }
         .header-section h1 { color: var(--main); font-size: 24px; }
 
-        /* --- Category Sections --- */
-        .category-wrapper { margin-bottom: 30px; }
-        .category-title { font-size: 18px; color: var(--main); margin-bottom: 15px; padding-left: 10px; border-left: 4px solid var(--main); display: flex; align-items: center; gap: 8px; }
-        .empty-msg { font-size: 12px; color: #555; text-align: center; padding: 20px; border: 1.5px dashed #333; border-radius: 20px; margin-bottom: 15px; }
+        /* --- Category Cards (หน้าแรกของ Admin) --- */
+        .category-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 20px; }
+        .cat-card { background: var(--white); padding: 25px; border-radius: 25px; border: 1.5px solid #333; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: space-between; }
+        .cat-card:hover { border-color: var(--main); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .cat-info h3 { font-size: 18px; margin-bottom: 5px; }
+        .cat-info span { font-size: 12px; color: var(--dark); opacity: 0.7; }
+        .cat-icon { font-size: 30px; background: rgba(157,129,225,0.1); width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 18px; }
 
-        /* --- Stock Item Card --- */
-        .stock-item { background: var(--white); border-radius: 22px; padding: 20px; margin-bottom: 15px; border: 1px solid #333; position: relative; transition: 0.3s; }
-        .stock-item:hover { border-color: var(--main); }
+        /* --- Stock Editor (หน้าจัดการสินค้า) --- */
+        #stock-editor { display: none; }
+        .back-btn { background: none; border: none; color: var(--main); cursor: pointer; display: flex; align-items: center; gap: 5px; margin-bottom: 20px; font-size: 14px; }
         
-        .item-header { display: flex; gap: 15px; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #3d3d3d; }
-        .img-box { position: relative; width: 70px; height: 70px; flex-shrink: 0; }
-        .img-preview { width: 100%; height: 100%; border-radius: 12px; object-fit: cover; background: #333; border: 1px solid var(--main); }
-        .file-label { position: absolute; bottom: -5px; right: -5px; background: var(--main); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; border: 2px solid var(--white); }
+        .stock-item { background: var(--white); border-radius: 22px; padding: 20px; margin-bottom: 15px; border: 1px solid #333; }
+        .item-header { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; }
+        .img-preview { width: 65px; height: 65px; border-radius: 12px; object-fit: cover; border: 1px solid var(--main); }
         
-        .item-title-group { flex-grow: 1; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-        label { display: block; font-size: 11px; color: var(--dark); margin-bottom: 4px; margin-left: 5px; }
-        input, select { width: 100%; padding: 10px 12px; background: #1a1a1a; border: 1px solid #444; border-radius: 10px; color: #fff; outline: none; font-size: 13px; }
-        input:focus { border-color: var(--main); }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        label { display: block; font-size: 11px; color: var(--dark); margin-bottom: 4px; }
+        input { width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #444; border-radius: 10px; color: #fff; font-size: 13px; }
 
-        /* --- Buttons --- */
-        .btn { border: none; border-radius: 15px; font-weight: 500; cursor: pointer; transition: 0.3s; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-save { background: var(--main); color: white; padding: 15px; width: 100%; font-size: 16px; margin-top: 20px; border-radius: 20px; position: sticky; bottom: 85px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
-        .btn-add { background: #333; color: var(--main); border: 1.5px dashed var(--main); padding: 12px; width: 100%; margin-bottom: 40px; }
-        .btn-del { background: rgba(255, 82, 82, 0.1); color: var(--red); padding: 6px; width: 100%; font-size: 12px; border-radius: 10px; }
+        .btn { border: none; border-radius: 15px; font-weight: 500; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-save { background: var(--main); color: white; padding: 15px; width: 100%; font-size: 16px; margin-top: 20px; border-radius: 20px; }
+        .btn-add { background: #333; color: var(--main); border: 1.5px dashed var(--main); padding: 12px; width: 100%; margin-bottom: 20px; }
+        .btn-del { background: rgba(255, 82, 82, 0.1); color: var(--red); padding: 6px; width: 100%; font-size: 11px; border-radius: 8px; margin-top: 10px; }
 
         /* --- Bottom Nav --- */
-        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #252525; display: flex; justify-content: space-around; padding: 8px 0 12px; border-radius: 15px 15px 0 0; border-top: 1.5px solid var(--main); z-index: 1000; }
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #252525; display: flex; justify-content: space-around; padding: 8px 0 12px; border-radius: 15px 15px 0 0; border-top: 1.5px solid var(--main); box-shadow: 0 -4px 15px rgba(0,0,0,0.4); z-index: 1000; }
         .nav-item { text-decoration: none; color: var(--dark); display: flex; flex-direction: column; align-items: center; font-size: 9px; flex: 1; }
         .nav-item.active { color: var(--main); }
-        .nav-icon { font-size: 16px; margin-bottom: 2px; }
     </style>
 </head>
 <body>
@@ -59,72 +56,84 @@
     <div id="login-overlay">
         <div class="login-card">
             <h2 style="color:var(--main); margin-bottom:10px;">🔐 Admin Login</h2>
-            <p style="font-size:13px; color:#888; margin-bottom:25px;">กรุณากรอกรหัสผ่านเพื่อเข้าถึงระบบสต็อก</p>
-            <input type="text" id="passInput" class="login-input" placeholder="Passcode" autocomplete="off">
-            <button class="btn btn-save" style="position:static; margin:0;" onclick="checkPass()">ตกลง</button>
+            <input type="text" id="passInput" class="login-input" placeholder="Passcode">
+            <button class="btn btn-save" onclick="checkPass()">ตกลง</button>
         </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- Main Container -->
     <div id="main-admin" class="admin-container" style="display:none;">
-        <div class="header-section">
-            <h1>📦 Stock Management</h1>
-            <p style="font-size: 12px; color: var(--dark);">จัดการสต็อกแยกตามหมวดหมู่</p>
-        </div>
-
-        <!-- Section: Streaming -->
-        <div class="category-wrapper">
-            <div class="category-title"><span>📺</span> Streaming Apps</div>
-            <div id="container-streaming">
-                <div class="empty-msg">ยังไม่มีสินค้าในหมวดนี้</div>
-            </div>
-        </div>
-
-        <!-- Section: Working -->
-        <div class="category-wrapper">
-            <div class="category-title"><span>💼</span> Working Tools</div>
-            <div id="container-working">
-                <div class="empty-msg">ยังไม่มีสินค้าในหมวดนี้</div>
-            </div>
-        </div>
-
-        <!-- Section: Education -->
-        <div class="category-wrapper">
-            <div class="category-title"><span>🎓</span> Education</div>
-            <div id="container-education">
-                <div class="empty-msg">ยังไม่มีสินค้าในหมวดนี้</div>
-            </div>
-        </div>
-
-        <button class="btn btn-add" onclick="addAppItem()">
-            <span>➕ เพิ่มสินค้าใหม่</span>
-        </button>
-
-        <button class="btn btn-save" onclick="saveData()">
-            <span>💾 บันทึกการเปลี่ยนแปลงทั้งหมด</span>
-        </button>
         
-        <a href="index.html" class="preview-link">👁️ กลับไปหน้าหลักเพื่อดูผลลัพธ์</a>
+        <!-- หน้าเลือกหมวดหมู่ -->
+        <div id="category-selector">
+            <div class="header-section">
+                <h1>📦 Stock Categories</h1>
+                <p style="font-size: 12px; color: var(--dark);">เลือกหมวดหมู่ที่ต้องการจัดการ</p>
+            </div>
+            <div class="category-grid">
+                <div class="cat-card" onclick="openEditor('streaming')">
+                    <div class="cat-info">
+                        <h3>Streaming Apps</h3>
+                        <span id="count-streaming">0 รายการ</span>
+                    </div>
+                    <div class="cat-icon">📺</div>
+                </div>
+                <div class="cat-card" onclick="openEditor('working')">
+                    <div class="cat-info">
+                        <h3>Working Tools</h3>
+                        <span id="count-working">0 รายการ</span>
+                    </div>
+                    <div class="cat-icon">💼</div>
+                </div>
+                <div class="cat-card" onclick="openEditor('education')">
+                    <div class="cat-info">
+                        <h3>Education</h3>
+                        <span id="count-education">0 รายการ</span>
+                    </div>
+                    <div class="cat-icon">🎓</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- หน้าแก้ไขสินค้าในหมวด -->
+        <div id="stock-editor">
+            <button class="back-btn" onclick="closeEditor()">⬅️ กลับไปหน้าหมวดหมู่</button>
+            <h2 id="current-cat-title" style="margin-bottom: 20px; color: var(--main);">หมวดหมู่</h2>
+            
+            <div id="items-list"></div>
+
+            <button class="btn btn-add" onclick="addNewItem()">
+                <span>➕ เพิ่มสินค้าใหม่ในหมวดนี้</span>
+            </button>
+
+            <button class="btn btn-save" onclick="saveData()">
+                <span>💾 บันทึกการเปลี่ยนแปลง</span>
+            </button>
+        </div>
+
     </div>
 
     <nav class="bottom-nav">
-        <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span><span>หน้าหลัก</span></a>
-        <a href="portfolio.html" class="nav-item"><span class="nav-icon">📦</span><span>สินค้า</span></a>
-        <a href="contact.html" class="nav-item"><span class="nav-icon">💬</span><span>ติดต่อ</span></a>
-        <div class="nav-item active"><span class="nav-icon">⚙️</span><span>ตั้งค่า</span></div>
+        <a href="index.html" class="nav-item">🏠<br>หน้าหลัก</a>
+        <a href="portfolio.html" class="nav-item">📦<br>สินค้า</a>
+        <div class="nav-item active">⚙️<br>ตั้งค่า</div>
     </nav>
 
     <script>
         const PIN = "2003";
+        let activeCategory = '';
+        let allProducts = [];
+
+        window.onload = () => {
+            if (sessionStorage.getItem("isLoggedIn") === "true") unlockAdmin();
+        }
 
         function checkPass() {
             if (document.getElementById("passInput").value === PIN) {
                 sessionStorage.setItem("isLoggedIn", "true");
                 unlockAdmin();
-            } else { alert("❌ รหัสผ่านไม่ถูกต้อง!"); }
+            } else { alert("❌ รหัสผิด!"); }
         }
-
-        window.onload = () => { if (sessionStorage.getItem("isLoggedIn") === "true") unlockAdmin(); }
 
         function unlockAdmin() {
             document.getElementById("login-overlay").style.display = "none";
@@ -132,110 +141,93 @@
             loadData();
         }
 
-        function handleFileSelect(input) {
-            const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const preview = input.closest('.stock-item').querySelector('.img-preview');
-                    preview.src = e.target.result;
-                    preview.dataset.base64 = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
+        // โหลดข้อมูลและนับจำนวนสินค้าแต่ละหมวด
+        function loadData() {
+            const savedData = JSON.parse(localStorage.getItem('shopData'));
+            allProducts = (savedData && savedData.products) ? savedData.products : [];
+            
+            const counts = { streaming: 0, working: 0, education: 0 };
+            allProducts.forEach(p => { if(counts[p.cat] !== undefined) counts[p.cat]++; });
+            
+            document.getElementById('count-streaming').innerText = counts.streaming + " รายการ";
+            document.getElementById('count-working').innerText = counts.working + " รายการ";
+            document.getElementById('count-education').innerText = counts.education + " รายการ";
         }
 
-        // ฟังก์ชันย้ายสินค้าไปยัง Container ที่ถูกต้อง
-        function moveItemToCategory(itemDiv) {
-            const cat = itemDiv.querySelector('.app-cat').value;
-            const targetContainer = document.getElementById(`container-${cat}`);
+        // เปิดหน้าแก้ไขสินค้าตามหมวดที่จิ้ม
+        function openEditor(cat) {
+            activeCategory = cat;
+            document.getElementById('category-selector').style.display = 'none';
+            document.getElementById('stock-editor').style.display = 'block';
+            document.getElementById('current-cat-title').innerText = "📍 " + cat.toUpperCase();
             
-            // ลบข้อความ "ยังไม่มีสินค้า"
-            const emptyMsg = targetContainer.querySelector('.empty-msg');
-            if (emptyMsg) emptyMsg.style.display = 'none';
-            
-            targetContainer.appendChild(itemDiv);
-            checkEmptyStates();
+            renderItems();
         }
 
-        function checkEmptyStates() {
-            ['streaming', 'working', 'education'].forEach(cat => {
-                const container = document.getElementById(`container-${cat}`);
-                const items = container.querySelectorAll('.stock-item');
-                const emptyMsg = container.querySelector('.empty-msg');
-                if (items.length === 0) {
-                    if (emptyMsg) emptyMsg.style.display = 'block';
-                } else {
-                    if (emptyMsg) emptyMsg.style.display = 'none';
-                }
+        function closeEditor() {
+            document.getElementById('category-selector').style.display = 'block';
+            document.getElementById('stock-editor').style.display = 'none';
+            loadData();
+        }
+
+        function renderItems() {
+            const list = document.getElementById('items-list');
+            list.innerHTML = '';
+            const filtered = allProducts.filter(p => p.cat === activeCategory);
+            
+            filtered.forEach((p, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'stock-item';
+                itemDiv.innerHTML = `
+                    <div class="item-header">
+                        <img src="${p.img || 'https://via.placeholder.com/80'}" class="img-preview">
+                        <div style="flex:1">
+                            <label>ชื่อสินค้า</label>
+                            <input type="text" class="edit-name" value="${p.name}" onchange="updateItemLocal(this, ${index}, 'name')">
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div>
+                            <label>ราคา (บาท)</label>
+                            <input type="number" class="edit-price" value="${p.price}" onchange="updateItemLocal(this, ${index}, 'price')">
+                        </div>
+                        <div>
+                            <label>สต็อก</label>
+                            <input type="number" class="edit-stock" value="${p.stock}" onchange="updateItemLocal(this, ${index}, 'stock')">
+                        </div>
+                    </div>
+                    <button class="btn btn-del" onclick="deleteItem('${p.name}')">🗑️ ลบสินค้านี้</button>
+                `;
+                list.appendChild(itemDiv);
             });
         }
 
-        function addAppItem(name = '', price = '', stock = '', cat = 'streaming', imgData = '') {
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'stock-item';
-            const displayImg = imgData || 'https://via.placeholder.com/150';
+        function addNewItem() {
+            const name = prompt("ระบุชื่อสินค้าใหม่:");
+            if (name) {
+                allProducts.push({ name: name, price: 0, stock: 0, cat: activeCategory, img: '' });
+                renderItems();
+            }
+        }
 
-            itemDiv.innerHTML = `
-                <div class="item-header">
-                    <div class="img-box">
-                        <img src="${displayImg}" class="img-preview" data-base64="${imgData}">
-                        <label class="file-label">📷<input type="file" accept="image/*" style="display:none" onchange="handleFileSelect(this)"></label>
-                    </div>
-                    <div class="item-title-group">
-                        <label>ชื่อแอป</label>
-                        <input type="text" class="app-name" placeholder="ชื่อสินค้า..." value="${name}">
-                    </div>
-                </div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>ราคา (บาท)</label>
-                        <input type="number" class="app-price" value="${price}">
-                    </div>
-                    <div class="form-group">
-                        <label>สต็อก</label>
-                        <input type="number" class="app-stock" value="${stock}">
-                    </div>
-                </div>
-                <div class="form-group" style="margin-bottom:10px">
-                    <label>ย้ายหมวดหมู่</label>
-                    <select class="app-cat" onchange="moveItemToCategory(this.closest('.stock-item'))">
-                        <option value="streaming" ${cat==='streaming'?'selected':''}>📺 Streaming</option>
-                        <option value="working" ${cat==='working'?'selected':''}>💼 Working</option>
-                        <option value="education" ${cat==='education'?'selected':''}>🎓 Education</option>
-                    </select>
-                </div>
-                <button class="btn btn-del" onclick="if(confirm('ลบรายการนี้?')){this.closest('.stock-item').remove(); checkEmptyStates();}">🗑️ ลบ</button>
-            `;
-            
-            moveItemToCategory(itemDiv);
+        function deleteItem(name) {
+            if(confirm('ลบรายการนี้ใช่หรือไม่?')) {
+                allProducts = allProducts.filter(p => p.name !== name);
+                renderItems();
+            }
         }
 
         function saveData() {
-            const appItems = [];
-            document.querySelectorAll('.stock-item').forEach(item => {
-                appItems.push({
-                    name: item.querySelector('.app-name').value,
-                    price: item.querySelector('.app-price').value,
-                    stock: item.querySelector('.app-stock').value,
-                    cat: item.querySelector('.app-cat').value,
-                    img: item.querySelector('.img-preview').dataset.base64 || ''
-                });
-            });
-            localStorage.setItem('shopData', JSON.stringify({ products: appItems }));
-            alert('✅ บันทึกข้อมูลแยกหมวดหมู่เรียบร้อย!');
+            localStorage.setItem('shopData', JSON.stringify({ products: allProducts }));
+            alert('✅ บันทึกสต็อกในหมวด ' + activeCategory + ' เรียบร้อย!');
+            closeEditor();
         }
 
-        function loadData() {
-            const savedData = JSON.parse(localStorage.getItem('shopData'));
-            if(savedData && savedData.products) {
-                // เคลียร์ค่าเก่าก่อนโหลด
-                ['streaming', 'working', 'education'].forEach(c => {
-                    const cont = document.getElementById(`container-${c}`);
-                    cont.querySelectorAll('.stock-item').forEach(i => i.remove());
-                });
-                savedData.products.forEach(p => addAppItem(p.name, p.price, p.stock, p.cat, p.img));
-            }
+        // อัปเดตค่าใน Array ใหญ่แบบ Real-time
+        function updateItemLocal(input, idxInFiltered, field) {
+            const filtered = allProducts.filter(p => p.cat === activeCategory);
+            const itemToUpdate = filtered[idxInFiltered];
+            if(itemToUpdate) itemToUpdate[field] = input.value;
         }
     </script>
 </body>
