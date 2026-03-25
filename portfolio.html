@@ -39,50 +39,25 @@
         .small{font-size:12px;opacity:.7;margin-top:10px;color:var(--dark);white-space: pre-line;}
 
         /* --- Updated Bottom Navigation Style --- */
-        .bottom-nav { 
-            position: fixed; 
-            bottom: 0; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            width: 100%; 
-            max-width: 500px; 
-            background: #252525; 
-            display: flex; 
-            justify-content: space-around; 
-            padding: 10px 0 12px; 
-            border-radius: 20px 20px 0 0; 
-            border-top: 2px solid var(--main); 
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
-            z-index: 1000; 
-        }
-
-        .nav-item { 
-            text-decoration: none; 
-            color: var(--dark); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center;
-            font-size: 10px; 
-            cursor: pointer; 
-            flex: 1; 
-            transition: 0.3s;
-            border: none;
-            background: none;
-            gap: 4px; 
-        }
-
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; background: #252525; display: flex; justify-content: space-around; padding: 10px 0 12px; border-radius: 20px 20px 0 0; border-top: 2px solid var(--main); box-shadow: 0 -5px 20px rgba(0,0,0,0.5); z-index: 1000; }
+        .nav-item { text-decoration: none; color: var(--dark); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; flex: 1; transition: 0.3s; border: none; background: none; gap: 4px; }
         .nav-item.active { color: var(--main); }
         .nav-icon { font-size: 18px; }
 
         /* --- Login Modal --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
         .modal-content { background: var(--white); border: 2px solid var(--main); border-radius: 25px; padding: 30px; width: 100%; max-width: 350px; text-align: center; }
-        .modal-content input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #333; color: #fff; text-align: center; font-size: 18px; margin-bottom: 20px; outline: none; }
         .modal-btns { display: flex; gap: 10px; }
         .btn-modal { flex: 1; padding: 12px; border-radius: 15px; border: none; cursor: pointer; font-family: 'Mitr'; }
         .btn-confirm { background: var(--main); color: #fff; }
         .btn-cancel { background: #444; color: #ccc; }
+
+        /* สไตล์ Input ที่ปรับปรุงใหม่ */
+        #adminPassInput {
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #333; color: #fff; 
+            outline: none; margin-bottom: 20px;
+            -webkit-text-security: disc; text-align: center; font-size: 24px; letter-spacing: 10px;
+        }
     </style>
 </head>
 <body>
@@ -106,7 +81,6 @@
     </div>
 </div>
 
-<!-- โครงสร้าง Bottom Nav ใหม่ตามคำขอ -->
 <nav class="bottom-nav">
     <a href="index.html" class="nav-item active">
         <span class="nav-icon">🏠</span>
@@ -130,7 +104,17 @@
     <div class="modal-content">
         <h3>🔐 Admin Login</h3>
         <p style="font-size: 12px; color: var(--dark); margin-bottom: 15px;">กรุณากรอกรหัสผ่านเพื่อเข้าสู่โหมดจัดการ</p>
-        <input type="text" id="adminPassInput" autocomplete="off" style="-webkit-text-security: disc;"> 
+        
+        <!-- ปรับแท็กตามคำขอ -->
+        <input type="tel" id="adminPassInput" 
+               placeholder="••••" 
+               maxlength="4" 
+               inputmode="numeric" 
+               autocomplete="off" 
+               autocorrect="off" 
+               autocapitalize="off" 
+               spellcheck="false"> 
+
         <div class="modal-btns">
             <button class="btn-modal btn-cancel" onclick="closeModal()">ยกเลิก</button>
             <button class="btn-modal btn-confirm" onclick="checkAdminPass()">ตกลง</button>
@@ -147,6 +131,7 @@
         { id: 'education', title: 'Education', icon: '🎓' }
     ];
 
+    // โหลดข้อมูลสินค้า
     const savedData = JSON.parse(localStorage.getItem('shopData'));
     if(savedData) {
         document.getElementById('disp-name').innerText = savedData.name || "Premium Store";
@@ -178,14 +163,46 @@
         });
     }
 
-    function openAdminModal() { document.getElementById('loginModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('loginModal').style.display = 'none'; }
+    /* --- ฟังก์ชันตรวจสอบรหัส --- */
     function checkAdminPass() {
-        if (document.getElementById('adminPassInput').value === PIN) {
+        const inputField = document.getElementById('adminPassInput');
+        const inputVal = inputField.value;
+
+        if (inputVal === PIN) {
             sessionStorage.setItem("isLoggedIn", "true");
             window.location.href = "admin.html";
-        } else { alert("❌ รหัสผิด!"); }
+        } else {
+            alert("❌ รหัสผ่านไม่ถูกต้อง!");
+            inputField.value = '';
+            inputField.focus(); 
+        }
     }
+
+    /* --- ฟังก์ชันเปิด Modal --- */
+    function openAdminModal() {
+        sessionStorage.removeItem("isLoggedIn"); 
+        document.getElementById('loginModal').style.display = 'flex';
+        
+        const input = document.getElementById('adminPassInput');
+        input.value = ''; 
+        
+        setTimeout(() => {
+            input.focus();
+        }, 200);
+    }
+
+    function closeModal() {
+        document.getElementById('loginModal').style.display = 'none';
+        document.getElementById('adminPassInput').value = '';
+    }
+
+    /* --- ดักจับการกด Enter --- */
+    document.getElementById('adminPassInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); 
+            checkAdminPass();
+        }
+    });
 </script>
 </body>
 </html>
