@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Manage Premium Store</title>
+    <title>Admin - Manage Stock Only</title>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root{ --bg:#1a1a1a; --main:#9d81e1; --dark:#d1c4e9; --white:#252525; --green:#4caf50; }
@@ -46,26 +46,19 @@
     <!-- Main Content -->
     <div id="main-admin" style="display:none; width: 100%; max-width: 500px;">
         <div class="admin-card">
-            <h2>🏠 ข้อมูลร้านค้า</h2>
-            <div class="form-group"><label>ชื่อร้าน</label><input type="text" id="shopName"></div>
-            <div class="form-group"><label>ลิงก์ LINE (สำหรับกดซื้อ)</label><input type="text" id="lineLink"></div>
-            <div class="form-group"><label>เงื่อนไข/กฎของร้าน</label><textarea id="shopRules" rows="3"></textarea></div>
-        </div>
-
-        <div class="admin-card">
             <h2>📦 จัดการสินค้า (สต็อก)</h2>
             <div id="stock-container">
-                <!-- รายการสินค้าจะงอกที่นี่ -->
+                <!-- รายการสินค้าจะแสดงที่นี่ -->
             </div>
             <button class="add-btn" onclick="addAppItem()">➕ เพิ่มสินค้าใหม่</button>
-            <button onclick="saveData()">💾 บันทึกข้อมูลทั้งหมด</button>
-            <a href="index.html" class="preview-btn">👁️ ไปหน้าบ้าน</a>
+            <button onclick="saveData()">💾 บันทึกสต็อกสินค้า</button>
+            <a href="index.html" class="preview-btn">👁️ กลับหน้าหลัก</a>
         </div>
     </div>
 
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item"><span>🏠</span><span>หน้าหลัก</span></a>
-        <a href="#" class="nav-item active"><span>⚙️</span><span>ตั้งค่า</span></a>
+        <a href="#" class="nav-item active"><span>⚙️</span><span>ตั้งค่าสินค้า</span></a>
     </nav>
 
     <script>
@@ -88,7 +81,6 @@
             loadData();
         }
 
-        // เพิ่มช่องกรอกสินค้าใหม่
         function addAppItem(name = '', price = '', stock = '', cat = 'streaming') {
             const container = document.getElementById('stock-container');
             const itemDiv = document.createElement('div');
@@ -123,26 +115,22 @@
                 });
             });
 
-            const data = {
-                name: document.getElementById('shopName').value,
-                line: document.getElementById('lineLink').value,
-                rules: document.getElementById('shopRules').value,
-                products: appItems
-            };
+            // ดึงข้อมูลเดิมที่มีอยู่ (เช่น ชื่อร้าน, ลิงก์ไลน์) มาก่อนเพื่อไม่ให้หายไป
+            let existingData = JSON.parse(localStorage.getItem('shopData')) || {};
+            
+            // อัปเดตเฉพาะส่วน products
+            existingData.products = appItems;
 
-            localStorage.setItem('shopData', JSON.stringify(data));
-            alert('บันทึกข้อมูลและสต็อกเรียบร้อย!');
+            localStorage.setItem('shopData', JSON.stringify(existingData));
+            alert('บันทึกข้อมูลสต็อกเรียบร้อยแล้ว!');
         }
 
         function loadData() {
             const savedData = JSON.parse(localStorage.getItem('shopData'));
-            if(savedData) {
-                document.getElementById('shopName').value = savedData.name || '';
-                document.getElementById('lineLink').value = savedData.line || '';
-                document.getElementById('shopRules').value = savedData.rules || '';
-                if(savedData.products) {
-                    savedData.products.forEach(p => addAppItem(p.name, p.price, p.stock, p.cat));
-                }
+            if(savedData && savedData.products) {
+                const container = document.getElementById('stock-container');
+                container.innerHTML = ''; // ล้างข้อมูลเก่าก่อนโหลด
+                savedData.products.forEach(p => addAppItem(p.name, p.price, p.stock, p.cat));
             }
         }
     </script>
