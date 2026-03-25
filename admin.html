@@ -6,137 +6,133 @@
     <title>Admin - Stock Management</title>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        :root{ --bg:#1a1a1a; --main:#9d81e1; --dark:#d1c4e9; --white:#252525; --green:#4caf50; }
+        :root{ --bg:#1a1a1a; --main:#9d81e1; --dark:#d1c4e9; --white:#252525; --green:#4caf50; --glow:rgba(157,129,225,0.3); }
         body { background: var(--bg); color: #fff; font-family: 'Mitr', sans-serif; padding: 20px 20px 100px; display: flex; justify-content: center; }
         
-        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        .admin-card { background: var(--white); padding: 25px; border-radius: 20px; width: 100%; max-width: 500px; border: 1px solid var(--main); box-shadow: 0 8px 20px rgba(0,0,0,0.3); margin-bottom: 20px; }
+        /* --- สไตล์ Modal Login ใหม่ --- */
+        #login-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+            z-index: 9999; display: flex; justify-content: center; align-items: center; 
+        }
+        .login-card { 
+            background: var(--white); padding: 40px 30px; border-radius: 30px; 
+            width: 90%; max-width: 380px; border: 2px solid var(--main); 
+            box-shadow: 0 0 30px var(--glow); text-align: center;
+            animation: modalShow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes modalShow {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .login-card h1 { font-size: 24px; margin-bottom: 10px; }
+        .login-card p { font-size: 13px; color: var(--dark); margin-bottom: 25px; opacity: 0.8; }
         
-        h1, h2 { color: var(--main); text-align: center; margin-bottom: 20px; }
-        h2 { font-size: 18px; text-align: left; border-bottom: 1px solid #444; padding-bottom: 10px; }
+        .login-input { 
+            width: 100%; padding: 15px; background: #1a1a1a; border: 1.5px solid #444; 
+            border-radius: 15px; color: #fff; font-size: 18px; text-align: center;
+            letter-spacing: 5px; outline: none; transition: 0.3s; margin-bottom: 20px;
+        }
+        .login-input:focus { border-color: var(--main); box-shadow: 0 0 10px var(--glow); }
+
+        /* --- ส่วนจัดการสต็อก --- */
+        .admin-card { background: var(--white); padding: 25px; border-radius: 20px; width: 100%; max-width: 500px; border: 1px solid var(--main); box-shadow: 0 8px 20px rgba(0,0,0,0.3); margin-bottom: 20px; }
+        h2 { font-size: 18px; text-align: left; border-bottom: 1px solid #444; padding-bottom: 10px; color: var(--main); margin-bottom: 20px; }
 
         .form-group { margin-bottom: 15px; }
         label { display: block; font-size: 13px; margin-bottom: 5px; color: var(--dark); }
-        input, textarea, select { width: 100%; padding: 12px; background: #333; border: 1px solid #444; border-radius: 10px; color: #fff; font-family: inherit; outline: none; }
+        input, select { width: 100%; padding: 12px; background: #333; border: 1px solid #444; border-radius: 10px; color: #fff; font-family: inherit; outline: none; }
         
-        .stock-item { background: #1e1e1e; padding: 15px; border-radius: 15px; margin-bottom: 10px; border: 1px dashed #555; position: relative; }
+        .stock-item { background: #1e1e1e; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px dashed #555; position: relative; }
         .row { display: flex; gap: 10px; margin-bottom: 10px; }
         
         .upload-container { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; background: #2a2a2a; padding: 10px; border-radius: 12px; }
-        .img-preview { width: 80px; height: 80px; border-radius: 10px; background: #333; object-fit: cover; border: 1px solid var(--main); }
-        .file-input-label { background: var(--main); padding: 8px 15px; border-radius: 8px; font-size: 12px; cursor: pointer; display: inline-block; }
+        .img-preview { width: 70px; height: 70px; border-radius: 10px; background: #333; object-fit: cover; border: 1px solid var(--main); }
+        .file-input-label { background: var(--main); padding: 8px 15px; border-radius: 8px; font-size: 12px; cursor: pointer; }
         input[type="file"] { display: none; }
 
-        button { width: 100%; padding: 15px; background: var(--main); border: none; border-radius: 25px; color: #fff; font-weight: 500; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        button { width: 100%; padding: 15px; background: var(--main); border: none; border-radius: 25px; color: #fff; font-weight: 500; cursor: pointer; transition: 0.3s; }
+        button:active { transform: scale(0.98); }
         .add-btn { background: var(--green); margin-bottom: 20px; padding: 10px; font-size: 14px; }
-        .del-btn { background: #ff5252; padding: 8px; font-size: 12px; margin-top: 5px; width: auto; display: inline-block; }
-        .preview-btn { background: transparent; border: 2px solid var(--main); color: var(--main); text-decoration: none; display: block; text-align: center; margin-top: 10px; padding: 12px; border-radius: 25px; }
+        .del-btn { background: #ff5252; padding: 6px 12px; font-size: 11px; width: auto; margin-top: 5px; border-radius: 10px; }
+        .preview-btn { background: transparent; border: 2px solid var(--main); color: var(--main); text-decoration: none; display: block; text-align: center; margin-top: 15px; padding: 12px; border-radius: 25px; font-size: 14px; }
 
-        .bottom-nav { 
-            position: fixed; 
-            bottom: 0; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            width: 100%; 
-            max-width: 450px; 
-            background: #252525; 
-            display: flex; 
-            justify-content: space-around; 
-            padding: 8px 0 12px; 
-            border-radius: 15px 15px 0 0; 
-            border-top: 1.5px solid var(--main); 
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.4); 
-            z-index: 1000; 
-        }
-
-        .nav-item { 
-            text-decoration: none; 
-            color: var(--dark); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            font-size: 9px; 
-            cursor: pointer; 
-            flex: 1; 
-            background: none;
-            border: none;
-            outline: none;
-        }
-
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 450px; background: #252525; display: flex; justify-content: space-around; padding: 8px 0 12px; border-radius: 15px 15px 0 0; border-top: 1.5px solid var(--main); z-index: 1000; }
+        .nav-item { text-decoration: none; color: var(--dark); display: flex; flex-direction: column; align-items: center; font-size: 9px; flex: 1; }
         .nav-item.active { color: var(--main); }
         .nav-icon { font-size: 16px; margin-bottom: 2px; }
     </style>
 </head>
 <body>
 
-    <!-- ล็อกอิน -->
+    <!-- ล็อกอินแบบ Modal เข้าธีม -->
     <div id="login-overlay">
-        <div class="admin-card">
-            <h1>🔐 Admin Login</h1>
-            <input type="password" id="passInput" placeholder="Password">
-            <button onclick="checkPass()">ตกลง</button>
+        <div class="login-card">
+            <h1>🔐 Admin Access</h1>
+            <p>กรุณากรอกรหัสผ่านเพื่อจัดการสต็อกสินค้า</p>
+            <input type="password" id="passInput" class="login-input" placeholder="••••" autofocus>
+            <button onclick="checkPass()">เข้าสู่ระบบ</button>
         </div>
     </div>
 
     <!-- ส่วนจัดการสต็อก -->
     <div id="main-admin" style="display:none; width: 100%; max-width: 500px;">
         <div class="admin-card">
-            <h2>📦 จัดการสินค้า (อัปโหลดรูป)</h2>
+            <h2>📦 จัดการสต็อกสินค้า</h2>
             <div id="stock-container"></div>
-            <button class="add-btn" onclick="addAppItem()">➕ เพิ่มสินค้าใหม่</button>
-            <button onclick="saveData()">💾 บันทึกสต็อกสินค้า</button>
-            <a href="index.html" class="preview-btn">👁️ กลับหน้าหลัก</a>
+            <button class="add-btn" onclick="addAppItem()">➕ เพิ่มรายการสินค้า</button>
+            <button onclick="saveData()">💾 บันทึกข้อมูลทั้งหมด</button>
+            <a href="index.html" class="preview-btn">👁️ ดูหน้าเว็บจริง</a>
         </div>
     </div>
 
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item">
-            <span class="nav-icon">🏠</span>
-            <span>หน้าหลัก</span>
+            <span class="nav-icon">🏠</span><span>หน้าหลัก</span>
         </a>
         <a href="portfolio.html" class="nav-item">
-            <span class="nav-icon">📦</span>
-            <span>สินค้า</span>
+            <span class="nav-icon">📦</span><span>สินค้า</span>
         </a>
         <a href="contact.html" class="nav-item">
-            <span class="nav-icon">💬</span>
-            <span>ติดต่อ</span>
+            <span class="nav-icon">💬</span><span>ติดต่อ</span>
         </a>
-        <div class="nav-item active" onclick="checkAdminAccess()">
-            <span class="nav-icon">⚙️</span>
-            <span>ตั้งค่า</span>
+        <div class="nav-item active">
+            <span class="nav-icon">⚙️</span><span>ตั้งค่า</span>
         </div>
     </nav>
 
     <script>
         const PIN = "2003";
 
+        // เช็คสถานะล็อกอินเมื่อเปิดหน้า
         window.onload = function() {
             if (sessionStorage.getItem("isLoggedIn") === "true") unlockAdmin();
         }
 
+        // ฟังก์ชันตรวจสอบรหัสผ่าน
         function checkPass() {
-            if (document.getElementById("passInput").value === PIN) {
+            const input = document.getElementById("passInput");
+            if (input.value === PIN) {
                 sessionStorage.setItem("isLoggedIn", "true");
                 unlockAdmin();
             } else { 
-                alert("❌ Password Incorrect!"); 
-                document.getElementById("passInput").value = "";
+                input.style.borderColor = "#ff5252";
+                input.style.boxShadow = "0 0 10px rgba(255,82,82,0.3)";
+                alert("❌ รหัสผ่านไม่ถูกต้อง!"); 
+                input.value = "";
+                input.focus();
             }
         }
+
+        // กด Enter เพื่อล็อกอินได้
+        document.getElementById("passInput").addEventListener("keyup", function(event) {
+            if (event.key === "Enter") checkPass();
+        });
 
         function unlockAdmin() {
             document.getElementById("login-overlay").style.display = "none";
             document.getElementById("main-admin").style.display = "block";
             loadData();
-        }
-
-        function checkAdminAccess() {
-            if (sessionStorage.getItem("isLoggedIn") === "true") {
-                location.reload();
-            } else {
-                document.getElementById("login-overlay").style.display = "flex";
-            }
         }
 
         function handleFileSelect(input) {
@@ -162,15 +158,15 @@
                 <div class="upload-container">
                     <img src="${displayImg}" class="img-preview" data-base64="${imgData}">
                     <div>
-                        <label class="file-input-label">📸 เลือกรูปภาพ
+                        <label class="file-input-label">📸 เปลี่ยนรูป
                             <input type="file" accept="image/*" onchange="handleFileSelect(this)">
                         </label>
                     </div>
                 </div>
-                <div class="form-group"><label>ชื่อแอป</label><input type="text" class="app-name" value="${name}"></div>
+                <div class="form-group"><label>ชื่อสินค้า</label><input type="text" class="app-name" value="${name}"></div>
                 <div class="row">
-                    <div><label>ราคา</label><input type="text" class="app-price" value="${price}"></div>
-                    <div><label>สต็อก</label><input type="number" class="app-stock" value="${stock}"></div>
+                    <div><label>ราคา (บาท)</label><input type="text" class="app-price" value="${price}"></div>
+                    <div><label>จำนวนสต็อก</label><input type="number" class="app-stock" value="${stock}"></div>
                 </div>
                 <div class="form-group">
                     <label>หมวดหมู่</label>
@@ -203,9 +199,9 @@
 
             try {
                 localStorage.setItem('shopData', JSON.stringify(existingData));
-                alert('✅ บันทึกเรียบร้อย!');
+                alert('✅ บันทึกสต็อกเรียบร้อยแล้ว!');
             } catch (e) {
-                alert('❌ พื้นที่เต็ม! แนะนำให้ลดขนาดไฟล์รูปภาพ');
+                alert('❌ พื้นที่เต็ม! กรุณาลดขนาดไฟล์รูปภาพ');
             }
         }
 
