@@ -3,129 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Store</title>
+    <title>Premium App Store</title>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root{ --bg:#1a1a1a; --main:#9d81e1; --dark:#d1c4e9; --white:#252525; --glow:rgba(157,129,225,0.3); --green:#4caf50; --red:#ff5252; }
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Mitr',sans-serif;}
         body{background:var(--bg);display:flex;justify-content:center;color:#efefef;}
+
         .container{ max-width:500px; width:100%; padding:20px 15px 100px; }
 
-        /* Category Tabs */
-        .category-wrapper { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 10px; scrollbar-width: none; }
-        .tab { background: var(--white); color: var(--dark); padding: 8px 20px; border-radius: 20px; white-space: nowrap; cursor: pointer; border: 1px solid #444; font-size: 14px; }
-        .tab.active { background: var(--main); color: #fff; border-color: var(--main); }
+        .section{background:var(--white);border-radius:20px;padding:25px 20px;margin-bottom:20px;box-shadow:0 8px 20px rgba(0,0,0,0.3);border:2px solid var(--main);}
+        h1,h2,h3{color:var(--main);}
+        .center{text-align:center;}
+        
+        .logo{width:120px;height:120px;border-radius:30px;overflow:hidden;margin:0 auto 20px;box-shadow:0 6px 20px var(--glow);border:2px solid var(--main);}
+        .logo img{width:100%;height:100%;object-fit:cover;}
 
-        /* App Card */
-        .section{background:var(--white);border-radius:20px;padding:20px;margin-bottom:20px;border:1px solid var(--main);}
-        .app-card { background: #2d2d2d; border-radius: 15px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; border-left: 4px solid var(--main); }
-        .app-icon { width: 50px; height: 50px; border-radius: 12px; background: #3d3d3d; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-right: 15px; }
-        .app-details { flex-grow: 1; }
-        .app-name { font-weight: 500; font-size: 15px; color: #fff; display: block; }
+        /* App Card สไตล์ใหม่ที่ดึงข้อมูลจาก JS */
+        #app-list-container { margin-top: 15px; }
+        .app-item {
+            display: flex;
+            align-items: center;
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 18px;
+            margin-bottom: 12px;
+            border: 1px solid transparent;
+            transition: 0.3s;
+        }
+        .app-icon { width: 50px; height: 50px; border-radius: 12px; margin-right: 15px; background: #3d3d3d; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .app-info { flex-grow: 1; }
+        .app-name { font-weight: 500; font-size: 16px; color: #fff; display: block; }
         .app-price { color: var(--main); font-size: 14px; font-weight: bold; }
-        .stock-status { font-size: 11px; margin-top: 4px; display: flex; align-items: center; gap: 5px; }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .stock-tag { font-size: 11px; color: var(--green); margin-top: 2px; }
+        
+        /* สถานะสินค้าหมด */
+        .out-of-stock { opacity: 0.6; filter: grayscale(0.8); }
+        .out-of-stock .stock-tag { color: var(--red); }
+        .btn-buy { background: var(--main); color: #fff; padding: 6px 15px; border-radius: 20px; text-decoration: none; font-size: 13px; font-weight: 500; }
+        .btn-out { background: #555; }
 
-        .btn-buy { background: var(--main); color: #fff; padding: 8px 18px; border-radius: 20px; text-decoration: none; font-size: 13px; font-weight: 500; }
-        .out-of-stock { opacity: 0.5; filter: grayscale(1); pointer-events: none; }
+        .btn-main{display:block;text-align:center;padding:14px;border-radius:25px;text-decoration:none;margin-top:15px;font-weight:500; background:var(--main);color:#fff;}
+        .small{font-size:12px;opacity:.7;margin-top:10px;color:var(--dark);white-space: pre-line;}
 
-        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; background: #252525; display: flex; justify-content: space-around; padding: 12px 0; border-top: 2px solid var(--main); }
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; background: #252525; display: flex; justify-content: space-around; padding: 12px 0; border-top: 2px solid var(--main); z-index: 1000; }
         .nav-item { text-decoration: none; color: var(--dark); display: flex; flex-direction: column; align-items: center; font-size: 11px; }
         .nav-item.active { color: var(--main); }
+        .nav-icon { font-size: 20px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="center" style="text-align:center; margin-bottom: 25px;">
-        <h1 id="disp-name" style="color:var(--main);">Premium Store</h1>
-        <p id="disp-slogan" style="font-size: 13px; opacity: 0.8;">กำลังโหลดข้อมูล...</p>
+    <!-- HEADER -->
+    <div class="section center" style="border:none;box-shadow:none;background:transparent; padding-top: 10px;">
+        <div class="logo"><img src="https://via.placeholder.com/150" alt="logo" id="disp-logo"></div>
+        <h1 id="disp-name">Premium Store</h1>
+        <p id="disp-slogan" style="color:var(--dark);opacity:.8;margin:5px 0 15px;">แหล่งรวมแอปพรีเมียม ราคาถูก พร้อมประกัน</p>
     </div>
 
-    <div class="category-wrapper">
-        <div class="tab active" onclick="filterApp('all', this)">ทั้งหมด</div>
-        <div class="tab" onclick="filterApp('streaming', this)">Streaming</div>
-        <div class="tab" onclick="filterApp('working', this)">Working</div>
-        <div class="tab" onclick="filterApp('education', this)">Education</div>
-    </div>
-
-    <div id="app-list-container">
-        <!-- ข้อมูลสินค้าจะถูกสร้างจาก JavaScript ตรงนี้ -->
-    </div>
-
+    <!-- รายการแอป (ดึงข้อมูลจาก Admin) -->
     <div class="section">
-        <h2 style="font-size: 16px; color:var(--main); margin-bottom:10px;">📍 เงื่อนไขร้านค้า</h2>
-        <p id="disp-rules" style="font-size: 12px; color: var(--dark); white-space: pre-line;"></p>
+        <h2 style="margin-bottom: 15px; font-size: 18px;">🔥 รายการสินค้าพร้อมส่ง</h2>
+        <div id="app-list-container">
+            <!-- ข้อมูลจะถูกฉีดเข้าตรงนี้จาก JavaScript -->
+            <p style="text-align:center; font-size:14px; color:#888;">กำลังโหลดสินค้า...</p>
+        </div>
+    </div>
+
+    <!-- กฎ/เงื่อนไข -->
+    <div class="section">
+        <h2>📍 เงื่อนไขการรับประกัน</h2>
+        <p id="disp-rules" class="small" style="text-align:left;"></p>
+        <a id="link-line-btn" href="#" class="btn-main">แจ้งปัญหา / สอบถามเพิ่มเติม 💬</a>
+    </div>
+
+    <div class="footer" style="padding-bottom: 20px; text-align: center;">
+        <p class="small">© 2026 <span id="disp-footer-name"></span><br>ขอบคุณที่ใช้บริการค่ะ</p>
     </div>
 </div>
 
 <nav class="bottom-nav">
-    <a href="index.html" class="nav-item active"><span>🏠</span><span>หน้าหลัก</span></a>
-    <a href="admin.html" class="nav-item"><span>⚙️</span><span>ตั้งค่า</span></a>
+    <a href="index.html" class="nav-item active"><span class="nav-icon">🏠</span><span>หน้าหลัก</span></a>
+    <a href="portfolio.html" class="nav-item"><span class="nav-icon">📦</span><span>สินค้า</span></a>
+    <a href="contact.html" class="nav-item"><span class="nav-icon">💬</span><span>ติดต่อ</span></a>
+    <a href="admin.html" class="nav-item"><span class="nav-icon">⚙️</span><span>ตั้งค่า</span></a>
 </nav>
 
 <script>
-    let allProducts = [];
+    // 1. ดึงข้อมูลจาก LocalStorage ที่บันทึกมาจากหน้า Admin
+    const savedData = JSON.parse(localStorage.getItem('shopData'));
 
-    function renderProducts(filter = 'all') {
+    if(savedData) {
+        // อัปเดตข้อมูลทั่วไป
+        document.getElementById('disp-name').innerText = savedData.name || "Premium Store";
+        document.getElementById('disp-footer-name').innerText = savedData.name || 'Store';
+        document.getElementById('disp-slogan').innerText = savedData.slogan || "";
+        document.getElementById('disp-rules').innerText = savedData.rules || "";
+        document.getElementById('link-line-btn').href = savedData.line || '#';
+
+        // 2. ฟังก์ชันแสดงรายการสินค้า
         const container = document.getElementById('app-list-container');
-        container.innerHTML = ''; // ล้างค่าเก่า
+        container.innerHTML = ''; // ล้างข้อความ "กำลังโหลด"
 
-        const filtered = filter === 'all' ? allProducts : allProducts.filter(p => p.cat === filter);
+        if(savedData.products && savedData.products.length > 0) {
+            savedData.products.forEach(product => {
+                const isOut = parseInt(product.stock) <= 0;
+                
+                // กำหนด Emoji ตามหมวดหมู่
+                let icon = '📦';
+                if(product.cat === 'streaming') icon = '🎬';
+                if(product.cat === 'working') icon = '💼';
+                if(product.cat === 'education') icon = '📚';
 
-        if (filtered.length === 0) {
-            container.innerHTML = '<p style="text-align:center; opacity:0.5; padding:20px;">ไม่มีสินค้าในหมวดนี้</p>';
-            return;
-        }
-
-        filtered.forEach(product => {
-            const isOut = parseInt(product.stock) <= 0;
-            const card = document.createElement('div');
-            card.className = `app-item ${isOut ? 'out-of-stock' : ''}`;
-            
-            // สุ่ม Emoji ตามหมวดหมู่ถ้าไม่มีรูป
-            const icons = { streaming: '🎬', working: '🎨', education: '📚' };
-            const icon = icons[product.cat] || '📦';
-
-            card.innerHTML = `
-                <div class="app-card">
-                    <div class="app-icon">${icon}</div>
-                    <div class="app-details">
-                        <span class="app-name">${product.name}</span>
-                        <span class="app-price">${isOut ? 'สินค้าหมด' : product.price + '.-'}</span>
-                        <div class="stock-status">
-                            <div class="status-dot" style="background: ${isOut ? 'var(--red)' : 'var(--green)'};"></div>
-                            <span style="color:${isOut ? 'var(--red)' : 'var(--green)'}">${isOut ? 'Out of Stock' : 'คงเหลือ ' + product.stock + ' ชิ้น'}</span>
+                const itemHTML = `
+                    <div class="app-item ${isOut ? 'out-of-stock' : ''}">
+                        <div class="app-icon">${icon}</div>
+                        <div class="app-info">
+                            <span class="app-name">${product.name}</span>
+                            <span class="app-price">${product.price}.-</span>
+                            <div class="stock-tag">
+                                ${isOut ? '❌ สินค้าหมด' : '✅ ในสต็อก: ' + product.stock + ' ชิ้น'}
+                            </div>
                         </div>
+                        <a href="${isOut ? '#' : savedData.line}" class="btn-buy ${isOut ? 'btn-out' : ''}">
+                            ${isOut ? 'หมด' : 'สั่งซื้อ'}
+                        </a>
                     </div>
-                    <a href="${document.getElementById('link-line-main')?.href || '#'}" class="btn-buy">${isOut ? 'หมด' : 'สั่งซื้อ'}</a>
-                </div>
-            `;
-            container.appendChild(card);
-        });
-    }
-
-    function filterApp(cat, el) {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        el.classList.add('active');
-        renderProducts(cat);
-    }
-
-    // โหลดข้อมูลจาก LocalStorage
-    window.onload = function() {
-        const savedData = JSON.parse(localStorage.getItem('shopData'));
-        if(savedData) {
-            document.getElementById('disp-name').innerText = savedData.name || 'Premium Store';
-            document.getElementById('disp-slogan').innerText = savedData.slogan || 'แอปพรีเมียมราคาถูก';
-            document.getElementById('disp-rules').innerText = savedData.rules || '';
-            allProducts = savedData.products || [];
-            
-            // ตั้งค่าลิงก์ Line ให้ปุ่มสั่งซื้อในอนาคต
-            window.lineLink = savedData.line || '#';
-            
-            renderProducts();
+                `;
+                container.innerHTML += itemHTML;
+            });
+        } else {
+            container.innerHTML = '<p style="text-align:center; font-size:14px; color:#888;">ยังไม่มีสินค้าในขณะนี้</p>';
         }
-    };
+    }
 </script>
 
 </body>
