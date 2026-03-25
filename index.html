@@ -19,7 +19,7 @@
         .logo img{width:100%;height:100%;object-fit:cover;}
 
         #app-list-container { margin-top: 15px; }
-        .app-item { display: flex; align-items: center; background: #2d2d2d; padding: 15px; border-radius: 18px; margin-bottom: 12px; transition: 0.3s; }
+        .app-item { display: flex; align-items: center; background: #2d2d2d; padding: 15px; border-radius: 18px; margin-bottom: 12px; border: 1px solid transparent; transition: 0.3s; }
         .app-icon { width: 55px; height: 55px; border-radius: 12px; margin-right: 15px; background: #3d3d3d; display: flex; align-items: center; justify-content: center; font-size: 24px; overflow: hidden; }
         .app-icon img { width: 100%; height: 100%; object-fit: cover; }
         .app-info { flex-grow: 1; }
@@ -42,19 +42,15 @@
 
         /* --- Admin Login Modal Style --- */
         .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
-            display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px;
         }
         .modal-content {
-            background: var(--white); border: 2px solid var(--main); border-radius: 25px; padding: 30px; 
-            width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 40px var(--glow);
-            animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: var(--white); border: 2px solid var(--main); border-radius: 25px; padding: 30px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 40px var(--glow); animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         @keyframes modalPop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .modal-content h3 { margin-bottom: 15px; }
         .modal-content input {
-            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #333; color: #fff;
-            text-align: center; font-size: 18px; margin-bottom: 20px; outline: none;
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #333; color: #fff; text-align: center; font-size: 18px; margin-bottom: 20px; outline: none;
         }
         .modal-btns { display: flex; gap: 10px; }
         .btn-modal { flex: 1; padding: 12px; border-radius: 15px; border: none; cursor: pointer; font-family: 'Mitr'; font-weight: 500; }
@@ -89,8 +85,7 @@
     <a href="index.html" class="nav-item active"><span class="nav-icon">🏠</span><span>หน้าหลัก</span></a>
     <a href="portfolio.html" class="nav-item"><span class="nav-icon">📦</span><span>สินค้า</span></a>
     <a href="contact.html" class="nav-item"><span class="nav-icon">💬</span><span>ติดต่อ</span></a>
-    <!-- แก้ไขปุ่มตั้งค่าให้เรียกใช้ฟังก์ชันเช็ครหัส -->
-    <div onclick="handleAdminClick()" class="nav-item"><span class="nav-icon">⚙️</span><span>ตั้งค่า</span></div>
+    <div onclick="openAdminModal()" class="nav-item"><span class="nav-icon">⚙️</span><span>ตั้งค่า</span></div>
 </nav>
 
 <!-- Modal สำหรับกรอกรหัสผ่าน Admin -->
@@ -107,41 +102,43 @@
 </div>
 
 <script>
-    const PIN = "2003"; // รหัสผ่านสำหรับ Admin
+    const PIN = "2003";
 
+    // --- ส่วนแสดงผลสินค้า ---
     const savedData = JSON.parse(localStorage.getItem('shopData'));
     if(savedData) {
         document.getElementById('disp-name').innerText = savedData.name || "Premium Store";
         document.getElementById('disp-rules').innerText = savedData.rules || "";
         document.getElementById('link-line-btn').href = savedData.line || '#';
         const container = document.getElementById('app-list-container');
-        container.innerHTML = ''; 
-        if(savedData.products && savedData.products.length > 0) {
-            savedData.products.forEach(product => {
-                const isOut = parseInt(product.stock) <= 0;
-                let displayImg = product.img ? `<img src="${product.img}">` : '🎬';
-                container.innerHTML += `
-                    <div class="app-item ${isOut ? 'out-of-stock' : ''}">
-                        <div class="app-icon">${displayImg}</div>
-                        <div class="app-info">
-                            <span class="app-name">${product.name}</span>
-                            <span class="app-price">${product.price}.-</span>
-                            <div class="stock-tag">${isOut ? '❌ หมด' : '✅ สต็อก: ' + product.stock}</div>
-                        </div>
-                        <a href="${isOut ? '#' : savedData.line}" class="btn-buy ${isOut ? 'btn-out' : ''}">${isOut ? 'หมด' : 'สั่งซื้อ'}</a>
-                    </div>`;
-            });
+        if(container) {
+            container.innerHTML = ''; 
+            if(savedData.products && savedData.products.length > 0) {
+                savedData.products.forEach(product => {
+                    const isOut = parseInt(product.stock) <= 0;
+                    let displayImg = product.img ? `<img src="${product.img}">` : '🎬';
+                    container.innerHTML += `
+                        <div class="app-item ${isOut ? 'out-of-stock' : ''}">
+                            <div class="app-icon">${displayImg}</div>
+                            <div class="app-info">
+                                <span class="app-name">${product.name}</span>
+                                <span class="app-price">${product.price}.-</span>
+                                <div class="stock-tag">${isOut ? '❌ หมด' : '✅ สต็อก: ' + product.stock}</div>
+                            </div>
+                            <a href="${isOut ? '#' : savedData.line}" class="btn-buy ${isOut ? 'btn-out' : ''}">${isOut ? 'หมด' : 'สั่งซื้อ'}</a>
+                        </div>`;
+                });
+            }
         }
     }
 
-    // --- Admin Access Functions ---
-    function handleAdminClick() {
-        if (sessionStorage.getItem("isLoggedIn") === "true") {
-            window.location.href = "admin.html";
-        } else {
-            document.getElementById('loginModal').style.display = 'flex';
+    // --- Admin Modal Functions (ถามรหัสใหม่ทุกครั้ง) ---
+    function openAdminModal() {
+        sessionStorage.removeItem("isLoggedIn"); 
+        document.getElementById('loginModal').style.display = 'flex';
+        setTimeout(() => {
             document.getElementById('adminPassInput').focus();
-        }
+        }, 100);
     }
 
     function closeModal() {
@@ -160,7 +157,6 @@
         }
     }
 
-    // กด Enter ในช่อง Input เพื่อตกลงได้ทันที
     document.getElementById('adminPassInput').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') checkAdminPass();
     });
