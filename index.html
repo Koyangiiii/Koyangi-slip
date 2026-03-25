@@ -10,7 +10,8 @@
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Mitr',sans-serif;}
         body{background:var(--bg);display:flex;justify-content:center;color:#efefef;}
 
-        .container{ max-width:500px; width:100%; padding:20px 15px 100px; }
+        .container{ max-width:500px; width:100%; padding:20px 15px 100px; } /* ปรับ padding ล่างให้พอดีกับเมนูใหม่ */
+
         .section{background:var(--white);border-radius:20px;padding:25px 20px;margin-bottom:20px;box-shadow:0 8px 20px rgba(0,0,0,0.3);border:2px solid var(--main);}
         h1,h2,h3{color:var(--main);}
         .center{text-align:center;}
@@ -19,9 +20,20 @@
         .logo img{width:100%;height:100%;object-fit:cover;}
 
         #app-list-container { margin-top: 15px; }
-        .app-item { display: flex; align-items: center; background: #2d2d2d; padding: 15px; border-radius: 18px; margin-bottom: 12px; border: 1px solid transparent; transition: 0.3s; }
+        .app-item {
+            display: flex;
+            align-items: center;
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 18px;
+            margin-bottom: 12px;
+            border: 1px solid transparent;
+            transition: 0.3s;
+        }
+        
         .app-icon { width: 55px; height: 55px; border-radius: 12px; margin-right: 15px; background: #3d3d3d; display: flex; align-items: center; justify-content: center; font-size: 24px; overflow: hidden; }
         .app-icon img { width: 100%; height: 100%; object-fit: cover; }
+        
         .app-info { flex-grow: 1; }
         .app-name { font-weight: 500; font-size: 16px; color: #fff; display: block; }
         .app-price { color: var(--main); font-size: 14px; font-weight: bold; }
@@ -35,44 +47,64 @@
         .btn-main{display:block;text-align:center;padding:14px;border-radius:25px;text-decoration:none;margin-top:15px;font-weight:500; background:var(--main);color:#fff;}
         .small{font-size:12px;opacity:.7;margin-top:10px;color:var(--dark);white-space: pre-line;}
 
-        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 450px; background: #252525; display: flex; justify-content: space-around; padding: 8px 0 12px; border-radius: 15px 15px 0 0; border-top: 1.5px solid var(--main); box-shadow: 0 -4px 15px rgba(0,0,0,0.4); z-index: 1000; }
-        .nav-item { text-decoration: none; color: var(--dark); display: flex; flex-direction: column; align-items: center; font-size: 9px; cursor: pointer; flex: 1; transition: 0.3s; }
-        .nav-item.active { color: var(--main); }
-        .nav-icon { font-size: 16px; margin-bottom: 2px; }
+        /* --- ปรับปรุงสไตล์ Bottom Nav ให้เล็กลงและกะทัดรัด (ติดขอบล่าง) --- */
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 100%; 
+            max-width: 450px; 
+            background: #252525; 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 8px 0 12px; 
+            border-radius: 15px 15px 0 0; 
+            border-top: 1.5px solid var(--main); 
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.4); 
+            z-index: 1000; 
+        }
 
-        /* --- Admin Login Modal Style --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px;
+        .nav-item { 
+            text-decoration: none; 
+            color: var(--dark); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            font-size: 9px; 
+            cursor: pointer; 
+            flex: 1; 
+            background: none;
+            border: none;
+            outline: none;
+            transition: 0.3s;
         }
-        .modal-content {
-            background: var(--white); border: 2px solid var(--main); border-radius: 25px; padding: 30px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 40px var(--glow); animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes modalPop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .modal-content h3 { margin-bottom: 15px; }
-        .modal-content input {
-            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #333; color: #fff; text-align: center; font-size: 18px; margin-bottom: 20px; outline: none;
-        }
-        .modal-btns { display: flex; gap: 10px; }
-        .btn-modal { flex: 1; padding: 12px; border-radius: 15px; border: none; cursor: pointer; font-family: 'Mitr'; font-weight: 500; }
-        .btn-confirm { background: var(--main); color: #fff; }
-        .btn-cancel { background: #444; color: #ccc; }
 
-        /* ป้องกัน Safari ถามบันทึกรหัสผ่านด้วยการใช้ CSS ซ่อนตัวอักษรแทน type="password" */
-        #adminPassInput {
-            -webkit-text-security: disc;
-            text-security: disc;
+        .nav-item.active { 
+            color: var(--main); 
+        }
+
+        .nav-icon { 
+            font-size: 16px; 
+            margin-bottom: 2px; 
+        }
+
+        .nav-item:active {
+            transform: scale(0.9);
         }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <!-- HEADER -->
     <div class="section center" style="border:none;box-shadow:none;background:transparent; padding-top: 10px;">
         <div class="logo"><img src="https://via.placeholder.com/150" alt="logo" id="disp-logo"></div>
         <h1 id="disp-name">Premium Store</h1>
         <p id="disp-slogan" style="color:var(--dark);opacity:.8;margin:5px 0 15px;">แหล่งรวมแอปพรีเมียม ราคาถูก พร้อมประกัน</p>
     </div>
 
+    <!-- รายการแอป -->
     <div class="section">
         <h2 style="margin-bottom: 15px; font-size: 18px;">🔥 รายการสินค้าพร้อมส่ง</h2>
         <div id="app-list-container">
@@ -80,99 +112,94 @@
         </div>
     </div>
 
+    <!-- กฎ/เงื่อนไข -->
     <div class="section">
         <h2>📍 เงื่อนไขการรับประกัน</h2>
         <p id="disp-rules" class="small" style="text-align:left;"></p>
         <a id="link-line-btn" href="#" class="btn-main">แจ้งปัญหา / สอบถามเพิ่มเติม 💬</a>
     </div>
-</div>
 
-<nav class="bottom-nav">
-    <a href="index.html" class="nav-item active"><span class="nav-icon">🏠</span></a>
-    <a href="portfolio.html" class="nav-item"><span class="nav-icon">📦</span></a>
-    <a href="contact.html" class="nav-item"><span class="nav-icon">💬</span></a>
-    <div onclick="openAdminModal()" class="nav-item"><span class="nav-icon">⚙️</span></div>
-</nav>
-
-<!-- Modal สำหรับกรอกรหัสผ่าน Admin (ป้องกัน Safari บันทึกรหัสผ่าน) -->
-<div class="modal-overlay" id="loginModal">
-    <div class="modal-content">
-        <h3>🔐 Admin Login</h3>
-        <p style="font-size: 12px; color: var(--dark); margin-bottom: 15px;">กรุณากรอกรหัสผ่านเพื่อเข้าสู่โหมดจัดการ</p>
-        
-        <input type="text" id="adminPassInput" 
-               placeholder="Password" 
-               autocomplete="off" 
-               autocorrect="off" 
-               autocapitalize="off" 
-               spellcheck="false"> 
-
-        <div class="modal-btns">
-            <button type="button" class="btn-modal btn-cancel" onclick="closeModal()">ยกเลิก</button>
-            <button type="button" class="btn-modal btn-confirm" onclick="checkAdminPass()">ตกลง</button>
-        </div>
+    <div class="footer" style="padding-bottom: 20px; text-align: center;">
+        <p class="small">© 2026 <span id="disp-footer-name"></span><br>ขอบคุณที่ใช้บริการค่ะ</p>
     </div>
 </div>
 
-<script>
-    const PIN = "2003";
+<!-- Bottom Nav โครงสร้างใหม่ -->
+<nav class="bottom-nav">
+    <a href="index.html" class="nav-item active">
+        <span class="nav-icon">🏠</span>
+        <span>หน้าหลัก</span>
+    </a>
+    <a href="portfolio.html" class="nav-item">
+        <span class="nav-icon">📦</span>
+        <span>สินค้า</span>
+    </a>
+    <a href="contact.html" class="nav-item">
+        <span class="nav-icon">💬</span>
+        <span>ติดต่อ</span>
+    </a>
+    <div class="nav-item" onclick="checkAdminAccess()">
+        <span class="nav-icon">⚙️</span>
+        <span>ตั้งค่า</span>
+    </div>
+</nav>
 
-    // --- ส่วนแสดงผลสินค้า ---
+<script>
     const savedData = JSON.parse(localStorage.getItem('shopData'));
+
     if(savedData) {
         document.getElementById('disp-name').innerText = savedData.name || "Premium Store";
+        document.getElementById('disp-footer-name').innerText = savedData.name || 'Store';
         document.getElementById('disp-rules').innerText = savedData.rules || "";
         document.getElementById('link-line-btn').href = savedData.line || '#';
+
         const container = document.getElementById('app-list-container');
-        if(container) {
-            container.innerHTML = ''; 
-            if(savedData.products && savedData.products.length > 0) {
-                savedData.products.forEach(product => {
-                    const isOut = parseInt(product.stock) <= 0;
-                    let displayImg = product.img ? `<img src="${product.img}">` : '🎬';
-                    container.innerHTML += `
-                        <div class="app-item ${isOut ? 'out-of-stock' : ''}">
-                            <div class="app-icon">${displayImg}</div>
-                            <div class="app-info">
-                                <span class="app-name">${product.name}</span>
-                                <span class="app-price">${product.price}.-</span>
-                                <div class="stock-tag">${isOut ? '❌ หมด' : '✅ สต็อก: ' + product.stock}</div>
+        container.innerHTML = ''; 
+
+        if(savedData.products && savedData.products.length > 0) {
+            savedData.products.forEach(product => {
+                const isOut = parseInt(product.stock) <= 0;
+                
+                let displayImg = product.img ? 
+                    `<img src="${product.img}" alt="icon">` : 
+                    (product.cat === 'streaming' ? '🎬' : product.cat === 'working' ? '💼' : '📚');
+
+                const itemHTML = `
+                    <div class="app-item ${isOut ? 'out-of-stock' : ''}">
+                        <div class="app-icon">${displayImg}</div>
+                        <div class="app-info">
+                            <span class="app-name">${product.name}</span>
+                            <span class="app-price">${product.price}.-</span>
+                            <div class="stock-tag">
+                                ${isOut ? '❌ สินค้าหมด' : '✅ ในสต็อก: ' + product.stock + ' ชิ้น'}
                             </div>
-                            <a href="${isOut ? '#' : savedData.line}" class="btn-buy ${isOut ? 'btn-out' : ''}">${isOut ? 'หมด' : 'สั่งซื้อ'}</a>
-                        </div>`;
-                });
-            }
+                        </div>
+                        <a href="${isOut ? '#' : savedData.line}" class="btn-buy ${isOut ? 'btn-out' : ''}">
+                            ${isOut ? 'หมด' : 'สั่งซื้อ'}
+                        </a>
+                    </div>
+                `;
+                container.innerHTML += itemHTML;
+            });
+        } else {
+            container.innerHTML = '<p style="text-align:center; font-size:14px; color:#888;">ยังไม่มีสินค้าในขณะนี้</p>';
         }
     }
 
-    // --- Admin Modal Functions ---
-    function openAdminModal() {
-        sessionStorage.removeItem("isLoggedIn"); 
-        document.getElementById('loginModal').style.display = 'flex';
-        setTimeout(() => {
-            document.getElementById('adminPassInput').focus();
-        }, 100);
-    }
-
-    function closeModal() {
-        document.getElementById('loginModal').style.display = 'none';
-        document.getElementById('adminPassInput').value = '';
-    }
-
-    function checkAdminPass() {
-        const input = document.getElementById('adminPassInput').value;
-        if (input === PIN) {
+    function checkAdminAccess() {
+        const PIN = "2003";
+        if (sessionStorage.getItem("isLoggedIn") === "true") {
+            window.location.href = "admin.html";
+            return;
+        }
+        const pass = prompt("🔐 กรุณากรอกรหัสผ่านเพื่อเข้าสู่โหมดตั้งค่า:");
+        if (pass === PIN) {
             sessionStorage.setItem("isLoggedIn", "true");
             window.location.href = "admin.html";
-        } else {
+        } else if (pass !== null) {
             alert("❌ รหัสผ่านไม่ถูกต้อง!");
-            document.getElementById('adminPassInput').value = '';
         }
     }
-
-    document.getElementById('adminPassInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') checkAdminPass();
-    });
 </script>
 </body>
 </html>
