@@ -56,6 +56,12 @@
         .btn-modal { flex: 1; padding: 12px; border-radius: 15px; border: none; cursor: pointer; font-family: 'Mitr'; font-weight: 500; }
         .btn-confirm { background: var(--main); color: #fff; }
         .btn-cancel { background: #444; color: #ccc; }
+
+        /* ป้องกัน Safari ถามบันทึกรหัสผ่านด้วยการใช้ CSS ซ่อนตัวอักษรแทน type="password" */
+        #adminPassInput {
+            -webkit-text-security: disc;
+            text-security: disc;
+        }
     </style>
 </head>
 <body>
@@ -82,21 +88,28 @@
 </div>
 
 <nav class="bottom-nav">
-    <a href="index.html" class="nav-item active"><span class="nav-icon">🏠</span><span>หน้าหลัก</span></a>
-    <a href="portfolio.html" class="nav-item"><span class="nav-icon">📦</span><span>สินค้า</span></a>
-    <a href="contact.html" class="nav-item"><span class="nav-icon">💬</span><span>ติดต่อ</span></a>
-    <div onclick="openAdminModal()" class="nav-item"><span class="nav-icon">⚙️</span><span>ตั้งค่า</span></div>
+    <a href="index.html" class="nav-item active"><span class="nav-icon">🏠</span></a>
+    <a href="portfolio.html" class="nav-item"><span class="nav-icon">📦</span></a>
+    <a href="contact.html" class="nav-item"><span class="nav-icon">💬</span></a>
+    <div onclick="openAdminModal()" class="nav-item"><span class="nav-icon">⚙️</span></div>
 </nav>
 
-<!-- Modal สำหรับกรอกรหัสผ่าน Admin -->
+<!-- Modal สำหรับกรอกรหัสผ่าน Admin (ป้องกัน Safari บันทึกรหัสผ่าน) -->
 <div class="modal-overlay" id="loginModal">
     <div class="modal-content">
         <h3>🔐 Admin Login</h3>
         <p style="font-size: 12px; color: var(--dark); margin-bottom: 15px;">กรุณากรอกรหัสผ่านเพื่อเข้าสู่โหมดจัดการ</p>
-        <input type="password" id="adminPassInput" placeholder="Password">
+        
+        <input type="text" id="adminPassInput" 
+               placeholder="Password" 
+               autocomplete="off" 
+               autocorrect="off" 
+               autocapitalize="off" 
+               spellcheck="false"> 
+
         <div class="modal-btns">
-            <button class="btn-modal btn-cancel" onclick="closeModal()">ยกเลิก</button>
-            <button class="btn-modal btn-confirm" onclick="checkAdminPass()">ตกลง</button>
+            <button type="button" class="btn-modal btn-cancel" onclick="closeModal()">ยกเลิก</button>
+            <button type="button" class="btn-modal btn-confirm" onclick="checkAdminPass()">ตกลง</button>
         </div>
     </div>
 </div>
@@ -132,7 +145,7 @@
         }
     }
 
-    // --- Admin Modal Functions (ถามรหัสใหม่ทุกครั้ง) ---
+    // --- Admin Modal Functions ---
     function openAdminModal() {
         sessionStorage.removeItem("isLoggedIn"); 
         document.getElementById('loginModal').style.display = 'flex';
