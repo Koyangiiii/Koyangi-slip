@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt - Bunnynap.co</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap');
+
+        :root {
+            --bg-color: #FEF4F7; /* สีพื้นหลังชมพูอ่อนมาก */
+            --box-bg: #FFFFFF;
+            --text-color: #333333;
+            --sub-text: #666666;
+            --pink-accent: #FAE8EE; /* สีชมพูอ่อนตรงช่อง TOTAL */
+            --font-family: 'Sarabun', sans-serif; /* ใช้ฟอนต์ Sarabun เพื่อความอ่านง่าย */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 40px;
+            font-family: var(--font-family);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+        }
+
+        .receipt-container {
+            background-color: var(--box-bg);
+            width: 500px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ส่วนหัว: โลโก้, ชื่อร้าน */
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 1px solid var(--pink-accent);
+        }
+        .shop-name {
+            font-weight: 700;
+            font-size: 26px;
+            margin: 0;
+        }
+        .collection {
+            font-weight: 400;
+            font-size: 16px;
+            color: var(--sub-text);
+            margin: 3px 0;
+        }
+        .contact {
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        /* รายละเอียดออเดอร์: ID, ชื่อลูกค้า, วันที่ */
+        .order-details, .subtotal-line {
+            width: 100%;
+            border-top: 1px solid #EEEEEE;
+            padding: 15px 0;
+        }
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 7px;
+            font-size: 15px;
+        }
+        .label { font-weight: 400; color: var(--sub-text); }
+        .value { font-weight: 700; }
+        .customer-name { font-weight: 400; color: var(--text-color); }
+
+        /* ตารางรายการสินค้า */
+        .items-list {
+            width: 100%;
+            margin-bottom: 20px;
+            text-align: left;
+            border-collapse: collapse;
+        }
+        .item-row th, .item-row td {
+            font-size: 15px;
+            padding: 8px 0;
+        }
+        .product-header {
+            font-weight: 700;
+            font-size: 16px;
+            padding-bottom: 5px;
+        }
+        .product-sub {
+            color: var(--sub-text);
+            font-weight: 400;
+        }
+        .price-col { text-align: right; font-weight: 700;}
+
+        /* ยอดรวมย่อย */
+        .subtotal-line {
+            border-bottom: 1px solid #EEEEEE;
+        }
+
+        /* ส่วนท้าย: TOTAL, QR, ข้อความ */
+        .total-box {
+            width: 100%;
+            margin-top: 20px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .total-content {
+            display: flex;
+            justify-content: space-between;
+            background-color: var(--pink-accent);
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #8C4D5F; /* สีตัวอักษรของ TOTAL */
+        }
+
+        .bunnynap-box {
+            width: 100%;
+            background-color: var(--pink-accent);
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            text-align: center;
+            box-sizing: border-box;
+            color: #8C4D5F;
+            margin-bottom: 30px;
+        }
+
+        .qr-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            margin-bottom: 10px;
+        }
+        .qr-text {
+            color: var(--sub-text);
+            font-size: 14px;
+        }
+
+        .thanks-section {
+            text-align: center;
+            color: var(--sub-text);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .thanks-item {
+            margin-bottom: 10px;
+        }
+        .courier-num {
+            font-weight: 700;
+            margin-top: 20px;
+            color: var(--text-color);
+        }
+
+        /* ซ่อนองค์ประกอบอื่นๆ เวลา Print */
+        @media print {
+            body { padding: 0; background-color: white; }
+            .receipt-container { box-shadow: none; border-radius: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="receipt-container">
+    <div class="header">
+        <img src="logo.png" alt="Shop Logo" class="logo">
+        <h1 class="shop-name">Bunnynap.co</h1>
+        <p class="collection">Mochi Friends</p>
+        <p class="contact">FB : bunzy.co</p>
+    </div>
+
+    <div class="order-details">
+        <div class="detail-item">
+            <div class="label">Order ID :</div>
+            <div class="value">23032026-00000006</div>
+        </div>
+        <div class="detail-item">
+            <div class="label">ลูกค้า :</div>
+            <div class="value customer-name">คุณ Morinaly ( ชำระเงินหลังได้รับของได้เลยน้าา ๑-๑ )</div>
+        </div>
+        <div class="detail-item">
+            <div class="label">Date : 23/3/2026</div>
+            <div class="value">Time : 12:37</div>
+        </div>
+    </div>
+
+    <table class="items-list">
+        <tr>
+            <td colspan="2" class="product-header">Mochi Friends *2</td>
+        </tr>
+        <tr>
+            <td class="product-sub">@392.00 x 1</td>
+            <td class="price-col">392.00</td>
+        </tr>
+    </table>
+
+    <div class="subtotal-line">
+        <div class="detail-item">
+            <div class="value customer-name">Subtotal 1 items</div>
+            <div class="value">392.00</div>
+        </div>
+    </div>
+
+    <div class="total-box">
+        <div class="total-content">
+            <div>TOTAL</div>
+            <div>392.00</div>
+        </div>
+    </div>
+
+    <div class="bunnynap-box">
+        Bunnynap.co
+    </div>
+
+    <div class="qr-section">
+        <img src="qrcode.png" alt="Payment QR" class="qr-code">
+        <div class="qr-text">สแกนเพื่อชำระเงิน</div>
+    </div>
+
+    <div class="thanks-section">
+        <div class="thanks-item">Thank you for supporting my caffeine 🍭✨</div>
+        <div class="thanks-item">หลังโอนเสร็จแล้วส่งสลิปให้เค้าด้วยน้าา 🧸</div>
+        <div class="courier-num">
+            หมายเลขพัสดุ
+            <p>*˙ ๔๑ ♡ ๖๓ *゜+*</p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
