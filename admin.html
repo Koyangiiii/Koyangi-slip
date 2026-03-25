@@ -6,14 +6,61 @@
     <title>Admin - จัดการข้อมูลร้าน</title>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        body { background: #1a1a1a; color: #fff; font-family: 'Mitr', sans-serif; padding: 20px; display: flex; justify-content: center; }
-        .admin-card { background: #252525; padding: 30px; border-radius: 20px; width: 100%; max-width: 500px; border: 1px solid #9d81e1; }
-        h1 { color: #9d81e1; font-size: 24px; margin-bottom: 20px; text-align: center; }
+        :root{ --bg:#1a1a1a; --main:#9d81e1; --dark:#d1c4e9; --white:#252525; }
+        
+        body { background: var(--bg); color: #fff; font-family: 'Mitr', sans-serif; padding: 20px 20px 100px; display: flex; justify-content: center; }
+        
+        .admin-card { background: var(--white); padding: 30px; border-radius: 20px; width: 100%; max-width: 500px; border: 1px solid var(--main); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+        
+        h1 { color: var(--main); font-size: 24px; margin-bottom: 20px; text-align: center; }
+        
         .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 14px; margin-bottom: 5px; color: #d1c4e9; }
-        input, textarea { width: 100%; padding: 12px; background: #333; border: 1px solid #444; border-radius: 10px; color: #fff; font-family: inherit; }
-        button { width: 100%; padding: 15px; background: #9d81e1; border: none; border-radius: 25px; color: #fff; font-weight: 500; cursor: pointer; margin-top: 10px; font-size: 16px; }
-        .preview-btn { background: transparent; border: 2px solid #9d81e1; color: #9d81e1; margin-top: 10px; }
+        
+        label { display: block; font-size: 14px; margin-bottom: 5px; color: var(--dark); }
+        
+        input, textarea { width: 100%; padding: 12px; background: #333; border: 1px solid #444; border-radius: 10px; color: #fff; font-family: inherit; outline: none; }
+        input:focus, textarea:focus { border-color: var(--main); }
+        
+        button { width: 100%; padding: 15px; background: var(--main); border: none; border-radius: 25px; color: #fff; font-weight: 500; cursor: pointer; margin-top: 10px; font-size: 16px; transition: 0.3s; }
+        button:hover { opacity: 0.9; transform: translateY(-2px); }
+        
+        .preview-btn { background: transparent; border: 2px solid var(--main); color: var(--main); margin-top: 10px; }
+
+        /* --- แถบเมนูด้านล่าง (Bottom Nav) --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 500px;
+            background: #252525;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 2px solid var(--main);
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: var(--dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 11px;
+            transition: 0.3s;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--main);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
     </style>
 </head>
 <body>
@@ -51,7 +98,39 @@
         <button class="preview-btn" onclick="goToPreview()">👁️ ดูหน้าเว็บของคุณ</button>
     </div>
 
+    <!-- --- BOTTOM NAVIGATION BAR --- -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>หน้าหลัก</span>
+        </a>
+        <a href="portfolio.html" class="nav-item">
+            <span class="nav-icon">🖼️</span>
+            <span>ผลงาน</span>
+        </a>
+        <a href="contact.html" class="nav-item">
+            <span class="nav-icon">💬</span>
+            <span>ติดต่อ</span>
+        </a>
+        <a href="admin.html" class="nav-item active">
+            <span class="nav-icon">⚙️</span>
+            <span>ตั้งค่า</span>
+        </a>
+    </nav>
+
     <script>
+        // โหลดข้อมูลเก่ามาแสดงในฟอร์มเมื่อเปิดหน้า
+        window.onload = function() {
+            const savedData = JSON.parse(localStorage.getItem('shopData'));
+            if(savedData) {
+                document.getElementById('shopName').value = savedData.name || '';
+                document.getElementById('shopSlogan').value = savedData.slogan || '';
+                document.getElementById('shopRules').value = savedData.rules || '';
+                document.getElementById('fbLink').value = savedData.fb || '';
+                document.getElementById('lineLink').value = savedData.line || '';
+            }
+        }
+
         function saveData() {
             const data = {
                 name: document.getElementById('shopName').value,
@@ -65,7 +144,7 @@
         }
 
         function goToPreview() {
-            window.location.href = 'index.html'; // ลิงก์ไปยังหน้าแสดงผล
+            window.location.href = 'index.html'; 
         }
     </script>
 </body>
