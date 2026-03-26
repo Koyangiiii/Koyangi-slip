@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <!-- ... (ส่วน meta และ link เหมือนเดิม) ... -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Koyangi App Store</title>
@@ -28,15 +27,9 @@
             display: flex; align-items: center; gap: 6px; border: 1px solid #444;
             white-space: nowrap; font-size: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
-        .status-dot {
-            width: 8px; height: 8px; border-radius: 50%;
-            position: relative;
-        }
-        /* ไฟสถานะเปิด */
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; position: relative; }
         .status-open .status-dot { background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse-green 2s infinite; }
         .status-open .status-text { color: var(--green); font-weight: 500; }
-        
-        /* ไฟสถานะปิด */
         .status-closed .status-dot { background: var(--red); box-shadow: 0 0 8px var(--red); }
         .status-closed .status-text { color: var(--red); font-weight: 500; }
 
@@ -46,7 +39,7 @@
             100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
         }
 
-        /* --- Sidebar & Hamburger (คงเดิม) --- */
+        /* --- Sidebar & Hamburger --- */
         .hamburger {
             position: fixed; top: 20px; right: 20px; z-index: 1100;
             background: var(--main); width: 45px; height: 45px; border-radius: 12px;
@@ -88,7 +81,13 @@
         /* Admin Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
         .modal-content { background: var(--white); border: 2px solid var(--main); border-radius: 25px; padding: 30px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 40px var(--glow); }
-        #adminPassInput { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #333; color: #fff; outline: none; margin-bottom: 20px; -webkit-text-security: disc; text-align: center; font-size: 24px; letter-spacing: 10px; }
+        
+        /* ปรับปรุง Input ให้รองรับภาษาไทย */
+        #adminPassInput { 
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; 
+            background: #1a1a1a; color: var(--main); outline: none; margin-bottom: 20px; 
+            text-align: center; font-size: 20px; -webkit-text-security: disc; 
+        }
         .modal-btns { display: flex; gap: 10px; }
         .btn-modal { flex: 1; padding: 12px; border-radius: 15px; border: none; cursor: pointer; font-family: 'Mitr'; font-weight: 500; }
         .btn-confirm { background: var(--main); color: #fff; }
@@ -119,7 +118,6 @@
 
 <div class="container">
     <div class="section center" style="border:none;box-shadow:none;background:transparent; padding-top: 10px;">
-        <!-- โลโก้พร้อมสถานะ -->
         <div class="logo-wrapper">
             <div class="logo"><img src="https://via.placeholder.com/150" alt="logo" id="disp-logo"></div>
             <div id="shop-status-ui" class="status-badge status-open">
@@ -165,12 +163,12 @@
     </div>
 </div>
 
-<!-- Modal Login (คงเดิม) -->
+<!-- Modal Login -->
 <div class="modal-overlay" id="loginModal">
     <div class="modal-content">
         <h3>🔐 Admin Login</h3>
-        <p style="font-size: 12px; color: var(--dark); margin-bottom: 15px;">กรุณากรอกรหัสผ่านเพื่อเข้าสู่โหมดจัดการ</p>
-        <input type="tel" id="adminPassInput" placeholder="••••" maxlength="4" inputmode="numeric" autocomplete="off"> 
+        <p style="font-size: 12px; color: var(--dark); margin-bottom: 15px;">กรุณากรอกรหัสผ่านภาษาไทย</p>
+        <input type="text" id="adminPassInput" placeholder="รหัสผ่าน" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');"> 
         <div class="modal-btns">
             <button type="button" class="btn-modal btn-cancel" onclick="closeModal()">ยกเลิก</button>
             <button type="button" class="btn-modal btn-confirm" onclick="checkAdminPass()">ตกลง</button>
@@ -179,7 +177,8 @@
 </div>
 
 <script>
-    const PIN = "2003";
+    // อัปเดตรหัสผ่านเป็น แอดมินออม
+    const PIN = "แอดมินออม";
 
     function toggleMenu() {
         document.getElementById('sidebar').classList.toggle('active');
@@ -193,8 +192,8 @@
             document.getElementById('disp-name').innerText = savedData.name || "Premium Store";
             document.getElementById('disp-rules').innerText = savedData.rules || "";
             document.getElementById('link-line-btn').href = savedData.line || '#';
+            if(savedData.logo) document.getElementById('disp-logo').src = savedData.logo;
             
-            // อัปเดตสถานะเปิด-ปิดร้าน
             const statusUI = document.getElementById('shop-status-ui');
             const statusText = document.getElementById('status-text');
             if (savedData.shopStatus === 'closed') {
@@ -217,7 +216,6 @@
         }
     }
 
-    // ... (ฟังก์ชันอื่นๆ คงเดิม) ...
     function checkAdminPass() {
         const inputField = document.getElementById('adminPassInput');
         if (inputField.value === PIN) {
@@ -226,14 +224,22 @@
         } else {
             alert("❌ รหัสผ่านไม่ถูกต้อง!");
             inputField.value = '';
+            inputField.focus();
         }
     }
+
     function openAdminModal() {
         document.getElementById('loginModal').style.display = 'flex';
-        setTimeout(() => document.getElementById('adminPassInput').focus(), 200);
+        const inputField = document.getElementById('adminPassInput');
+        inputField.value = '';
+        setTimeout(() => inputField.focus(), 200);
     }
+
     function closeModal() { document.getElementById('loginModal').style.display = 'none'; }
-    document.getElementById('adminPassInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') checkAdminPass(); });
+    
+    document.getElementById('adminPassInput').addEventListener('keydown', (e) => { 
+        if (e.key === 'Enter') checkAdminPass(); 
+    });
 
     window.onload = loadContent;
 </script>
