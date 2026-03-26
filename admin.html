@@ -10,7 +10,6 @@
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Mitr',sans-serif;}
         body { background: var(--bg); color: #fff; display: flex; justify-content: center; min-height: 100vh; }
         
-        /* --- Sidebar & Nav --- */
         .hamburger { position: fixed; top: 20px; right: 20px; z-index: 1100; background: var(--main); width: 45px; height: 45px; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; cursor: pointer; box-shadow: 0 4px 15px var(--glow); transition: 0.3s; }
         .hamburger span { width: 25px; height: 3px; background: #fff; border-radius: 2px; transition: 0.3s ease-in-out; display: block; }
         .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
@@ -24,46 +23,38 @@
         .nav-item { text-decoration: none; color: var(--dark); display: flex; align-items: center; padding: 15px 20px; margin-bottom: 10px; border-radius: 15px; font-size: 16px; transition: 0.3s; gap: 15px; cursor: pointer; }
         .nav-item:hover, .nav-item.active { background: rgba(157, 129, 225, 0.1); color: var(--main); }
 
-        /* --- Admin UI --- */
         .admin-container { width: 100%; max-width: 500px; padding: 80px 15px 50px; }
-        .section-card { background: var(--white); border-radius: 25px; padding: 25px; margin-bottom: 20px; border: 2px solid var(--main); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-        h3 { color: var(--main); margin-bottom: 15px; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+        .section-card { background: var(--white); border-radius: 25px; padding: 20px; margin-bottom: 20px; border: 1.5px solid var(--main); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        h3 { color: var(--main); margin-bottom: 15px; font-size: 16px; display: flex; align-items: center; gap: 10px; }
         
-        select, input { width: 100%; padding: 12px 15px; background: #1a1a1a; border: 1.5px solid #444; border-radius: 12px; color: #fff; outline: none; font-size: 14px; transition: 0.3s; }
+        select, input { width: 100%; padding: 10px 15px; background: #1a1a1a; border: 1.2px solid #444; border-radius: 12px; color: #fff; outline: none; font-size: 14px; transition: 0.3s; }
         select:focus, input:focus { border-color: var(--main); }
 
-        /* ป้องกันไอคอนรหัสผ่าน Safari/Chrome */
-        input::-webkit-contacts-auto-fill-button, 
-        input::-webkit-credentials-auto-fill-button {
-            visibility: hidden;
-            pointer-events: none;
-            position: absolute;
-            right: 0;
-        }
+        .stock-item { background: #2d2d2d; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #444; position: relative; }
+        .stock-item.hidden-item { opacity: 0.6; border-style: dashed; }
+        .stock-item.out-of-stock { border-left: 5px solid var(--red); }
 
-        .stock-item { background: #2d2d2d; border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid #444; transition: 0.4s; }
-        .stock-item.out-of-stock { opacity: 0.5; filter: grayscale(1); border-color: #333; }
-
-        .item-header { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; }
-        .img-box { position: relative; width: 75px; height: 75px; flex-shrink: 0; }
-        .img-preview { width: 100%; height: 100%; border-radius: 15px; object-fit: cover; background: #1a1a1a; border: 1px solid #444; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .item-header { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
+        .img-box { position: relative; width: 65px; height: 65px; flex-shrink: 0; }
+        .img-preview { width: 100%; height: 100%; border-radius: 12px; object-fit: cover; background: #1a1a1a; border: 1px solid #444; }
         
-        .btn { border: none; border-radius: 15px; font-weight: 500; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
-        .btn-save { background: var(--main); color: white; padding: 16px; font-size: 16px; margin-top: 20px; box-shadow: 0 4px 15px var(--glow); }
-        .btn-add { background: transparent; color: var(--main); border: 2px dashed var(--main); padding: 12px; margin-bottom: 20px; }
-        .btn-del { background: rgba(255, 82, 82, 0.1); color: var(--red); padding: 10px; font-size: 12px; margin-top: 10px; border-radius: 10px; }
-        .btn-del:hover { background: var(--red); color: white; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        
+        .btn { border: none; border-radius: 12px; font-weight: 500; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
+        .btn-save { background: var(--main); color: white; padding: 14px; font-size: 16px; margin-top: 20px; box-shadow: 0 4px 15px var(--glow); }
+        .btn-add { background: transparent; color: var(--main); border: 2.5px dashed var(--main); padding: 12px; margin-bottom: 20px; border-radius: 20px; }
+        
+        .action-btns { display: flex; gap: 8px; margin-top: 12px; }
+        .btn-mini { padding: 8px; font-size: 12px; border-radius: 10px; flex: 1; }
+        .btn-hide { background: #444; color: #fff; }
+        .btn-hide.active { background: #ff9800; }
+        .btn-del { background: rgba(255, 82, 82, 0.1); color: var(--red); }
 
         #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        .login-card { background: var(--white); padding: 40px 30px; border-radius: 30px; width: 90%; max-width: 360px; border: 2px solid var(--main); text-align: center; box-shadow: 0 0 30px var(--glow); }
-        
-        /* เปลี่ยน ID input */
-        #safePinInput { 
-            font-size: 32px; text-align: center; letter-spacing: 10px; 
-            -webkit-text-security: disc; margin-bottom: 20px; 
-            background: #1a1a1a; border: 1.5px solid #444; color: var(--main); 
-        }
+        .login-card { background: var(--white); padding: 40px 30px; border-radius: 30px; width: 90%; max-width: 360px; border: 2px solid var(--main); text-align: center; }
+        #safePinInput { font-size: 32px; text-align: center; letter-spacing: 10px; -webkit-text-security: disc; margin-bottom: 20px; background: #1a1a1a; color: var(--main); }
+
+        .back-btn { display: inline-flex; align-items: center; gap: 5px; color: var(--dark); text-decoration: none; font-size: 14px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -73,49 +64,35 @@
 
     <nav class="sidebar" id="sidebar">
         <a href="index.html" class="nav-item">🏠 หน้าหลัก</a>
-        <a href="portfolio.html" class="nav-item">📦 สินค้า</a>
+        <a href="portfolio.html" class="nav-item">📦 ไปที่หน้าสินค้า</a>
         <a href="contact.html" class="nav-item">💬 ติดต่อเรา</a>
         <div onclick="toggleMenu()" class="nav-item active">⚙️ ตั้งค่าระบบ</div>
     </nav>
 
-    <!-- ปรับปรุงส่วน Login Overlay -->
     <div id="login-overlay">
         <div class="login-card">
             <h3>🔐 Admin Access</h3>
-            <input type="tel" 
-                   id="safePinInput" 
-                   placeholder="••••" 
-                   maxlength="4" 
-                   inputmode="numeric" 
-                   autocomplete="off" 
-                   name="no-save-pin"
-                   readonly 
-                   onfocus="this.removeAttribute('readonly');">
+            <input type="tel" id="safePinInput" placeholder="••••" maxlength="4" inputmode="numeric" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');">
             <button class="btn btn-save" onclick="checkPass()">ปลดล็อกระบบ</button>
         </div>
     </div>
 
     <div id="main-admin" class="admin-container" style="display:none;">
+        <a href="portfolio.html" class="back-btn">⬅️ กลับไปหน้าสินค้า</a>
+        
         <div style="text-align:center; margin-bottom:25px;">
             <h1>🛠️ Control Panel</h1>
-            <p style="font-size: 13px; color: var(--dark);">จัดการสต็อกและรายการสินค้า</p>
+            <p style="font-size: 13px; color: var(--dark);">จัดการสต็อกและหมวดหมู่</p>
         </div>
 
         <div class="section-card">
-            <h3>🏪 สถานะร้านค้า</h3>
-            <select id="shopStatusInput">
-                <option value="open">🟢 เปิดร้าน (พร้อมให้บริการ)</option>
-                <option value="closed">🔴 ปิดร้าน (พักการขายชั่วคราว)</option>
-            </select>
-        </div>
-
-        <div class="section-card">
-            <h3>📦 จัดการสต็อกสินค้า</h3>
+            <h3>📦 รายการสินค้าทั้งหมด</h3>
             <div id="stock-container"></div>
             <button class="btn btn-add" onclick="addAppItem()">➕ เพิ่มสินค้าใหม่</button>
         </div>
 
-        <button class="btn btn-save" onclick="saveData()">💾 บันทึกการเปลี่ยนแปลงทั้งหมด</button>
+        <button class="btn btn-save" onclick="saveData()">💾 บันทึกการเปลี่ยนแปลง</button>
+        <p style="text-align:center; font-size:11px; color:#666; margin-top:15px;">ข้อมูลจะถูกอัปเดตไปที่หน้าสินค้าทันทีหลังกดบันทึก</p>
     </div>
 
     <script>
@@ -127,7 +104,6 @@
             document.querySelector('.hamburger').classList.toggle('active');
         }
 
-        // ปรับปรุงฟังก์ชันเช็ครหัสผ่าน
         function checkPass() {
             const input = document.getElementById("safePinInput");
             if (input.value === PIN) {
@@ -146,42 +122,67 @@
             loadData();
         }
 
-        function updateStockUI(inputElement) {
-            const stockItem = inputElement.closest('.stock-item');
-            const stockValue = parseInt(inputElement.value) || 0;
-            if (stockValue <= 0) {
-                stockItem.classList.add('out-of-stock');
-            } else {
-                stockItem.classList.remove('out-of-stock');
-            }
-        }
-
-        function addAppItem(name = '', price = '', stock = '', cat = 'streaming', imgData = '', subCat = '') {
+        function addAppItem(data = {}) {
             const container = document.getElementById('stock-container');
             const itemDiv = document.createElement('div');
-            itemDiv.className = `stock-item ${stock !== '' && parseInt(stock) <= 0 ? 'out-of-stock' : ''}`;
             
-            const displayImg = imgData || 'https://via.placeholder.com/150';
+            // ค่าเริ่มต้น
+            const {
+                name = '', price = '', stock = '', 
+                cat = 'streaming', img = 'https://via.placeholder.com/150', 
+                subCat = '', isHidden = false
+            } = data;
 
+            itemDiv.className = `stock-item ${isHidden ? 'hidden-item' : ''}`;
+            itemDiv.dataset.hidden = isHidden;
+            
             itemDiv.innerHTML = `
                 <div class="item-header">
                     <div class="img-box">
-                        <img src="${displayImg}" class="img-preview" data-base64="${imgData}">
+                        <img src="${img}" class="img-preview" data-base64="${img}">
                         <input type="file" accept="image/*" style="display:none" onchange="handleFile(this)">
-                        <div style="position:absolute; bottom:0; right:0; background:var(--main); border-radius:50%; width:24px; height:24px; font-size:12px; display:flex; align-items:center; justify-content:center; cursor:pointer; border: 2px solid var(--white);" onclick="this.previousElementSibling.click()">📷</div>
+                        <div style="position:absolute; bottom:-5px; right:-5px; background:var(--main); border-radius:50%; width:22px; height:22px; font-size:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; border: 2px solid #2d2d2d;" onclick="this.previousElementSibling.click()">📷</div>
                     </div>
                     <div style="flex-grow:1;">
-                        <input type="text" class="app-subcat" placeholder="ชื่อแอปหลัก (เช่น Netflix)" value="${subCat}">
-                        <input type="text" class="app-name" style="margin-top:5px; font-size:12px;" placeholder="แพ็กเกจ (เช่น 30 วัน)" value="${name}">
+                        <select class="app-cat" style="margin-bottom:5px; height:35px; border-color:var(--main);">
+                            <option value="streaming" ${cat === 'streaming' ? 'selected' : ''}>📺 Streaming</option>
+                            <option value="working" ${cat === 'working' ? 'selected' : ''}>💼 Working</option>
+                            <option value="education" ${cat === 'education' ? 'selected' : ''}>🎓 Education</option>
+                        </select>
+                        <input type="text" class="app-subcat" placeholder="ชื่อแอป (เช่น Netflix)" value="${subCat}">
                     </div>
                 </div>
+                
+                <input type="text" class="app-name" placeholder="ชื่อแพ็กเกจ (เช่น 30 วัน / 1 จอ)" value="${name}">
+                
                 <div class="form-grid">
-                    <input type="number" class="app-price" value="${price}" placeholder="ราคา">
-                    <input type="number" class="app-stock" value="${stock}" placeholder="สต็อก" oninput="updateStockUI(this)">
+                    <div style="font-size:11px; color:var(--dark);">ราคา (บาท)
+                        <input type="number" class="app-price" value="${price}" placeholder="ราคา">
+                    </div>
+                    <div style="font-size:11px; color:var(--dark);">สต็อก (ชิ้น)
+                        <input type="number" class="app-stock" value="${stock}" placeholder="สต็อก">
+                    </div>
                 </div>
-                <button class="btn btn-del" onclick="if(confirm('ลบรายการนี้?')){this.closest('.stock-item').remove()}">🗑️ ลบรายการนี้</button>
+
+                <div class="action-btns">
+                    <button class="btn btn-mini btn-hide ${isHidden ? 'active' : ''}" onclick="toggleHide(this)">
+                        ${isHidden ? '👁️‍🗨️ ถูกซ่อนอยู่' : '👁️ แสดงหน้าเว็บ'}
+                    </button>
+                    <button class="btn btn-mini btn-del" onclick="if(confirm('ลบรายการนี้?')){this.closest('.stock-item').remove()}">🗑️ ลบ</button>
+                </div>
             `;
             container.appendChild(itemDiv);
+        }
+
+        function toggleHide(btn) {
+            const item = btn.closest('.stock-item');
+            const isCurrentlyHidden = item.dataset.hidden === "true";
+            const newState = !isCurrentlyHidden;
+            
+            item.dataset.hidden = newState;
+            item.classList.toggle('hidden-item', newState);
+            btn.classList.toggle('active', newState);
+            btn.innerHTML = newState ? '👁️‍🗨️ ถูกซ่อนอยู่' : '👁️ แสดงหน้าเว็บ';
         }
 
         function handleFile(input) {
@@ -198,45 +199,40 @@
         }
 
         function saveData() {
-            const status = document.getElementById('shopStatusInput').value;
             const products = [];
             const oldData = JSON.parse(localStorage.getItem('shopData')) || {};
 
             document.querySelectorAll('.stock-item').forEach(item => {
                 const previewImg = item.querySelector('.img-preview');
                 products.push({
+                    cat: item.querySelector('.app-cat').value,
                     subCat: item.querySelector('.app-subcat').value,
                     name: item.querySelector('.app-name').value,
                     price: item.querySelector('.app-price').value,
                     stock: item.querySelector('.app-stock').value,
-                    cat: 'streaming', 
-                    img: previewImg.dataset.base64 || previewImg.src
+                    img: previewImg.dataset.base64 || previewImg.src,
+                    isHidden: item.dataset.hidden === "true"
                 });
             });
 
             const newData = {
                 ...oldData,
-                shopStatus: status,
                 products: products
             };
 
             localStorage.setItem('shopData', JSON.stringify(newData));
-            alert('✅ บันทึกสต็อกเรียบร้อย!');
+            alert('✅ บันทึกข้อมูลเรียบร้อยแล้ว!');
         }
 
         function loadData() {
             const savedData = JSON.parse(localStorage.getItem('shopData'));
-            if(savedData) {
-                if(savedData.shopStatus) document.getElementById('shopStatusInput').value = savedData.shopStatus;
-                if(savedData.products) {
-                    const container = document.getElementById('stock-container');
-                    container.innerHTML = '';
-                    savedData.products.forEach(p => addAppItem(p.name, p.price, p.stock, p.cat, p.img, p.subCat));
-                }
+            if(savedData && savedData.products) {
+                const container = document.getElementById('stock-container');
+                container.innerHTML = '';
+                savedData.products.forEach(p => addAppItem(p));
             }
         }
 
-        // เพิ่ม EventListener สำหรับการกด Enter
         document.getElementById('safePinInput').addEventListener('keydown', (e) => {
             if (e.key === 'Enter') checkPass();
         });
@@ -244,8 +240,6 @@
         window.onload = () => { 
             if (sessionStorage.getItem("isLoggedIn") === "true") {
                 unlockAdmin();
-            } else {
-                document.getElementById('safePinInput').setAttribute('readonly', true);
             }
         };
     </script>
