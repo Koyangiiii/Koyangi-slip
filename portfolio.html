@@ -18,16 +18,14 @@
         .logo{width:120px;height:120px;border-radius:30px;overflow:hidden;margin:0 auto 20px;box-shadow:0 6px 20px var(--glow);border:2px solid var(--main);}
         .logo img{width:100%;height:100%;object-fit:cover;}
 
-        /* --- 🍔 Hamburger Menu (ปรับปรุงใหม่) --- */
+        /* --- 🍔 Hamburger Menu --- */
         .hamburger {
-            position: fixed; top: 20px; right: 20px; z-index: 1100; /* สูงกว่า Sidebar */
+            position: fixed; top: 20px; right: 20px; z-index: 1100;
             background: var(--main); width: 45px; height: 45px; border-radius: 12px;
             display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
             cursor: pointer; box-shadow: 0 4px 15px var(--glow); transition: 0.3s;
         }
         .hamburger span { width: 25px; height: 3px; background: #fff; border-radius: 2px; transition: 0.3s ease-in-out; display: block; }
-        
-        /* เปลี่ยนเป็นกากบาท */
         .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
         .hamburger.active span:nth-child(2) { opacity: 0; transform: translateX(20px); }
         .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
@@ -48,16 +46,38 @@
         /* --- Category & App List --- */
         .cat-group { margin-bottom: 25px; }
         .cat-title { font-size: 16px; color: var(--main); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px dashed #444; padding-bottom: 5px; }
-        .app-item { display: flex; align-items: center; background: #2d2d2d; padding: 15px; border-radius: 18px; margin-bottom: 12px; border: 1px solid transparent; transition: 0.3s; }
-        .app-icon { width: 55px; height: 55px; border-radius: 12px; margin-right: 15px; background: #3d3d3d; display: flex; align-items: center; justify-content: center; font-size: 24px; overflow: hidden; }
+        
+        /* สไตล์หมวดหมู่ย่อย (ชื่อแอป) */
+        .sub-cat-group {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-left: 3px solid var(--main);
+        }
+        .sub-cat-name {
+            font-size: 14px;
+            color: var(--dark);
+            margin: 0 0 10px 5px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* สไตล์รายการสินค้า (แพ็กเกจ) */
+        .app-item { display: flex; align-items: center; background: #2d2d2d; padding: 12px; border-radius: 15px; margin-bottom: 8px; border: 1px solid transparent; transition: 0.3s; }
+        .app-icon { width: 40px; height: 40px; border-radius: 10px; margin-right: 12px; background: #3d3d3d; display: flex; align-items: center; justify-content: center; font-size: 18px; overflow: hidden; flex-shrink: 0; }
         .app-icon img { width: 100%; height: 100%; object-fit: cover; }
         .app-info { flex-grow: 1; }
-        .app-name { font-weight: 500; font-size: 15px; color: #fff; }
-        .app-price { color: var(--main); font-size: 14px; font-weight: bold; }
-        .stock-tag { font-size: 11px; color: var(--green); margin-top: 2px; }
+        .app-name { font-weight: 400; font-size: 13px; color: #fff; }
+        .app-price { color: var(--main); font-size: 13px; font-weight: bold; }
+        .stock-tag { font-size: 11px; color: var(--green); margin-left: 5px; font-weight: normal; }
+        
         .out-of-stock { opacity: 0.6; filter: grayscale(0.8); }
         .out-of-stock .stock-tag { color: var(--red); }
-        .btn-buy { background: var(--main); color: #fff; padding: 6px 15px; border-radius: 20px; text-decoration: none; font-size: 13px; font-weight: 500; }
+        
+        .btn-buy { background: var(--main); color: #fff; padding: 5px 15px; border-radius: 20px; text-decoration: none; font-size: 11px; font-weight: 500; }
         .btn-main{display:block;text-align:center;padding:14px;border-radius:25px;text-decoration:none;margin-top:15px;font-weight:500; background:var(--main);color:#fff;}
         .small{font-size:12px;opacity:.7;margin-top:10px;color:var(--dark);white-space: pre-line;}
 
@@ -129,7 +149,6 @@
 <script>
     const PIN = "2003";
 
-    // ✅ ตรวจสอบและสลับเมนู (Hamburger -> X)
     function toggleMenu() {
         document.getElementById('sidebar').classList.toggle('active');
         document.getElementById('overlay').classList.toggle('active');
@@ -166,37 +185,56 @@
 
     function loadContent() {
         const savedData = JSON.parse(localStorage.getItem('shopData'));
-        if(savedData) {
-            document.getElementById('disp-name').innerText = savedData.name || "Premium Store";
-            document.getElementById('disp-rules').innerText = savedData.rules || "";
-            document.getElementById('link-line-btn').href = savedData.line || '#';
-            
-            const container = document.getElementById('app-list-container');
-            container.innerHTML = '';
+        if(!savedData) return;
 
-            categories.forEach(cat => {
-                const catItems = (savedData.products || []).filter(p => p.cat === cat.id);
-                if(catItems.length > 0) {
-                    let catHtml = `<div class="cat-group"><div class="cat-title">${cat.icon} ${cat.title}</div>`;
-                    catItems.forEach(product => {
+        document.getElementById('disp-name').innerText = savedData.name || "Premium Store";
+        document.getElementById('disp-rules').innerText = savedData.rules || "";
+        document.getElementById('link-line-btn').href = savedData.line || '#';
+        if(savedData.logo) document.getElementById('disp-logo').src = savedData.logo;
+        
+        const container = document.getElementById('app-list-container');
+        container.innerHTML = '';
+
+        categories.forEach(cat => {
+            const catItems = (savedData.products || []).filter(p => p.cat === cat.id);
+            
+            if(catItems.length > 0) {
+                let catHtml = `<div class="cat-group"><div class="cat-title">${cat.icon} ${cat.title}</div>`;
+                
+                // --- จัดกลุ่มตามชื่อแอป (subCat) ---
+                const grouped = catItems.reduce((acc, item) => {
+                    const groupName = item.subCat || 'ทั่วไป';
+                    if (!acc[groupName]) acc[groupName] = [];
+                    acc[groupName].push(item);
+                    return acc;
+                }, {});
+
+                for (const subCatName in grouped) {
+                    catHtml += `<div class="sub-cat-group">
+                                    <div class="sub-cat-name">📦 ${subCatName}</div>`;
+                    
+                    grouped[subCatName].forEach(product => {
                         const isOut = parseInt(product.stock) <= 0;
                         let displayImg = product.img ? `<img src="${product.img}">` : '🎬';
                         catHtml += `
-                            <div class="app-item ${isOut ? 'out-of-stock' : ''}">
+                            <div class="app-item ${isOut ? 'out-of-stock' : ''}" style="background: #333;">
                                 <div class="app-icon">${displayImg}</div>
                                 <div class="app-info">
-                                    <span class="app-name">${product.name}</span>
-                                    <span class="app-price">${product.price}.-</span>
-                                    <div class="stock-tag">${isOut ? '❌ หมด' : '✅ สต็อก: ' + product.stock}</div>
+                                    <div class="app-name">${product.name}</div>
+                                    <div class="app-price">
+                                        ${product.price}.- 
+                                        <span class="stock-tag">${isOut ? '(หมด)' : 'คลัง: '+product.stock}</span>
+                                    </div>
                                 </div>
-                                <a href="${isOut ? '#' : savedData.line}" class="btn-buy">${isOut ? 'หมด' : 'สั่งซื้อ'}</a>
+                                <a href="${isOut ? '#' : savedData.line}" class="btn-buy">${isOut ? 'หมด' : 'ซื้อ'}</a>
                             </div>`;
                     });
                     catHtml += `</div>`;
-                    container.innerHTML += catHtml;
                 }
-            });
-        }
+                catHtml += `</div>`;
+                container.innerHTML += catHtml;
+            }
+        });
     }
 
     document.getElementById('adminPassInput').addEventListener('keydown', (e) => {
