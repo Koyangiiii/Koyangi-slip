@@ -10,15 +10,37 @@
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Mitr',sans-serif;}
         body{background:var(--bg);display:flex;justify-content:center;color:#efefef;}
 
-        .container{ max-width:500px; width:100%; padding:20px 15px 100px; }
+        .container{ max-width:500px; width:100%; padding:20px 15px 100px; position: relative; }
+        
+        /* --- 🔙 Back Button --- */
+        .back-btn {
+            position: absolute; top: 20px; left: 15px;
+            background: var(--white); color: var(--main);
+            width: 40px; height: 40px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; border: 1.5px solid var(--main);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 100;
+        }
+
         .section{background:var(--white);border-radius:20px;padding:25px 20px;margin-bottom:20px;box-shadow:0 8px 20px rgba(0,0,0,0.3);border:2px solid var(--main);}
         h1,h2,h3{color:var(--main);}
         .center{text-align:center;}
         
-        .logo{width:120px;height:120px;border-radius:30px;overflow:hidden;margin:0 auto 20px;box-shadow:0 6px 20px var(--glow);border:2px solid var(--main);}
+        .logo{width:100px;height:100px;border-radius:30px;overflow:hidden;margin:0 auto 15px;box-shadow:0 6px 20px var(--glow);border:2px solid var(--main);}
         .logo img{width:100%;height:100%;object-fit:cover;}
 
-        /* --- 🍔 Hamburger Menu --- */
+        /* --- 🔍 Search Box --- */
+        .search-container { margin-bottom: 20px; position: relative; }
+        .search-input {
+            width: 100%; padding: 12px 15px 12px 45px;
+            background: #2d2d2d; border: 1.5px solid #444;
+            border-radius: 15px; color: #fff; outline: none;
+            transition: 0.3s; font-size: 14px;
+        }
+        .search-input:focus { border-color: var(--main); box-shadow: 0 0 10px var(--glow); }
+        .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
+
+        /* --- 🍔 Sidebar & Navigation --- */
         .hamburger {
             position: fixed; top: 20px; right: 20px; z-index: 1100;
             background: var(--main); width: 45px; height: 45px; border-radius: 12px;
@@ -47,26 +69,10 @@
         .cat-group { margin-bottom: 25px; }
         .cat-title { font-size: 16px; color: var(--main); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px dashed #444; padding-bottom: 5px; }
         
-        /* สไตล์หมวดหมู่ย่อย (ชื่อแอป) */
-        .sub-cat-group {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 15px;
-            padding: 12px;
-            margin-bottom: 15px;
-            border-left: 3px solid var(--main);
-        }
-        .sub-cat-name {
-            font-size: 14px;
-            color: var(--dark);
-            margin: 0 0 10px 5px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .sub-cat-group { background: rgba(255, 255, 255, 0.03); border-radius: 15px; padding: 12px; margin-bottom: 15px; border-left: 3px solid var(--main); }
+        .sub-cat-name { font-size: 14px; color: var(--dark); margin: 0 0 10px 5px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
 
-        /* สไตล์รายการสินค้า (แพ็กเกจ) */
-        .app-item { display: flex; align-items: center; background: #2d2d2d; padding: 12px; border-radius: 15px; margin-bottom: 8px; border: 1px solid transparent; transition: 0.3s; }
+        .app-item { display: flex; align-items: center; background: #333; padding: 12px; border-radius: 15px; margin-bottom: 8px; border: 1px solid transparent; transition: 0.3s; }
         .app-icon { width: 40px; height: 40px; border-radius: 10px; margin-right: 12px; background: #3d3d3d; display: flex; align-items: center; justify-content: center; font-size: 18px; overflow: hidden; flex-shrink: 0; }
         .app-icon img { width: 100%; height: 100%; object-fit: cover; }
         .app-info { flex-grow: 1; }
@@ -81,10 +87,10 @@
         .btn-main{display:block;text-align:center;padding:14px;border-radius:25px;text-decoration:none;margin-top:15px;font-weight:500; background:var(--main);color:#fff;}
         .small{font-size:12px;opacity:.7;margin-top:10px;color:var(--dark);white-space: pre-line;}
 
-        /* Admin Login Modal */
+        /* Admin Modal Styles */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
-        .modal-content { background: var(--white); border: 2px solid var(--main); border-radius: 25px; padding: 30px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 40px var(--glow); }
-        #adminPassInput { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #333; color: var(--main); text-align: center; font-size: 24px; letter-spacing: 10px; margin-bottom: 20px; outline: none; -webkit-text-security: disc; }
+        .modal-content { background: var(--white); border: 2px solid var(--main); border-radius: 30px; padding: 30px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 40px var(--glow); }
+        #adminPassInput { width: 100%; padding: 12px; border-radius: 15px; border: 1px solid #444; background: #333; color: var(--main); text-align: center; font-size: 28px; letter-spacing: 8px; margin-bottom: 20px; outline: none; -webkit-text-security: disc; }
         .modal-btns { display: flex; gap: 10px; }
         .btn-modal { flex: 1; padding: 12px; border-radius: 15px; border: none; cursor: pointer; font-family: 'Mitr'; font-weight: 500; }
         .btn-confirm { background: var(--main); color: #fff; }
@@ -92,6 +98,9 @@
     </style>
 </head>
 <body>
+
+<!-- ✅ ปุ่มย้อนกลับ (Back Button) -->
+<a href="index.html" class="back-btn">⬅️</a>
 
 <div class="hamburger" onclick="toggleMenu()">
     <span></span><span></span><span></span>
@@ -114,14 +123,20 @@
 </nav>
 
 <div class="container">
-    <div class="section center" style="border:none;box-shadow:none;background:transparent; padding-top: 10px;">
+    <div class="section center" style="border:none;box-shadow:none;background:transparent; padding-top: 20px;">
         <div class="logo"><img src="https://via.placeholder.com/150" alt="logo" id="disp-logo"></div>
-        <h1 id="disp-name">Premium Store</h1>
-        <p id="disp-slogan" style="color:var(--dark);opacity:.8;margin:5px 0 15px;">รายการสินค้าทั้งหมดแบ่งตามหมวดหมู่</p>
+        <h1 id="disp-name" style="font-size: 24px;">รายการสินค้า</h1>
+        <p id="disp-slogan" style="color:var(--dark);opacity:.8;margin:5px 0 15px; font-size: 14px;">ค้นหาแอปหรือแพ็กเกจที่ต้องการได้เลย</p>
+    </div>
+
+    <!-- ✅ ช่องการค้นหา (Search Box) -->
+    <div class="search-container">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" class="search-input" placeholder="ค้นหาชื่อแอป หรือ หมวดหมู่..." oninput="filterProducts()">
     </div>
 
     <div class="section">
-        <h2 style="margin-bottom: 20px; font-size: 18px;">🔥 หมวดหมู่สินค้า</h2>
+        <h2 style="margin-bottom: 20px; font-size: 18px; display: flex; align-items: center; gap: 10px;">🔥 สินค้าทั้งหมด <span id="item-count" style="font-size: 12px; color: var(--dark); font-weight: normal;"></span></h2>
         <div id="app-list-container">
             <p style="text-align:center; font-size:14px; color:#888;">กำลังโหลดสินค้า...</p>
         </div>
@@ -134,6 +149,7 @@
     </div>
 </div>
 
+<!-- Admin Modal -->
 <div class="modal-overlay" id="loginModal">
     <div class="modal-content">
         <h3>🔐 Admin Login</h3>
@@ -148,6 +164,7 @@
 
 <script>
     const PIN = "2003";
+    let allProducts = [];
 
     function toggleMenu() {
         document.getElementById('sidebar').classList.toggle('active');
@@ -187,21 +204,29 @@
         const savedData = JSON.parse(localStorage.getItem('shopData'));
         if(!savedData) return;
 
-        document.getElementById('disp-name').innerText = savedData.name || "Premium Store";
+        allProducts = savedData.products || [];
+        document.getElementById('disp-name').innerText = savedData.name || "รายการสินค้า";
         document.getElementById('disp-rules').innerText = savedData.rules || "";
         document.getElementById('link-line-btn').href = savedData.line || '#';
         if(savedData.logo) document.getElementById('disp-logo').src = savedData.logo;
         
+        renderProducts(allProducts);
+    }
+
+    // ✅ ฟังก์ชันแสดงผลสินค้า (รองรับการ Filter)
+    function renderProducts(productsToDisplay) {
         const container = document.getElementById('app-list-container');
+        const savedData = JSON.parse(localStorage.getItem('shopData'));
         container.innerHTML = '';
+        
+        let visibleCount = 0;
 
         categories.forEach(cat => {
-            const catItems = (savedData.products || []).filter(p => p.cat === cat.id);
+            const catItems = productsToDisplay.filter(p => p.cat === cat.id);
             
             if(catItems.length > 0) {
                 let catHtml = `<div class="cat-group"><div class="cat-title">${cat.icon} ${cat.title}</div>`;
                 
-                // --- จัดกลุ่มตามชื่อแอป (subCat) ---
                 const grouped = catItems.reduce((acc, item) => {
                     const groupName = item.subCat || 'ทั่วไป';
                     if (!acc[groupName]) acc[groupName] = [];
@@ -210,14 +235,14 @@
                 }, {});
 
                 for (const subCatName in grouped) {
-                    catHtml += `<div class="sub-cat-group">
-                                    <div class="sub-cat-name">📦 ${subCatName}</div>`;
+                    catHtml += `<div class="sub-cat-group"><div class="sub-cat-name">📦 ${subCatName}</div>`;
                     
                     grouped[subCatName].forEach(product => {
+                        visibleCount++;
                         const isOut = parseInt(product.stock) <= 0;
                         let displayImg = product.img ? `<img src="${product.img}">` : '🎬';
                         catHtml += `
-                            <div class="app-item ${isOut ? 'out-of-stock' : ''}" style="background: #333;">
+                            <div class="app-item ${isOut ? 'out-of-stock' : ''}">
                                 <div class="app-icon">${displayImg}</div>
                                 <div class="app-info">
                                     <div class="app-name">${product.name}</div>
@@ -226,7 +251,7 @@
                                         <span class="stock-tag">${isOut ? '(หมด)' : 'คลัง: '+product.stock}</span>
                                     </div>
                                 </div>
-                                <a href="${isOut ? '#' : savedData.line}" class="btn-buy">${isOut ? 'หมด' : 'ซื้อ'}</a>
+                                <a href="${isOut ? '#' : savedData.line}" class="btn-buy" target="_blank">${isOut ? 'หมด' : 'ซื้อ'}</a>
                             </div>`;
                     });
                     catHtml += `</div>`;
@@ -235,6 +260,21 @@
                 container.innerHTML += catHtml;
             }
         });
+
+        if (visibleCount === 0) {
+            container.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">ไม่พบสินค้าที่ตรงกับการค้นหา</p>';
+        }
+        document.getElementById('item-count').innerText = `(${visibleCount} รายการ)`;
+    }
+
+    // ✅ ฟังก์ชันกรองสินค้า (Search Logic)
+    function filterProducts() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = allProducts.filter(p => 
+            p.name.toLowerCase().includes(query) || 
+            (p.subCat && p.subCat.toLowerCase().includes(query))
+        );
+        renderProducts(filtered);
     }
 
     document.getElementById('adminPassInput').addEventListener('keydown', (e) => {
