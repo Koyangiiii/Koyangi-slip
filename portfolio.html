@@ -40,12 +40,11 @@
         .search-input:focus { border-color: var(--main); box-shadow: 0 0 10px var(--glow); }
         .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
 
-        /* --- 📂 Category Selector --- */
         .cat-selector {
             display: flex; gap: 10px; overflow-x: auto; padding: 5px 5px 15px;
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none;
         }
-        .cat-selector::-webkit-scrollbar { display: none; } /* Chrome, Safari */
+        .cat-selector::-webkit-scrollbar { display: none; }
 
         .cat-tab {
             white-space: nowrap; background: #333; color: var(--dark);
@@ -104,7 +103,6 @@
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
         .modal-content { background: var(--white); border: 2px solid var(--main); border-radius: 25px; padding: 30px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 40px var(--glow); }
-        #adminSafeIDInput { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #333; color: var(--main); text-align: center; font-size: 24px; letter-spacing: 10px; margin-bottom: 20px; outline: none; -webkit-text-security: disc; }
         .modal-btns { display: flex; gap: 10px; }
         .btn-modal { flex: 1; padding: 12px; border-radius: 15px; border: none; cursor: pointer; font-family: 'Mitr'; font-weight: 500; }
         .btn-confirm { background: var(--main); color: #fff; }
@@ -142,13 +140,11 @@
         <p id="disp-slogan" style="color:var(--dark);opacity:.8;margin:5px 0 15px; font-size: 14px;">ค้นหาแอปที่ต้องการได้เลย</p>
     </div>
 
-    <!-- 🔍 ค้นหา -->
     <div class="search-container">
         <span class="search-icon">🔍</span>
         <input type="text" id="searchInput" class="search-input" placeholder="ค้นชื่อแอป หรือแพ็กเกจ..." oninput="filterProducts()">
     </div>
 
-    <!-- 📂 ตัวเลือกหมวดหมู่ -->
     <div class="cat-selector" id="catSelector">
         <div class="cat-tab active" onclick="selectCategory('all')">ทั้งหมด</div>
         <div class="cat-tab" onclick="selectCategory('streaming')">📺 Streaming</div>
@@ -170,12 +166,25 @@
     </div>
 </div>
 
-<!-- Modal Admin คงเดิม -->
+<!-- ส่วน Modal Admin ที่อัปเดตป้องกัน Safari -->
 <div class="modal-overlay" id="loginModal">
     <div class="modal-content">
         <h3>🔐 Admin ID Access</h3>
         <p style="font-size: 12px; color: var(--dark); margin-bottom: 15px;">กรุณากรอก ID เพื่อเข้าสู่โหมดจัดการ</p>
-        <input type="tel" id="adminSafeIDInput" placeholder="••••" maxlength="4" inputmode="numeric" autocomplete="off"> 
+        
+        <input 
+            type="tel" 
+            id="adminSafeIDInput" 
+            name="koyangi-access-code" 
+            placeholder="••••" 
+            maxlength="4" 
+            inputmode="numeric" 
+            autocomplete="one-time-code"
+            readonly 
+            onfocus="this.removeAttribute('readonly');"
+            style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #333; color: var(--main); text-align: center; font-size: 24px; letter-spacing: 10px; margin-bottom: 20px; outline: none; -webkit-text-security: disc;"
+        > 
+
         <div class="modal-btns">
             <button class="btn-modal btn-cancel" onclick="closeModal()">ยกเลิก</button>
             <button class="btn-modal btn-confirm" onclick="checkAdminID()">ตกลง</button>
@@ -186,7 +195,7 @@
 <script>
     const KEY_ID = "2003";
     let allProducts = [];
-    let currentCategory = 'all'; // เก็บค่าหมวดหมู่ที่เลือก
+    let currentCategory = 'all';
 
     function toggleMenu() {
         document.getElementById('sidebar').classList.toggle('active');
@@ -194,12 +203,19 @@
         document.querySelector('.hamburger').classList.toggle('active');
     }
 
+    // ฟังก์ชัน openAdminModal อัปเดตใหม่
     function openAdminModal() { 
         sessionStorage.removeItem("isLoggedIn");
-        document.getElementById('loginModal').style.display = 'flex'; 
+        const modal = document.getElementById('loginModal');
         const input = document.getElementById('adminSafeIDInput');
+        
+        modal.style.display = 'flex'; 
         input.value = '';
-        setTimeout(() => { input.focus(); }, 200);
+        input.setAttribute('readonly', 'readonly'); 
+        
+        setTimeout(() => { 
+            input.focus(); 
+        }, 200);
     }
 
     function closeModal() { document.getElementById('loginModal').style.display = 'none'; }
@@ -235,11 +251,8 @@
         renderProducts(allProducts);
     }
 
-    // ฟังก์ชันเลือกหมวดหมู่
     function selectCategory(catId) {
         currentCategory = catId;
-        
-        // อัปเดต UI ปุ่ม
         const tabs = document.querySelectorAll('.cat-tab');
         tabs.forEach(tab => {
             if(tab.getAttribute('onclick').includes(`'${catId}'`)) {
@@ -248,19 +261,16 @@
                 tab.classList.remove('active');
             }
         });
-
-        filterProducts(); // กรองข้อมูลใหม่
+        filterProducts();
     }
 
     function filterProducts() {
         const query = document.getElementById('searchInput').value.toLowerCase();
-        
         const filtered = allProducts.filter(p => {
             const matchQuery = p.name.toLowerCase().includes(query) || (p.subCat && p.subCat.toLowerCase().includes(query));
             const matchCat = (currentCategory === 'all' || p.cat === currentCategory);
             return matchQuery && matchCat;
         });
-
         renderProducts(filtered);
     }
 
@@ -268,20 +278,16 @@
         const container = document.getElementById('app-list-container');
         const savedData = JSON.parse(localStorage.getItem('shopData'));
         container.innerHTML = '';
-        
         let visibleCount = 0;
 
-        // เลือกหมวดหมู่ที่จะแสดง (ถ้าเลือก all จะวนลูปทุกหมวดที่มีข้อมูล)
         const categoriesToShow = currentCategory === 'all' 
             ? categoryMeta 
             : categoryMeta.filter(c => c.id === currentCategory);
 
         categoriesToShow.forEach(cat => {
             const catItems = productsToDisplay.filter(p => p.cat === cat.id);
-            
             if(catItems.length > 0) {
                 let catHtml = `<div class="cat-group"><div class="cat-title">${cat.icon} ${cat.title}</div>`;
-                
                 const grouped = catItems.reduce((acc, item) => {
                     const groupName = item.subCat || 'ทั่วไป';
                     if (!acc[groupName]) acc[groupName] = [];
@@ -290,9 +296,7 @@
                 }, {});
 
                 for (const subCatName in grouped) {
-                    catHtml += `<div class="sub-cat-group">
-                                    <div class="sub-cat-name">📦 ${subCatName}</div>`;
-                    
+                    catHtml += `<div class="sub-cat-group"><div class="sub-cat-name">📦 ${subCatName}</div>`;
                     grouped[subCatName].forEach(product => {
                         visibleCount++;
                         const isOut = parseInt(product.stock) <= 0;
