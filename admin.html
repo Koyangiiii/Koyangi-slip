@@ -12,7 +12,6 @@
 
         .container{ max-width:500px; width:100%; padding:20px 15px 100px; position: relative; }
         
-        /* --- 🏠 Home Button (ปรับจากปุ่มย้อนกลับ) --- */
         .home-btn {
             position: absolute; top: 20px; left: 15px;
             background: var(--main); color: #fff;
@@ -31,7 +30,6 @@
         .logo{width:100px;height:100px;border-radius:30px;overflow:hidden;margin:0 auto 15px;box-shadow:0 6px 20px var(--glow);border:2px solid var(--main);}
         .logo img{width:100%;height:100%;object-fit:cover;}
 
-        /* --- 🔍 Search Box --- */
         .search-container { margin-bottom: 20px; position: relative; }
         .search-input {
             width: 100%; padding: 12px 15px 12px 45px;
@@ -42,7 +40,6 @@
         .search-input:focus { border-color: var(--main); box-shadow: 0 0 10px var(--glow); }
         .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
 
-        /* --- 🍔 Hamburger & Sidebar --- */
         .hamburger {
             position: fixed; top: 20px; right: 20px; z-index: 1100;
             background: var(--main); width: 45px; height: 45px; border-radius: 12px;
@@ -67,7 +64,6 @@
         .nav-item { text-decoration: none; color: var(--dark); display: flex; align-items: center; padding: 15px 20px; margin-bottom: 10px; border-radius: 15px; font-size: 16px; transition: 0.3s; gap: 15px; }
         .nav-item:hover, .nav-item.active { background: rgba(157, 129, 225, 0.1); color: var(--main); }
 
-        /* --- App List Styling --- */
         .cat-group { margin-bottom: 25px; }
         .cat-title { font-size: 16px; color: var(--main); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px dashed #444; padding-bottom: 5px; }
         
@@ -92,7 +88,22 @@
         /* Admin Login Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
         .modal-content { background: var(--white); border: 2px solid var(--main); border-radius: 25px; padding: 30px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 40px var(--glow); }
-        #adminPassInput { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #333; color: var(--main); text-align: center; font-size: 24px; letter-spacing: 10px; margin-bottom: 20px; outline: none; -webkit-text-security: disc; }
+        
+        /* แก้ไขเพื่อป้องกัน Safari Autofill */
+        #safePinInput { 
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; 
+            background: #333; color: var(--main); text-align: center; font-size: 24px; 
+            letter-spacing: 10px; margin-bottom: 20px; outline: none; -webkit-text-security: disc; 
+        }
+        /* ป้องกันการแสดงไอคอนรหัสผ่านของ Safari / Chrome */
+        input::-webkit-contacts-auto-fill-button, 
+        input::-webkit-credentials-auto-fill-button {
+            visibility: hidden;
+            pointer-events: none;
+            position: absolute;
+            right: 0;
+        }
+
         .modal-btns { display: flex; gap: 10px; }
         .btn-modal { flex: 1; padding: 12px; border-radius: 15px; border: none; cursor: pointer; font-family: 'Mitr'; font-weight: 500; }
         .btn-confirm { background: var(--main); color: #fff; }
@@ -101,7 +112,6 @@
 </head>
 <body>
 
-<!-- ✅ เปลี่ยนจากปุ่มลูกศรเป็นรูปบ้าน 🏠 -->
 <a href="index.html" class="home-btn" title="กลับหน้าหลัก">🏠</a>
 
 <div class="hamburger" onclick="toggleMenu()">
@@ -131,7 +141,6 @@
         <p id="disp-slogan" style="color:var(--dark);opacity:.8;margin:5px 0 15px; font-size: 14px;">ค้นหาแอปที่ต้องการได้เลย</p>
     </div>
 
-    <!-- ✅ ช่องค้นหา -->
     <div class="search-container">
         <span class="search-icon">🔍</span>
         <input type="text" id="searchInput" class="search-input" placeholder="ค้นชื่อแอป หรือแพ็กเกจ..." oninput="filterProducts()">
@@ -155,7 +164,18 @@
     <div class="modal-content">
         <h3>🔐 Admin Login</h3>
         <p style="font-size: 12px; color: var(--dark); margin-bottom: 15px;">กรุณากรอกรหัสผ่านเพื่อเข้าสู่โหมดจัดการ</p>
-        <input type="tel" id="adminPassInput" placeholder="••••" maxlength="4" inputmode="numeric"> 
+        
+        <!-- แก้ไขโครงสร้าง Input ใหม่ -->
+        <input type="tel" 
+               id="safePinInput" 
+               placeholder="••••" 
+               maxlength="4" 
+               inputmode="numeric" 
+               autocomplete="off" 
+               name="no-save-pin"
+               readonly 
+               onfocus="this.removeAttribute('readonly');">
+
         <div class="modal-btns">
             <button class="btn-modal btn-cancel" onclick="closeModal()">ยกเลิก</button>
             <button class="btn-modal btn-confirm" onclick="checkAdminPass()">ตกลง</button>
@@ -176,15 +196,17 @@
     function openAdminModal() { 
         sessionStorage.removeItem("isLoggedIn");
         document.getElementById('loginModal').style.display = 'flex'; 
-        const input = document.getElementById('adminPassInput');
+        const input = document.getElementById('safePinInput');
         input.value = '';
+        input.setAttribute('readonly', true); // คืนค่า readonly ทุกครั้งที่เปิด
         setTimeout(() => { input.focus(); }, 200);
     }
 
     function closeModal() { document.getElementById('loginModal').style.display = 'none'; }
 
+    // แก้ไขฟังก์ชันเช็ครหัสผ่าน
     function checkAdminPass() {
-        const input = document.getElementById('adminPassInput');
+        const input = document.getElementById('safePinInput');
         if (input.value === PIN) {
             sessionStorage.setItem("isLoggedIn", "true");
             window.location.href = "admin.html";
@@ -277,7 +299,8 @@
         renderProducts(filtered);
     }
 
-    document.getElementById('adminPassInput').addEventListener('keydown', (e) => {
+    // แก้ไข EventListener
+    document.getElementById('safePinInput').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') checkAdminPass();
     });
 
