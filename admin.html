@@ -10,6 +10,7 @@
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Mitr',sans-serif;}
         body { background: var(--bg); color: #fff; display: flex; justify-content: center; min-height: 100vh; }
         
+        /* --- UI Elements --- */
         .hamburger { position: fixed; top: 20px; right: 20px; z-index: 1100; background: var(--main); width: 45px; height: 45px; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; cursor: pointer; box-shadow: 0 4px 15px var(--glow); transition: 0.3s; }
         .hamburger span { width: 25px; height: 3px; background: #fff; border-radius: 2px; transition: 0.3s ease-in-out; display: block; }
         .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
@@ -20,19 +21,21 @@
         .sidebar.active { right: 0; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 999; backdrop-filter: blur(3px); }
         .overlay.active { display: block; }
-        .nav-item { text-decoration: none; color: var(--dark); display: flex; align-items: center; padding: 15px 20px; margin-bottom: 10px; border-radius: 15px; font-size: 16px; transition: 0.3s; gap: 15px; cursor: pointer; }
-        .nav-item:hover, .nav-item.active { background: rgba(157, 129, 225, 0.1); color: var(--main); }
 
-        .admin-container { width: 100%; max-width: 500px; padding: 80px 15px 50px; }
+        .admin-container { width: 100%; max-width: 500px; padding: 40px 15px 120px; }
         .section-card { background: var(--white); border-radius: 25px; padding: 20px; margin-bottom: 20px; border: 1.5px solid var(--main); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-        h3 { color: var(--main); margin-bottom: 15px; font-size: 16px; display: flex; align-items: center; gap: 10px; }
         
         select, input { width: 100%; padding: 10px 15px; background: #1a1a1a; border: 1.2px solid #444; border-radius: 12px; color: #fff; outline: none; font-size: 14px; transition: 0.3s; }
         select:focus, input:focus { border-color: var(--main); }
 
-        .stock-item { background: #2d2d2d; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #444; position: relative; }
-        .stock-item.hidden-item { opacity: 0.6; border-style: dashed; }
-        .stock-item.out-of-stock { border-left: 5px solid var(--red); }
+        /* --- Stock Item Style --- */
+        .stock-item { background: #2d2d2d; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #444; position: relative; transition: 0.3s; }
+        
+        /* เมื่อสินค้าหมด */
+        .stock-item.out-of-stock { opacity: 0.6; filter: grayscale(0.8); border: 1px solid var(--red); }
+        .stock-item.out-of-stock::after { content: "SOLD OUT"; position: absolute; top: 10px; right: 10px; background: var(--red); color: white; font-size: 10px; padding: 2px 8px; border-radius: 5px; font-weight: bold; }
+        
+        .stock-item.hidden-item { opacity: 0.5; border-style: dashed; }
 
         .item-header { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
         .img-box { position: relative; width: 65px; height: 65px; flex-shrink: 0; }
@@ -41,8 +44,12 @@
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         
         .btn { border: none; border-radius: 12px; font-weight: 500; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
-        .btn-save { background: var(--main); color: white; padding: 14px; font-size: 16px; margin-top: 20px; box-shadow: 0 4px 15px var(--glow); }
-        .btn-add { background: transparent; color: var(--main); border: 2.5px dashed var(--main); padding: 12px; margin-bottom: 20px; border-radius: 20px; }
+        
+        /* ปุ่มบันทึกแบบลอย */
+        .floating-save { position: fixed; bottom: 25px; right: 20px; left: 20px; max-width: 460px; margin: 0 auto; z-index: 900; background: var(--main); color: white; padding: 16px; font-size: 16px; box-shadow: 0 8px 25px var(--glow); border-radius: 18px; border: 2px solid rgba(255,255,255,0.2); }
+        .floating-save:active { transform: scale(0.95); }
+
+        .btn-add { background: transparent; color: var(--main); border: 2.5px dashed var(--main); padding: 12px; margin-bottom: 40px; border-radius: 20px; }
         
         .action-btns { display: flex; gap: 8px; margin-top: 12px; }
         .btn-mini { padding: 8px; font-size: 12px; border-radius: 10px; flex: 1; }
@@ -50,11 +57,17 @@
         .btn-hide.active { background: #ff9800; }
         .btn-del { background: rgba(255, 82, 82, 0.1); color: var(--red); }
 
+        /* Login */
         #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 9999; display: flex; justify-content: center; align-items: center; }
         .login-card { background: var(--white); padding: 40px 30px; border-radius: 30px; width: 90%; max-width: 360px; border: 2px solid var(--main); text-align: center; }
         #safePinInput { font-size: 32px; text-align: center; letter-spacing: 10px; -webkit-text-security: disc; margin-bottom: 20px; background: #1a1a1a; color: var(--main); }
 
-        .back-btn { display: inline-flex; align-items: center; gap: 5px; color: var(--dark); text-decoration: none; font-size: 14px; margin-bottom: 15px; }
+        .nav-item { text-decoration: none; color: var(--dark); display: flex; align-items: center; padding: 15px 20px; margin-bottom: 10px; border-radius: 15px; font-size: 16px; transition: 0.3s; gap: 15px; }
+        
+        /* ปุ่มด้านล่าง */
+        .bottom-nav-box { margin-top: 30px; border-top: 1px solid #444; padding-top: 20px; text-align: center; }
+        .back-link-btn { display: inline-flex; align-items: center; gap: 8px; background: #333; color: #ccc; padding: 12px 25px; border-radius: 50px; text-decoration: none; font-size: 14px; transition: 0.3s; }
+        .back-link-btn:hover { background: var(--main); color: #fff; }
     </style>
 </head>
 <body>
@@ -64,35 +77,42 @@
 
     <nav class="sidebar" id="sidebar">
         <a href="index.html" class="nav-item">🏠 หน้าหลัก</a>
-        <a href="portfolio.html" class="nav-item">📦 ไปที่หน้าสินค้า</a>
+        <a href="portfolio.html" class="nav-item">📦 สินค้า</a>
         <a href="contact.html" class="nav-item">💬 ติดต่อเรา</a>
-        <div onclick="toggleMenu()" class="nav-item active">⚙️ ตั้งค่าระบบ</div>
+        <div onclick="toggleMenu()" class="nav-item active" style="cursor:pointer;">⚙️ ตั้งค่าระบบ</div>
     </nav>
 
     <div id="login-overlay">
         <div class="login-card">
             <h3>🔐 Admin Access</h3>
             <input type="tel" id="safePinInput" placeholder="••••" maxlength="4" inputmode="numeric" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');">
-            <button class="btn btn-save" onclick="checkPass()">ปลดล็อกระบบ</button>
+            <button class="btn btn-save" style="background:var(--main); color:white; padding:12px; margin-top:10px;" onclick="checkPass()">ปลดล็อกระบบ</button>
         </div>
     </div>
 
     <div id="main-admin" class="admin-container" style="display:none;">
-        <a href="portfolio.html" class="back-btn">⬅️ กลับไปหน้าสินค้า</a>
         
-        <div style="text-align:center; margin-bottom:25px;">
-            <h1>🛠️ Control Panel</h1>
-            <p style="font-size: 13px; color: var(--dark);">จัดการสต็อกและหมวดหมู่</p>
+        <div style="text-align:center; margin-bottom:30px;">
+            <h1 style="color: var(--main);">🛠️ Control Panel</h1>
+            <p style="font-size: 13px; color: var(--dark);">อัปเดตสต็อกและสถานะสินค้า</p>
         </div>
 
         <div class="section-card">
-            <h3>📦 รายการสินค้าทั้งหมด</h3>
+            <h3 style="color:var(--main); margin-bottom:15px;">📦 รายการสินค้า</h3>
             <div id="stock-container"></div>
             <button class="btn btn-add" onclick="addAppItem()">➕ เพิ่มสินค้าใหม่</button>
         </div>
 
-        <button class="btn btn-save" onclick="saveData()">💾 บันทึกการเปลี่ยนแปลง</button>
-        <p style="text-align:center; font-size:11px; color:#666; margin-top:15px;">ข้อมูลจะถูกอัปเดตไปที่หน้าสินค้าทันทีหลังกดบันทึก</p>
+        <!-- ปุ่มบันทึกแบบลอย -->
+        <button class="btn floating-save" onclick="saveData()">
+            💾 บันทึกการเปลี่ยนแปลงทั้งหมด
+        </button>
+
+        <!-- ย้ายมาไว้ด้านล่าง -->
+        <div class="bottom-nav-box">
+            <a href="portfolio.html" class="back-link-btn">⬅️ กลับไปหน้าสินค้า</a>
+            <p style="font-size: 11px; color: #666; margin-top: 15px;">ระบบจะบันทึกลงใน Browser นี้เท่านั้น</p>
+        </div>
     </div>
 
     <script>
@@ -122,18 +142,30 @@
             loadData();
         }
 
+        // ฟังก์ชันเช็คสต็อกเพื่อเปลี่ยนสี
+        function checkStockStatus(input) {
+            const item = input.closest('.stock-item');
+            const stockVal = parseInt(input.value);
+            if (stockVal <= 0 || isNaN(stockVal)) {
+                item.classList.add('out-of-stock');
+            } else {
+                item.classList.remove('out-of-stock');
+            }
+        }
+
         function addAppItem(data = {}) {
             const container = document.getElementById('stock-container');
             const itemDiv = document.createElement('div');
             
-            // ค่าเริ่มต้น
             const {
                 name = '', price = '', stock = '', 
                 cat = 'streaming', img = 'https://via.placeholder.com/150', 
                 subCat = '', isHidden = false
             } = data;
 
-            itemDiv.className = `stock-item ${isHidden ? 'hidden-item' : ''}`;
+            // เช็คสถานะสินค้าหมดตอนโหลด
+            const outStockClass = (stock !== '' && parseInt(stock) <= 0) ? 'out-of-stock' : '';
+            itemDiv.className = `stock-item ${isHidden ? 'hidden-item' : ''} ${outStockClass}`;
             itemDiv.dataset.hidden = isHidden;
             
             itemDiv.innerHTML = `
@@ -160,13 +192,13 @@
                         <input type="number" class="app-price" value="${price}" placeholder="ราคา">
                     </div>
                     <div style="font-size:11px; color:var(--dark);">สต็อก (ชิ้น)
-                        <input type="number" class="app-stock" value="${stock}" placeholder="สต็อก">
+                        <input type="number" class="app-stock" value="${stock}" placeholder="สต็อก" oninput="checkStockStatus(this)">
                     </div>
                 </div>
 
                 <div class="action-btns">
                     <button class="btn btn-mini btn-hide ${isHidden ? 'active' : ''}" onclick="toggleHide(this)">
-                        ${isHidden ? '👁️‍🗨️ ถูกซ่อนอยู่' : '👁️ แสดงหน้าเว็บ'}
+                        ${isHidden ? '👁️‍🗨️ ซ่อนอยู่' : '👁️ แสดงอยู่'}
                     </button>
                     <button class="btn btn-mini btn-del" onclick="if(confirm('ลบรายการนี้?')){this.closest('.stock-item').remove()}">🗑️ ลบ</button>
                 </div>
@@ -182,7 +214,7 @@
             item.dataset.hidden = newState;
             item.classList.toggle('hidden-item', newState);
             btn.classList.toggle('active', newState);
-            btn.innerHTML = newState ? '👁️‍🗨️ ถูกซ่อนอยู่' : '👁️ แสดงหน้าเว็บ';
+            btn.innerHTML = newState ? '👁️‍🗨️ ซ่อนอยู่' : '👁️ แสดงอยู่';
         }
 
         function handleFile(input) {
@@ -221,7 +253,17 @@
             };
 
             localStorage.setItem('shopData', JSON.stringify(newData));
-            alert('✅ บันทึกข้อมูลเรียบร้อยแล้ว!');
+            
+            // เอฟเฟกต์ปุ่มหลังบันทึก
+            const saveBtn = document.querySelector('.floating-save');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = "✅ บันทึกสำเร็จ!";
+            saveBtn.style.background = "var(--green)";
+            
+            setTimeout(() => {
+                saveBtn.innerHTML = originalText;
+                saveBtn.style.background = "var(--main)";
+            }, 2000);
         }
 
         function loadData() {
