@@ -32,13 +32,8 @@
         select, input { width: 100%; padding: 12px 15px; background: #1a1a1a; border: 1.5px solid #444; border-radius: 12px; color: #fff; outline: none; font-size: 14px; transition: 0.3s; }
         select:focus, input:focus { border-color: var(--main); }
 
-        /* ✅ สไตล์สินค้าหมด (สีเทา) */
         .stock-item { background: #2d2d2d; border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid #444; transition: 0.4s; }
-        .stock-item.out-of-stock { 
-            opacity: 0.5; 
-            filter: grayscale(1); 
-            border-color: #333;
-        }
+        .stock-item.out-of-stock { opacity: 0.5; filter: grayscale(1); border-color: #333; }
 
         .item-header { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; }
         .img-box { position: relative; width: 75px; height: 75px; flex-shrink: 0; }
@@ -61,11 +56,12 @@
     <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
+    <!-- ✅ ปรับเมนูสินค้าให้อยู่อันดับที่ 2 -->
     <nav class="sidebar" id="sidebar">
         <a href="index.html" class="nav-item">🏠 หน้าหลัก</a>
+        <a href="portfolio.html" class="nav-item">📦 สินค้า</a>
         <a href="contact.html" class="nav-item">💬 ติดต่อเรา</a>
         <div onclick="toggleMenu()" class="nav-item active">⚙️ ตั้งค่าระบบ</div>
-        <a href="portfolio.html" class="nav-item">📦 สินค้า</a>
     </nav>
 
     <div id="login-overlay">
@@ -79,7 +75,7 @@
     <div id="main-admin" class="admin-container" style="display:none;">
         <div style="text-align:center; margin-bottom:25px;">
             <h1>🛠️ Control Panel</h1>
-            <p style="font-size: 13px; color: var(--dark);">จัดการสต็อกแยกตามหมวดหมู่ย่อย</p>
+            <p style="font-size: 13px; color: var(--dark);">จัดการสต็อกและรายการสินค้า</p>
         </div>
 
         <div class="section-card">
@@ -121,7 +117,6 @@
             loadData();
         }
 
-        // ✅ ฟังก์ชันเช็คสต็อกเพื่อเปลี่ยนสี
         function updateStockUI(inputElement) {
             const stockItem = inputElement.closest('.stock-item');
             const stockValue = parseInt(inputElement.value) || 0;
@@ -135,7 +130,6 @@
         function addAppItem(name = '', price = '', stock = '', cat = 'streaming', imgData = '', subCat = '') {
             const container = document.getElementById('stock-container');
             const itemDiv = document.createElement('div');
-            // เช็คตั้งแต่ตอนสร้างว่าควรเป็นสีเทาไหม
             itemDiv.className = `stock-item ${stock !== '' && parseInt(stock) <= 0 ? 'out-of-stock' : ''}`;
             
             const displayImg = imgData || 'https://via.placeholder.com/150';
@@ -148,8 +142,8 @@
                         <div style="position:absolute; bottom:0; right:0; background:var(--main); border-radius:50%; width:24px; height:24px; font-size:12px; display:flex; align-items:center; justify-content:center; cursor:pointer; border: 2px solid var(--white);" onclick="this.previousElementSibling.click()">📷</div>
                     </div>
                     <div style="flex-grow:1;">
-                        <input type="text" class="app-subcat" placeholder="ชื่อแอปหลัก" value="${subCat}">
-                        <input type="text" class="app-name" style="margin-top:5px; font-size:12px;" placeholder="แพ็กเกจ" value="${name}">
+                        <input type="text" class="app-subcat" placeholder="ชื่อแอปหลัก (เช่น Netflix)" value="${subCat}">
+                        <input type="text" class="app-name" style="margin-top:5px; font-size:12px;" placeholder="แพ็กเกจ (เช่น 30 วัน)" value="${name}">
                     </div>
                 </div>
                 <div class="form-grid">
@@ -177,6 +171,9 @@
         function saveData() {
             const status = document.getElementById('shopStatusInput').value;
             const products = [];
+            // ดึงข้อมูลเดิมจาก LocalStorage เพื่อรักษาข้อมูลตั้งค่าอื่นๆ (โลโก้, ชื่อร้าน)
+            const oldData = JSON.parse(localStorage.getItem('shopData')) || {};
+
             document.querySelectorAll('.stock-item').forEach(item => {
                 const previewImg = item.querySelector('.img-preview');
                 products.push({
@@ -184,20 +181,30 @@
                     name: item.querySelector('.app-name').value,
                     price: item.querySelector('.app-price').value,
                     stock: item.querySelector('.app-stock').value,
-                    cat: 'streaming', // Default หรือปรับตามต้องการ
+                    cat: 'streaming', 
                     img: previewImg.dataset.base64 || previewImg.src
                 });
             });
-            localStorage.setItem('shopData', JSON.stringify({shopStatus: status, products: products}));
+
+            const newData = {
+                ...oldData, // เก็บค่า logo, name, rules เดิมไว้
+                shopStatus: status,
+                products: products
+            };
+
+            localStorage.setItem('shopData', JSON.stringify(newData));
             alert('✅ บันทึกสต็อกเรียบร้อย!');
         }
 
         function loadData() {
             const savedData = JSON.parse(localStorage.getItem('shopData'));
-            if(savedData && savedData.products) {
-                const container = document.getElementById('stock-container');
-                container.innerHTML = '';
-                savedData.products.forEach(p => addAppItem(p.name, p.price, p.stock, p.cat, p.img, p.subCat));
+            if(savedData) {
+                if(savedData.shopStatus) document.getElementById('shopStatusInput').value = savedData.shopStatus;
+                if(savedData.products) {
+                    const container = document.getElementById('stock-container');
+                    container.innerHTML = '';
+                    savedData.products.forEach(p => addAppItem(p.name, p.price, p.stock, p.cat, p.img, p.subCat));
+                }
             }
         }
 
