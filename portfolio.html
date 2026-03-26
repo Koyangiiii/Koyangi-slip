@@ -30,7 +30,7 @@
         .logo{width:100px;height:100px;border-radius:30px;overflow:hidden;margin:0 auto 15px;box-shadow:0 6px 20px var(--glow);border:2px solid var(--main);}
         .logo img{width:100%;height:100%;object-fit:cover;}
 
-        .search-container { margin-bottom: 20px; position: relative; }
+        .search-container { margin-bottom: 15px; position: relative; }
         .search-input {
             width: 100%; padding: 12px 15px 12px 45px;
             background: #2d2d2d; border: 1.5px solid #444;
@@ -39,6 +39,23 @@
         }
         .search-input:focus { border-color: var(--main); box-shadow: 0 0 10px var(--glow); }
         .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
+
+        /* --- 📂 Category Selector --- */
+        .cat-selector {
+            display: flex; gap: 10px; overflow-x: auto; padding: 5px 5px 15px;
+            scrollbar-width: none; /* Firefox */
+        }
+        .cat-selector::-webkit-scrollbar { display: none; } /* Chrome, Safari */
+
+        .cat-tab {
+            white-space: nowrap; background: #333; color: var(--dark);
+            padding: 8px 18px; border-radius: 20px; font-size: 13px;
+            cursor: pointer; transition: 0.3s; border: 1.5px solid transparent;
+        }
+        .cat-tab.active {
+            background: var(--main); color: #fff; border-color: var(--main);
+            box-shadow: 0 4px 12px var(--glow);
+        }
 
         .hamburger {
             position: fixed; top: 20px; right: 20px; z-index: 1100;
@@ -85,27 +102,9 @@
         .btn-main{display:block;text-align:center;padding:14px;border-radius:25px;text-decoration:none;margin-top:15px;font-weight:500; background:var(--main);color:#fff;}
         .small{font-size:12px;opacity:.7;margin-top:10px;color:var(--dark);white-space: pre-line;}
 
-        /* Admin Login Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
         .modal-content { background: var(--white); border: 2px solid var(--main); border-radius: 25px; padding: 30px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 40px var(--glow); }
-        
-        /* ปรับปรุง ID Input เพื่อพรางตาเบราว์เซอร์ */
-        #adminSafeIDInput { 
-            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; 
-            background: #333; color: var(--main); text-align: center; font-size: 24px; 
-            letter-spacing: 10px; margin-bottom: 20px; outline: none; 
-            -webkit-text-security: disc; /* พรางจุดแทน type="password" */
-        }
-        
-        /* ซ่อนไอคอนกุญแจของ Safari */
-        #adminSafeIDInput::-webkit-contacts-auto-fill-button, 
-        #adminSafeIDInput::-webkit-credentials-auto-fill-button {
-            visibility: hidden;
-            pointer-events: none;
-            position: absolute;
-            right: 0;
-        }
-
+        #adminSafeIDInput { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #333; color: var(--main); text-align: center; font-size: 24px; letter-spacing: 10px; margin-bottom: 20px; outline: none; -webkit-text-security: disc; }
         .modal-btns { display: flex; gap: 10px; }
         .btn-modal { flex: 1; padding: 12px; border-radius: 15px; border: none; cursor: pointer; font-family: 'Mitr'; font-weight: 500; }
         .btn-confirm { background: var(--main); color: #fff; }
@@ -137,20 +136,28 @@
 </nav>
 
 <div class="container">
-    <!-- ส่วนแสดงเนื้อหาเหมือนเดิม -->
     <div class="section center" style="border:none;box-shadow:none;background:transparent; padding-top: 20px;">
         <div class="logo"><img src="https://via.placeholder.com/150" alt="logo" id="disp-logo"></div>
         <h1 id="disp-name" style="font-size: 24px;">รายการสินค้า</h1>
         <p id="disp-slogan" style="color:var(--dark);opacity:.8;margin:5px 0 15px; font-size: 14px;">ค้นหาแอปที่ต้องการได้เลย</p>
     </div>
 
+    <!-- 🔍 ค้นหา -->
     <div class="search-container">
         <span class="search-icon">🔍</span>
         <input type="text" id="searchInput" class="search-input" placeholder="ค้นชื่อแอป หรือแพ็กเกจ..." oninput="filterProducts()">
     </div>
 
+    <!-- 📂 ตัวเลือกหมวดหมู่ -->
+    <div class="cat-selector" id="catSelector">
+        <div class="cat-tab active" onclick="selectCategory('all')">ทั้งหมด</div>
+        <div class="cat-tab" onclick="selectCategory('streaming')">📺 Streaming</div>
+        <div class="cat-tab" onclick="selectCategory('working')">💼 Working</div>
+        <div class="cat-tab" onclick="selectCategory('education')">🎓 Education</div>
+    </div>
+
     <div class="section">
-        <h2 style="margin-bottom: 20px; font-size: 18px; display: flex; align-items: center; gap: 10px;">🔥 สินค้าทั้งหมด <span id="item-count" style="font-size: 12px; color: var(--dark); font-weight: normal;"></span></h2>
+        <h2 style="margin-bottom: 20px; font-size: 18px; display: flex; align-items: center; gap: 10px;">🔥 สินค้า <span id="item-count" style="font-size: 12px; color: var(--dark); font-weight: normal;"></span></h2>
         <div id="app-list-container">
             <p style="text-align:center; font-size:14px; color:#888;">กำลังโหลดสินค้า...</p>
         </div>
@@ -163,27 +170,12 @@
     </div>
 </div>
 
+<!-- Modal Admin คงเดิม -->
 <div class="modal-overlay" id="loginModal">
     <div class="modal-content">
         <h3>🔐 Admin ID Access</h3>
         <p style="font-size: 12px; color: var(--dark); margin-bottom: 15px;">กรุณากรอก ID เพื่อเข้าสู่โหมดจัดการ</p>
-        
-        <!-- เทคนิคป้องกัน Safari: 
-             1. ไม่ใช้ type="password" แต่ใช้ CSS -webkit-text-security แทน
-             2. ใส่ชื่อ name ที่สื่อถึงอย่างอื่น เช่น "search-query" 
-             3. เพิ่ม readonly และลบออกเมื่อคลิก (ป้องกันบอทสแกนช่องกรอก)
-             4. autocomplete="off"
-        -->
-        <input type="tel" 
-               id="adminSafeIDInput" 
-               name="search-query-internal" 
-               placeholder="••••" 
-               maxlength="4" 
-               inputmode="numeric" 
-               autocomplete="off"
-               readonly 
-               onfocus="this.removeAttribute('readonly');"> 
-
+        <input type="tel" id="adminSafeIDInput" placeholder="••••" maxlength="4" inputmode="numeric" autocomplete="off"> 
         <div class="modal-btns">
             <button class="btn-modal btn-cancel" onclick="closeModal()">ยกเลิก</button>
             <button class="btn-modal btn-confirm" onclick="checkAdminID()">ตกลง</button>
@@ -194,6 +186,7 @@
 <script>
     const KEY_ID = "2003";
     let allProducts = [];
+    let currentCategory = 'all'; // เก็บค่าหมวดหมู่ที่เลือก
 
     function toggleMenu() {
         document.getElementById('sidebar').classList.toggle('active');
@@ -206,7 +199,6 @@
         document.getElementById('loginModal').style.display = 'flex'; 
         const input = document.getElementById('adminSafeIDInput');
         input.value = '';
-        input.setAttribute('readonly', 'true'); // ใส่กลับเพื่อกัน Safari จำ
         setTimeout(() => { input.focus(); }, 200);
     }
 
@@ -224,8 +216,7 @@
         }
     }
 
-    // ฟังก์ชันอื่นๆ คงเดิม...
-    const categories = [
+    const categoryMeta = [
         { id: 'streaming', title: 'Streaming Apps', icon: '📺' },
         { id: 'working', title: 'Working Tools', icon: '💼' },
         { id: 'education', title: 'Education', icon: '🎓' }
@@ -234,31 +225,74 @@
     function loadContent() {
         const savedData = JSON.parse(localStorage.getItem('shopData'));
         if(!savedData) return;
+
         allProducts = savedData.products || [];
         document.getElementById('disp-name').innerText = savedData.name || "Premium Store";
         document.getElementById('disp-rules').innerText = savedData.rules || "";
         document.getElementById('link-line-btn').href = savedData.line || '#';
         if(savedData.logo) document.getElementById('disp-logo').src = savedData.logo;
+        
         renderProducts(allProducts);
+    }
+
+    // ฟังก์ชันเลือกหมวดหมู่
+    function selectCategory(catId) {
+        currentCategory = catId;
+        
+        // อัปเดต UI ปุ่ม
+        const tabs = document.querySelectorAll('.cat-tab');
+        tabs.forEach(tab => {
+            if(tab.getAttribute('onclick').includes(`'${catId}'`)) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+
+        filterProducts(); // กรองข้อมูลใหม่
+    }
+
+    function filterProducts() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        
+        const filtered = allProducts.filter(p => {
+            const matchQuery = p.name.toLowerCase().includes(query) || (p.subCat && p.subCat.toLowerCase().includes(query));
+            const matchCat = (currentCategory === 'all' || p.cat === currentCategory);
+            return matchQuery && matchCat;
+        });
+
+        renderProducts(filtered);
     }
 
     function renderProducts(productsToDisplay) {
         const container = document.getElementById('app-list-container');
         const savedData = JSON.parse(localStorage.getItem('shopData'));
         container.innerHTML = '';
+        
         let visibleCount = 0;
-        categories.forEach(cat => {
+
+        // เลือกหมวดหมู่ที่จะแสดง (ถ้าเลือก all จะวนลูปทุกหมวดที่มีข้อมูล)
+        const categoriesToShow = currentCategory === 'all' 
+            ? categoryMeta 
+            : categoryMeta.filter(c => c.id === currentCategory);
+
+        categoriesToShow.forEach(cat => {
             const catItems = productsToDisplay.filter(p => p.cat === cat.id);
+            
             if(catItems.length > 0) {
                 let catHtml = `<div class="cat-group"><div class="cat-title">${cat.icon} ${cat.title}</div>`;
+                
                 const grouped = catItems.reduce((acc, item) => {
                     const groupName = item.subCat || 'ทั่วไป';
                     if (!acc[groupName]) acc[groupName] = [];
                     acc[groupName].push(item);
                     return acc;
                 }, {});
+
                 for (const subCatName in grouped) {
-                    catHtml += `<div class="sub-cat-group"><div class="sub-cat-name">📦 ${subCatName}</div>`;
+                    catHtml += `<div class="sub-cat-group">
+                                    <div class="sub-cat-name">📦 ${subCatName}</div>`;
+                    
                     grouped[subCatName].forEach(product => {
                         visibleCount++;
                         const isOut = parseInt(product.stock) <= 0;
@@ -268,7 +302,10 @@
                                 <div class="app-icon">${displayImg}</div>
                                 <div class="app-info">
                                     <div class="app-name">${product.name}</div>
-                                    <div class="app-price">${product.price}.- <span class="stock-tag">${isOut ? '(หมด)' : 'คลัง: '+product.stock}</span></div>
+                                    <div class="app-price">
+                                        ${product.price}.- 
+                                        <span class="stock-tag">${isOut ? '(หมด)' : 'คลัง: '+product.stock}</span>
+                                    </div>
                                 </div>
                                 <a href="${isOut ? '#' : savedData.line}" class="btn-buy" target="_blank">${isOut ? 'หมด' : 'ซื้อ'}</a>
                             </div>`;
@@ -279,17 +316,11 @@
                 container.innerHTML += catHtml;
             }
         });
-        if (visibleCount === 0) container.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">ไม่พบสินค้าที่ตรงกับการค้นหา</p>';
-        document.getElementById('item-count').innerText = `(${visibleCount} รายการ)`;
-    }
 
-    function filterProducts() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        const filtered = allProducts.filter(p => 
-            p.name.toLowerCase().includes(query) || 
-            (p.subCat && p.subCat.toLowerCase().includes(query))
-        );
-        renderProducts(filtered);
+        if (visibleCount === 0) {
+            container.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">ไม่พบสินค้าในหมวดหมู่นี้</p>';
+        }
+        document.getElementById('item-count').innerText = `(${visibleCount} รายการ)`;
     }
 
     document.getElementById('adminSafeIDInput').addEventListener('keydown', (e) => {
