@@ -82,11 +82,10 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
         .modal-content { background: var(--white); border: 2px solid var(--main); border-radius: 25px; padding: 30px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 40px var(--glow); }
         
-        /* ปรับปรุง Input ให้รองรับภาษาไทย */
         #adminPassInput { 
             width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; 
             background: #1a1a1a; color: var(--main); outline: none; margin-bottom: 20px; 
-            text-align: center; font-size: 20px; -webkit-text-security: disc; 
+            text-align: center; font-size: 24px; letter-spacing: 8px; -webkit-text-security: disc; 
         }
         .modal-btns { display: flex; gap: 10px; }
         .btn-modal { flex: 1; padding: 12px; border-radius: 15px; border: none; cursor: pointer; font-family: 'Mitr'; font-weight: 500; }
@@ -141,6 +140,7 @@
             <a href="portfolio.html?cat=working" class="cat-card">
                 <div class="cat-icon">💼</div>
                 <div class="cat-name">Working</div>
+                <div class="cat-name">Working</div>
                 <div class="cat-count" id="count-working">ดูสินค้า</div>
             </a>
             <a href="portfolio.html?cat=education" class="cat-card">
@@ -167,8 +167,9 @@
 <div class="modal-overlay" id="loginModal">
     <div class="modal-content">
         <h3>🔐 Admin Login</h3>
-        <p style="font-size: 12px; color: var(--dark); margin-bottom: 15px;">กรุณากรอกรหัสผ่านภาษาไทย</p>
-        <input type="text" id="adminPassInput" placeholder="รหัสผ่าน" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');"> 
+        <p style="font-size: 12px; color: var(--dark); margin-bottom: 15px;">กรุณากรอกรหัสผ่าน 4 หลัก</p>
+        <!-- เปลี่ยนเป็น type="tel" เพื่อคีย์บอร์ดตัวเลข และจำกัด maxlength="4" -->
+        <input type="tel" id="adminPassInput" placeholder="••••" maxlength="4" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');"> 
         <div class="modal-btns">
             <button type="button" class="btn-modal btn-cancel" onclick="closeModal()">ยกเลิก</button>
             <button type="button" class="btn-modal btn-confirm" onclick="checkAdminPass()">ตกลง</button>
@@ -177,8 +178,8 @@
 </div>
 
 <script>
-    // อัปเดตรหัสผ่านเป็น แอดมินออม
-    const PIN = "แอดมินออม";
+    // อัปเดตรหัสผ่านเป็น 2546 เรียบร้อยแล้ว
+    const PIN = "2546";
 
     function toggleMenu() {
         document.getElementById('sidebar').classList.toggle('active');
