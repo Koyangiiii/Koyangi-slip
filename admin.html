@@ -10,38 +10,21 @@
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Mitr',sans-serif;}
         body { background: var(--bg); color: #fff; display: flex; justify-content: center; min-height: 100vh; }
         
-        /* --- 🍔 Sidebar & Hamburger (Update ให้เหมือนหน้าอื่น) --- */
-        .hamburger {
-            position: fixed; top: 20px; right: 20px; z-index: 1100;
-            background: var(--main); width: 45px; height: 45px; border-radius: 12px;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
-            cursor: pointer; box-shadow: 0 4px 15px var(--glow); transition: 0.3s;
-        }
+        /* --- Sidebar & Nav --- */
+        .hamburger { position: fixed; top: 20px; right: 20px; z-index: 1100; background: var(--main); width: 45px; height: 45px; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; cursor: pointer; box-shadow: 0 4px 15px var(--glow); transition: 0.3s; }
         .hamburger span { width: 25px; height: 3px; background: #fff; border-radius: 2px; transition: 0.3s ease-in-out; display: block; }
         .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
         .hamburger.active span:nth-child(2) { opacity: 0; transform: translateX(20px); }
         .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
-        .sidebar {
-            position: fixed; top: 0; right: -280px; width: 280px; height: 100%;
-            background: #252525; z-index: 1050; padding: 80px 20px 20px;
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: -5px 0 25px rgba(0,0,0,0.5); border-left: 2px solid var(--main);
-        }
+        .sidebar { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: #252525; z-index: 1050; padding: 80px 20px 20px; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: -5px 0 25px rgba(0,0,0,0.5); border-left: 2px solid var(--main); }
         .sidebar.active { right: 0; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 999; backdrop-filter: blur(3px); }
         .overlay.active { display: block; }
-
-        /* จัดสไตล์ Nav Item ให้เหมือนหน้า Portfolio/Index */
-        .nav-item { 
-            text-decoration: none; color: var(--dark); display: flex; 
-            align-items: center; padding: 15px 20px; margin-bottom: 10px; 
-            border-radius: 15px; font-size: 16px; transition: 0.3s; gap: 15px; cursor: pointer; 
-        }
+        .nav-item { text-decoration: none; color: var(--dark); display: flex; align-items: center; padding: 15px 20px; margin-bottom: 10px; border-radius: 15px; font-size: 16px; transition: 0.3s; gap: 15px; cursor: pointer; }
         .nav-item:hover, .nav-item.active { background: rgba(157, 129, 225, 0.1); color: var(--main); }
-        .nav-icon { font-size: 20px; }
 
-        /* --- Admin UI Elements --- */
+        /* --- Admin UI --- */
         .admin-container { width: 100%; max-width: 500px; padding: 80px 15px 50px; }
         .section-card { background: var(--white); border-radius: 25px; padding: 25px; margin-bottom: 20px; border: 2px solid var(--main); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
         h3 { color: var(--main); margin-bottom: 15px; font-size: 18px; display: flex; align-items: center; gap: 10px; }
@@ -49,7 +32,14 @@
         select, input { width: 100%; padding: 12px 15px; background: #1a1a1a; border: 1.5px solid #444; border-radius: 12px; color: #fff; outline: none; font-size: 14px; transition: 0.3s; }
         select:focus, input:focus { border-color: var(--main); }
 
-        .stock-item { background: #2d2d2d; border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid #444; }
+        /* ✅ สไตล์สินค้าหมด (สีเทา) */
+        .stock-item { background: #2d2d2d; border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid #444; transition: 0.4s; }
+        .stock-item.out-of-stock { 
+            opacity: 0.5; 
+            filter: grayscale(1); 
+            border-color: #333;
+        }
+
         .item-header { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; }
         .img-box { position: relative; width: 75px; height: 75px; flex-shrink: 0; }
         .img-preview { width: 100%; height: 100%; border-radius: 15px; object-fit: cover; background: #1a1a1a; border: 1px solid #444; }
@@ -71,26 +61,16 @@
     <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-    <!-- ✅ Sidebar ที่ปรับปรุงใหม่ให้เหมือนหน้าอื่น -->
     <nav class="sidebar" id="sidebar">
-        <a href="index.html" class="nav-item">
-            <span class="nav-icon">🏠</span><span>หน้าหลัก</span>
-        </a>
-        <a href="portfolio.html" class="nav-item">
-            <span class="nav-icon">📦</span><span>สินค้า</span>
-        </a>
-        <a href="contact.html" class="nav-item">
-            <span class="nav-icon">💬</span><span>ติดต่อเรา</span>
-        </a>
-        <div onclick="toggleMenu()" class="nav-item active">
-            <span class="nav-icon">⚙️</span><span>ตั้งค่าระบบ</span>
-        </div>
+        <a href="index.html" class="nav-item">🏠 หน้าหลัก</a>
+        <a href="contact.html" class="nav-item">💬 ติดต่อเรา</a>
+        <div onclick="toggleMenu()" class="nav-item active">⚙️ ตั้งค่าระบบ</div>
+        <a href="portfolio.html" class="nav-item">📦 สินค้า</a>
     </nav>
 
     <div id="login-overlay">
         <div class="login-card">
             <h3>🔐 Admin Access</h3>
-            <p style="font-size:13px; color:#888; margin-bottom:20px;">กรุณากรอกรหัสผ่านเพื่อจัดการร้าน</p>
             <input type="tel" id="passInput" class="login-input" placeholder="••••" maxlength="4">
             <button class="btn btn-save" onclick="checkPass()">ปลดล็อกระบบ</button>
         </div>
@@ -117,9 +97,6 @@
         </div>
 
         <button class="btn btn-save" onclick="saveData()">💾 บันทึกการเปลี่ยนแปลงทั้งหมด</button>
-        
-        <!-- ✅ เพิ่มปุ่มกลับหน้าสินค้าด้านล่าง (เผื่อคนไม่ถนัดใช้เมนู) -->
-        <a href="portfolio.html" style="display:block; text-align:center; color:var(--dark); margin-top:25px; font-size:14px; text-decoration:none;">👁️ ดูหน้าเว็บสินค้า (Portfolio)</a>
     </div>
 
     <script>
@@ -135,10 +112,7 @@
             if (document.getElementById("passInput").value === PIN) {
                 sessionStorage.setItem("isLoggedIn", "true");
                 unlockAdmin();
-            } else { 
-                alert("❌ รหัสผ่านไม่ถูกต้อง!"); 
-                document.getElementById("passInput").value = "";
-            }
+            } else { alert("❌ รหัสผ่านไม่ถูกต้อง!"); document.getElementById("passInput").value = ""; }
         }
 
         function unlockAdmin() {
@@ -147,35 +121,22 @@
             loadData();
         }
 
-        function handleFile(input) {
-            const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.src = e.target.result;
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        const MAX_WIDTH = 300; 
-                        const scaleSize = MAX_WIDTH / img.width;
-                        canvas.width = MAX_WIDTH;
-                        canvas.height = img.height * scaleSize;
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
-                        const preview = input.closest('.stock-item').querySelector('.img-preview');
-                        preview.src = compressedBase64;
-                        preview.dataset.base64 = compressedBase64;
-                    };
-                };
-                reader.readAsDataURL(file);
+        // ✅ ฟังก์ชันเช็คสต็อกเพื่อเปลี่ยนสี
+        function updateStockUI(inputElement) {
+            const stockItem = inputElement.closest('.stock-item');
+            const stockValue = parseInt(inputElement.value) || 0;
+            if (stockValue <= 0) {
+                stockItem.classList.add('out-of-stock');
+            } else {
+                stockItem.classList.remove('out-of-stock');
             }
         }
 
         function addAppItem(name = '', price = '', stock = '', cat = 'streaming', imgData = '', subCat = '') {
             const container = document.getElementById('stock-container');
             const itemDiv = document.createElement('div');
-            itemDiv.className = 'stock-item';
+            // เช็คตั้งแต่ตอนสร้างว่าควรเป็นสีเทาไหม
+            itemDiv.className = `stock-item ${stock !== '' && parseInt(stock) <= 0 ? 'out-of-stock' : ''}`;
             
             const displayImg = imgData || 'https://via.placeholder.com/150';
 
@@ -187,72 +148,60 @@
                         <div style="position:absolute; bottom:0; right:0; background:var(--main); border-radius:50%; width:24px; height:24px; font-size:12px; display:flex; align-items:center; justify-content:center; cursor:pointer; border: 2px solid var(--white);" onclick="this.previousElementSibling.click()">📷</div>
                     </div>
                     <div style="flex-grow:1;">
-                        <input type="text" class="app-subcat" placeholder="ชื่อแอปหลัก (เช่น YouTube)" value="${subCat}">
-                        <input type="text" class="app-name" style="margin-top:5px; font-size:12px;" placeholder="แพ็กเกจ (เช่น รายเดือน/เมลส่วนตัว)" value="${name}">
+                        <input type="text" class="app-subcat" placeholder="ชื่อแอปหลัก" value="${subCat}">
+                        <input type="text" class="app-name" style="margin-top:5px; font-size:12px;" placeholder="แพ็กเกจ" value="${name}">
                     </div>
                 </div>
                 <div class="form-grid">
                     <input type="number" class="app-price" value="${price}" placeholder="ราคา">
-                    <input type="number" class="app-stock" value="${stock}" placeholder="สต็อก">
-                    <select class="app-cat" style="grid-column: span 2; margin-top:5px;">
-                        <option value="streaming" ${cat==='streaming'?'selected':''}>📺 Streaming</option>
-                        <option value="working" ${cat==='working'?'selected':''}>💼 Working Tools</option>
-                        <option value="education" ${cat==='education'?'selected':''}>🎓 Education</option>
-                    </select>
+                    <input type="number" class="app-stock" value="${stock}" placeholder="สต็อก" oninput="updateStockUI(this)">
                 </div>
                 <button class="btn btn-del" onclick="if(confirm('ลบรายการนี้?')){this.closest('.stock-item').remove()}">🗑️ ลบรายการนี้</button>
             `;
             container.appendChild(itemDiv);
         }
 
+        function handleFile(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const preview = input.closest('.stock-item').querySelector('.img-preview');
+                    preview.src = e.target.result;
+                    preview.dataset.base64 = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
         function saveData() {
             const status = document.getElementById('shopStatusInput').value;
             const products = [];
-            
             document.querySelectorAll('.stock-item').forEach(item => {
                 const previewImg = item.querySelector('.img-preview');
                 products.push({
-                    subCat: item.querySelector('.app-subcat').value || 'ทั่วไป',
+                    subCat: item.querySelector('.app-subcat').value,
                     name: item.querySelector('.app-name').value,
                     price: item.querySelector('.app-price').value,
                     stock: item.querySelector('.app-stock').value,
-                    cat: item.querySelector('.app-cat').value,
+                    cat: 'streaming', // Default หรือปรับตามต้องการ
                     img: previewImg.dataset.base64 || previewImg.src
                 });
             });
-
-            const shopData = JSON.parse(localStorage.getItem('shopData')) || {};
-            shopData.shopStatus = status;
-            shopData.products = products;
-
-            try {
-                localStorage.setItem('shopData', JSON.stringify(shopData));
-                alert('✅ บันทึกสต็อกเรียบร้อย!');
-            } catch (e) {
-                alert('❌ พื้นที่เต็ม! กรุณาลบสินค้าบางรายการ');
-            }
+            localStorage.setItem('shopData', JSON.stringify({shopStatus: status, products: products}));
+            alert('✅ บันทึกสต็อกเรียบร้อย!');
         }
 
         function loadData() {
             const savedData = JSON.parse(localStorage.getItem('shopData'));
-            if(savedData) {
-                if(savedData.shopStatus) document.getElementById('shopStatusInput').value = savedData.shopStatus;
-                if(savedData.products) {
-                    const container = document.getElementById('stock-container');
-                    container.innerHTML = '';
-                    savedData.products.forEach(p => {
-                        addAppItem(p.name, p.price, p.stock, p.cat, p.img, p.subCat);
-                    });
-                }
+            if(savedData && savedData.products) {
+                const container = document.getElementById('stock-container');
+                container.innerHTML = '';
+                savedData.products.forEach(p => addAppItem(p.name, p.price, p.stock, p.cat, p.img, p.subCat));
             }
         }
 
-        window.onload = () => { 
-            if (sessionStorage.getItem("isLoggedIn") === "true") unlockAdmin(); 
-            document.getElementById('passInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') checkPass();
-            });
-        };
+        window.onload = () => { if (sessionStorage.getItem("isLoggedIn") === "true") unlockAdmin(); };
     </script>
 </body>
 </html>
