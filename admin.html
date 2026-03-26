@@ -28,8 +28,15 @@
         select, input { width: 100%; padding: 10px 15px; background: #1a1a1a; border: 1.2px solid #444; border-radius: 12px; color: #fff; outline: none; font-size: 14px; transition: 0.3s; }
         select:focus, input:focus { border-color: var(--main); }
 
-        /* ปรับแต่ง Select ให้พอดีกับตัวหนังสือ */
-        .app-cat { width: auto !important; min-width: 120px; padding-right: 30px; }
+        /* ปรับแต่งความสูงและความกว้างให้พอดีกับตัวหนังสือ */
+        .app-cat { 
+            width: auto !important; 
+            height: auto !important; 
+            padding: 2px 25px 2px 10px !important; /* ลด padding แนวตั้ง */
+            min-width: 100px; 
+            line-height: 1.2;
+            display: inline-block;
+        }
 
         /* --- Stock Item Style --- */
         .stock-item { background: #2d2d2d; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #444; position: relative; transition: 0.3s; }
@@ -47,16 +54,15 @@
         /* ปุ่มบันทึกแบบวงกลมด้านซ้าย */
         .floating-save-circle { 
             position: fixed; bottom: 30px; left: 20px; 
-            width: 65px; height: 65px; border-radius: 50%;
+            width: 60px; height: 60px; border-radius: 50%;
             z-index: 1000; background: var(--main); color: white; 
             font-size: 24px; box-shadow: 0 8px 25px var(--glow); 
             border: 3px solid rgba(255,255,255,0.2);
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .floating-save-circle:hover { transform: scale(1.1) rotate(15deg); }
-        .floating-save-circle:active { transform: scale(0.9); }
-        .floating-save-circle.success { background: var(--green); transform: scale(1.1); }
+        .floating-save-circle:hover { transform: scale(1.1); }
+        .floating-save-circle.success { background: var(--green); }
 
         .btn-add { background: transparent; color: var(--main); border: 2.5px dashed var(--main); padding: 12px; margin-bottom: 40px; border-radius: 20px; }
         
@@ -66,14 +72,9 @@
         .btn-hide.active { background: #ff9800; }
         .btn-del { background: rgba(255, 82, 82, 0.1); color: var(--red); }
 
-        /* Login Overlay */
         #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 9999; display: flex; justify-content: center; align-items: center; }
         .login-card { background: var(--white); padding: 40px 30px; border-radius: 30px; width: 90%; max-width: 360px; border: 2px solid var(--main); text-align: center; }
         
-        .nav-item { text-decoration: none; color: var(--dark); display: flex; align-items: center; padding: 15px 20px; margin-bottom: 10px; border-radius: 15px; font-size: 16px; transition: 0.3s; gap: 15px; }
-        .bottom-nav-box { margin-top: 30px; border-top: 1px solid #444; padding-top: 20px; text-align: center; }
-        .back-link-btn { display: inline-flex; align-items: center; gap: 8px; background: #333; color: #ccc; padding: 12px 25px; border-radius: 50px; text-decoration: none; font-size: 14px; transition: 0.3s; }
-
         #safePinInput {
             font-size: 24px; text-align: center; letter-spacing: 10px; 
             margin-bottom: 20px; background: #1a1a1a; color: var(--main); 
@@ -98,15 +99,13 @@
         <div class="login-card">
             <h3>🔐 Admin Access</h3>
             <p style="font-size: 12px; color: var(--dark); margin-bottom: 15px;">กรุณากรอกรหัสผ่าน 4 หลัก</p>
-            <input type="tel" id="safePinInput" placeholder="••••" maxlength="4" autocomplete="off" inputmode="numeric" readonly onfocus="this.removeAttribute('readonly');">
+            <input type="tel" id="safePinInput" placeholder="••••" maxlength="4" autocomplete="off" inputmode="numeric">
             <button class="btn" style="background:var(--main); color:white; padding:12px; margin-top:10px;" onclick="checkPass()">ปลดล็อกระบบ</button>
         </div>
     </div>
 
     <!-- ปุ่มบันทึกวงกลมด้านซ้าย -->
-    <div class="floating-save-circle" id="saveCircle" onclick="saveData()" title="บันทึกข้อมูล">
-        💾
-    </div>
+    <div class="floating-save-circle" id="saveCircle" onclick="saveData()">💾</div>
 
     <div id="main-admin" class="admin-container" style="display:none;">
         <div style="text-align:center; margin-bottom:30px;">
@@ -122,7 +121,6 @@
 
         <div class="bottom-nav-box">
             <a href="portfolio.html" class="back-link-btn">⬅️ กลับไปหน้าสินค้า</a>
-            <p style="font-size: 11px; color: #666; margin-top: 15px;">ระบบจะบันทึกลงใน Browser นี้เท่านั้น</p>
         </div>
     </div>
 
@@ -143,7 +141,6 @@
             } else { 
                 alert("❌ รหัสผ่านไม่ถูกต้อง!"); 
                 input.value = ""; 
-                input.focus();
             }
         }
 
@@ -151,16 +148,6 @@
             document.getElementById("login-overlay").style.display = "none";
             document.getElementById("main-admin").style.display = "block";
             loadData();
-        }
-
-        function checkStockStatus(input) {
-            const item = input.closest('.stock-item');
-            const stockVal = parseInt(input.value);
-            if (stockVal <= 0 || isNaN(stockVal)) {
-                item.classList.add('out-of-stock');
-            } else {
-                item.classList.remove('out-of-stock');
-            }
         }
 
         function addAppItem(data = {}) {
@@ -173,8 +160,8 @@
                 subCat = '', isHidden = false
             } = data;
 
-            const outStockClass = (stock !== '' && parseInt(stock) <= 0) ? 'out-of-stock' : '';
-            itemDiv.className = `stock-item ${isHidden ? 'hidden-item' : ''} ${outStockClass}`;
+            const isOut = (stock !== '' && parseInt(stock) <= 0);
+            itemDiv.className = `stock-item ${isHidden ? 'hidden-item' : ''} ${isOut ? 'out-of-stock' : ''}`;
             itemDiv.dataset.hidden = isHidden;
             
             itemDiv.innerHTML = `
@@ -185,25 +172,20 @@
                         <div style="position:absolute; bottom:-5px; right:-5px; background:var(--main); border-radius:50%; width:22px; height:22px; font-size:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; border: 2px solid #2d2d2d;" onclick="this.previousElementSibling.click()">📷</div>
                     </div>
                     <div style="flex-grow:1;">
-                        <!-- ปรับแต่ง Select ให้กว้างพอดีคำ -->
-                        <select class="app-cat" style="margin-bottom:5px; height:35px; border-color:var(--main);">
+                        <select class="app-cat">
                             <option value="streaming" ${cat === 'streaming' ? 'selected' : ''}>📺 Streaming</option>
                             <option value="working" ${cat === 'working' ? 'selected' : ''}>💼 Working</option>
                             <option value="education" ${cat === 'education' ? 'selected' : ''}>🎓 Education</option>
                         </select>
-                        <input type="text" class="app-subcat" placeholder="ชื่อแอป (เช่น Netflix)" value="${subCat}">
+                        <input type="text" class="app-subcat" placeholder="ชื่อแอป" value="${subCat}" style="margin-top:5px;">
                     </div>
                 </div>
                 
-                <input type="text" class="app-name" placeholder="ชื่อแพ็กเกจ (เช่น 30 วัน / 1 จอ)" value="${name}">
+                <input type="text" class="app-name" placeholder="ชื่อแพ็กเกจ" value="${name}">
                 
                 <div class="form-grid">
-                    <div style="font-size:11px; color:var(--dark);">ราคา (฿)
-                        <input type="number" class="app-price" value="${price}" placeholder="ราคา">
-                    </div>
-                    <div style="font-size:11px; color:var(--dark);">สต็อก (ตัว)
-                        <input type="number" class="app-stock" value="${stock}" placeholder="สต็อก" oninput="checkStockStatus(this)">
-                    </div>
+                    <input type="number" class="app-price" value="${price}" placeholder="ราคา">
+                    <input type="number" class="app-stock" value="${stock}" placeholder="สต็อก" oninput="checkStockStatus(this)">
                 </div>
 
                 <div class="action-btns">
@@ -214,6 +196,12 @@
                 </div>
             `;
             container.appendChild(itemDiv);
+        }
+
+        function checkStockStatus(input) {
+            const item = input.closest('.stock-item');
+            if (parseInt(input.value) <= 0) item.classList.add('out-of-stock');
+            else item.classList.remove('out-of-stock');
         }
 
         function toggleHide(btn) {
@@ -240,7 +228,6 @@
 
         function saveData() {
             const products = [];
-            const oldData = JSON.parse(localStorage.getItem('shopData')) || {};
             document.querySelectorAll('.stock-item').forEach(item => {
                 const previewImg = item.querySelector('.img-preview');
                 products.push({
@@ -253,16 +240,14 @@
                     isHidden: item.dataset.hidden === "true"
                 });
             });
-            const newData = { ...oldData, products: products };
-            localStorage.setItem('shopData', JSON.stringify(newData));
+            localStorage.setItem('shopData', JSON.stringify({products}));
             
-            // เอฟเฟกต์ปุ่มบันทึก
-            const saveBtn = document.getElementById('saveCircle');
-            saveBtn.innerHTML = "✅";
-            saveBtn.classList.add('success');
+            const btn = document.getElementById('saveCircle');
+            btn.innerHTML = "✅";
+            btn.classList.add('success');
             setTimeout(() => {
-                saveBtn.innerHTML = "💾";
-                saveBtn.classList.remove('success');
+                btn.innerHTML = "💾";
+                btn.classList.remove('success');
             }, 2000);
         }
 
@@ -275,14 +260,8 @@
             }
         }
 
-        document.getElementById('safePinInput').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') checkPass();
-        });
-
         window.onload = () => { 
-            if (sessionStorage.getItem("isLoggedIn") === "true") {
-                unlockAdmin();
-            }
+            if (sessionStorage.getItem("isLoggedIn") === "true") unlockAdmin();
         };
     </script>
 </body>
