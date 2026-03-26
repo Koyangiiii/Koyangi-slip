@@ -3,212 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Stock Management</title>
+    <title>Admin - Manage Store</title>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        :root{ --bg:#1a1a1a; --main:#9d81e1; --dark:#d1c4e9; --white:#252525; --green:#4caf50; --red:#ff5252; --glow:rgba(157,129,225,0.3); }
+        :root{ --bg:#1a1a1a; --main:#9d81e1; --dark:#d1c4e9; --white:#252525; --red:#ff5252; --glow:rgba(157,129,225,0.3); }
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Mitr',sans-serif;}
         body { background: var(--bg); color: #fff; display: flex; justify-content: center; min-height: 100vh; }
         
-        /* --- Sidebar & Nav --- */
-        .hamburger { position: fixed; top: 20px; right: 20px; z-index: 1100; background: var(--main); width: 45px; height: 45px; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; cursor: pointer; box-shadow: 0 4px 15px var(--glow); transition: 0.3s; }
-        .hamburger span { width: 25px; height: 3px; background: #fff; border-radius: 2px; transition: 0.3s ease-in-out; display: block; }
-        .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-        .hamburger.active span:nth-child(2) { opacity: 0; transform: translateX(20px); }
-        .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-
-        .sidebar { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: #252525; z-index: 1050; padding: 80px 20px 20px; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: -5px 0 25px rgba(0,0,0,0.5); border-left: 2px solid var(--main); }
-        .sidebar.active { right: 0; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 999; backdrop-filter: blur(3px); }
-        .overlay.active { display: block; }
-        .nav-item { text-decoration: none; color: var(--dark); display: flex; align-items: center; padding: 15px 20px; margin-bottom: 10px; border-radius: 15px; font-size: 16px; transition: 0.3s; gap: 15px; cursor: pointer; }
-        .nav-item:hover, .nav-item.active { background: rgba(157, 129, 225, 0.1); color: var(--main); }
-
-        /* --- Admin UI --- */
-        .admin-container { width: 100%; max-width: 500px; padding: 80px 15px 50px; }
-        .section-card { background: var(--white); border-radius: 25px; padding: 25px; margin-bottom: 20px; border: 2px solid var(--main); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-        h3 { color: var(--main); margin-bottom: 15px; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+        .admin-container { width: 100%; max-width: 500px; padding: 40px 15px 100px; }
+        .section-card { background: var(--white); border-radius: 25px; padding: 25px; margin-bottom: 20px; border: 2px solid var(--main); }
         
-        select, input { width: 100%; padding: 12px 15px; background: #1a1a1a; border: 1.5px solid #444; border-radius: 12px; color: #fff; outline: none; font-size: 14px; transition: 0.3s; }
+        input, textarea, select { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #444; border-radius: 12px; color: #fff; margin-bottom: 10px; font-size: 14px; outline: none; }
         select:focus, input:focus { border-color: var(--main); }
+        h3 { color: var(--main); margin-bottom: 15px; font-size: 16px; }
 
-        .stock-item { background: #2d2d2d; border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid #444; transition: 0.4s; }
-        .stock-item.out-of-stock { opacity: 0.5; filter: grayscale(1); border-color: #333; }
-
-        .item-header { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; }
-        .img-box { position: relative; width: 75px; height: 75px; flex-shrink: 0; }
-        .img-preview { width: 100%; height: 100%; border-radius: 15px; object-fit: cover; background: #1a1a1a; border: 1px solid #444; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .stock-item { background: #333; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #444; position: relative; }
+        .item-header { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
+        .img-preview { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; background: #222; cursor: pointer; border: 1px solid #555; }
         
-        .btn { border: none; border-radius: 15px; font-weight: 500; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
-        .btn-save { background: var(--main); color: white; padding: 16px; font-size: 16px; margin-top: 20px; box-shadow: 0 4px 15px var(--glow); }
-        .btn-add { background: transparent; color: var(--main); border: 2px dashed var(--main); padding: 12px; margin-bottom: 20px; }
-        .btn-del { background: rgba(255, 82, 82, 0.1); color: var(--red); padding: 10px; font-size: 12px; margin-top: 10px; border-radius: 10px; }
-        .btn-del:hover { background: var(--red); color: white; }
+        .btn { width: 100%; padding: 15px; border-radius: 15px; border: none; font-weight: 500; cursor: pointer; transition: 0.3s; }
+        .btn-save { background: var(--main); color: #fff; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: calc(100% - 30px); max-width: 470px; z-index: 100; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+        .btn-add { background: transparent; color: var(--main); border: 2px dashed var(--main); margin-top: 10px; }
+        .btn-del { background: rgba(255, 82, 82, 0.1); color: var(--red); font-size: 12px; padding: 8px; margin-top: 5px; border-radius: 10px; }
 
-        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        .login-card { background: var(--white); padding: 40px 30px; border-radius: 30px; width: 90%; max-width: 360px; border: 2px solid var(--main); text-align: center; box-shadow: 0 0 30px var(--glow); }
-        .login-input { font-size: 32px; text-align: center; letter-spacing: 10px; -webkit-text-security: disc; margin-bottom: 20px; background: #1a1a1a; border: 1.5px solid #444; color: var(--main); }
+        #login-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:9999; display:flex; justify-content:center; align-items:center; backdrop-filter: blur(10px); }
     </style>
 </head>
 <body>
 
-    <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-
-    <!-- ✅ ปรับเมนูสินค้าให้อยู่อันดับที่ 2 -->
-    <nav class="sidebar" id="sidebar">
-        <a href="index.html" class="nav-item">🏠 หน้าหลัก</a>
-        <a href="portfolio.html" class="nav-item">📦 สินค้า</a>
-        <a href="contact.html" class="nav-item">💬 ติดต่อเรา</a>
-        <div onclick="toggleMenu()" class="nav-item active">⚙️ ตั้งค่าระบบ</div>
-    </nav>
-
     <div id="login-overlay">
-        <div class="login-card">
-            <h3>🔐 Admin Access</h3>
-            <input type="tel" id="passInput" class="login-input" placeholder="••••" maxlength="4">
-            <button class="btn btn-save" onclick="checkPass()">ปลดล็อกระบบ</button>
+        <div style="text-align:center; width: 300px;">
+            <h3 style="margin-bottom:20px;">🔐 Admin Access</h3>
+            <input type="tel" id="passInput" style="text-align:center; letter-spacing:10px; font-size:24px;" maxlength="4" placeholder="••••">
+            <button class="btn" style="background:var(--main); color:#fff;" onclick="checkPass()">ปลดล็อกระบบ</button>
         </div>
     </div>
 
     <div id="main-admin" class="admin-container" style="display:none;">
-        <div style="text-align:center; margin-bottom:25px;">
-            <h1>🛠️ Control Panel</h1>
-            <p style="font-size: 13px; color: var(--dark);">จัดการสต็อกและรายการสินค้า</p>
+        <h1 style="text-align:center; margin-bottom:30px;">🛠️ ระบบจัดการสต็อก</h1>
+
+        <div class="section-card">
+            <h3>🏠 ข้อมูลร้านพื้นฐาน</h3>
+            <input type="text" id="shopName" placeholder="ชื่อร้าน">
+            <input type="text" id="shopLine" placeholder="ลิงก์ไลน์ (https://line.me/...)">
+            <textarea id="shopRules" rows="3" placeholder="กฎการรับประกันสินค้า"></textarea>
+            <p style="font-size: 11px; color: #888;">* รูปโลโก้จะใช้ไฟล์ล่าสุดที่บันทึกไว้</p>
         </div>
 
         <div class="section-card">
-            <h3>🏪 สถานะร้านค้า</h3>
-            <select id="shopStatusInput">
-                <option value="open">🟢 เปิดร้าน (พร้อมให้บริการ)</option>
-                <option value="closed">🔴 ปิดร้าน (พักการขายชั่วคราว)</option>
-            </select>
-        </div>
-
-        <div class="section-card">
-            <h3>📦 จัดการสต็อกสินค้า</h3>
+            <h3>📦 รายการสินค้า</h3>
             <div id="stock-container"></div>
-            <button class="btn btn-add" onclick="addAppItem()">➕ เพิ่มสินค้าใหม่</button>
+            <button class="btn btn-add" onclick="addItem()">➕ เพิ่มสินค้าใหม่</button>
         </div>
 
-        <button class="btn btn-save" onclick="saveData()">💾 บันทึกการเปลี่ยนแปลงทั้งหมด</button>
+        <button class="btn btn-save" onclick="saveAll()">💾 บันทึกการเปลี่ยนแปลงทั้งหมด</button>
     </div>
 
     <script>
         const PIN = "2003";
 
-        function toggleMenu() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
-            document.querySelector('.hamburger').classList.toggle('active');
-        }
-
         function checkPass() {
             if (document.getElementById("passInput").value === PIN) {
-                sessionStorage.setItem("isLoggedIn", "true");
-                unlockAdmin();
-            } else { alert("❌ รหัสผ่านไม่ถูกต้อง!"); document.getElementById("passInput").value = ""; }
+                document.getElementById("login-overlay").style.display = "none";
+                document.getElementById("main-admin").style.display = "block";
+                loadData();
+            } else { alert("รหัสผ่านไม่ถูกต้อง!"); }
         }
 
-        function unlockAdmin() {
-            document.getElementById("login-overlay").style.display = "none";
-            document.getElementById("main-admin").style.display = "block";
-            loadData();
-        }
-
-        function updateStockUI(inputElement) {
-            const stockItem = inputElement.closest('.stock-item');
-            const stockValue = parseInt(inputElement.value) || 0;
-            if (stockValue <= 0) {
-                stockItem.classList.add('out-of-stock');
-            } else {
-                stockItem.classList.remove('out-of-stock');
-            }
-        }
-
-        function addAppItem(name = '', price = '', stock = '', cat = 'streaming', imgData = '', subCat = '') {
+        function addItem(cat='streaming', subCat='', name='', price='', stock='', img='') {
             const container = document.getElementById('stock-container');
-            const itemDiv = document.createElement('div');
-            itemDiv.className = `stock-item ${stock !== '' && parseInt(stock) <= 0 ? 'out-of-stock' : ''}`;
-            
-            const displayImg = imgData || 'https://via.placeholder.com/150';
-
-            itemDiv.innerHTML = `
+            const div = document.createElement('div');
+            div.className = 'stock-item';
+            div.innerHTML = `
                 <div class="item-header">
-                    <div class="img-box">
-                        <img src="${displayImg}" class="img-preview" data-base64="${imgData}">
-                        <input type="file" accept="image/*" style="display:none" onchange="handleFile(this)">
-                        <div style="position:absolute; bottom:0; right:0; background:var(--main); border-radius:50%; width:24px; height:24px; font-size:12px; display:flex; align-items:center; justify-content:center; cursor:pointer; border: 2px solid var(--white);" onclick="this.previousElementSibling.click()">📷</div>
+                    <div style="position:relative;">
+                        <img src="${img || 'https://via.placeholder.com/50'}" class="img-preview" onclick="this.nextElementSibling.click()">
+                        <input type="file" hidden accept="image/*" onchange="handleImg(this)">
                     </div>
-                    <div style="flex-grow:1;">
-                        <input type="text" class="app-subcat" placeholder="ชื่อแอปหลัก (เช่น Netflix)" value="${subCat}">
-                        <input type="text" class="app-name" style="margin-top:5px; font-size:12px;" placeholder="แพ็กเกจ (เช่น 30 วัน)" value="${name}">
+                    <div style="flex:1">
+                        <select class="p-cat">
+                            <option value="streaming" ${cat==='streaming'?'selected':''}>📺 Streaming Apps</option>
+                            <option value="working" ${cat==='working'?'selected':''}>💼 Working Tools</option>
+                            <option value="education" ${cat==='education'?'selected':''}>🎓 Education</option>
+                        </select>
+                        <input type="text" class="p-subcat" placeholder="แอปหลัก (เช่น Netflix)" value="${subCat}" style="margin:0">
                     </div>
                 </div>
-                <div class="form-grid">
-                    <input type="number" class="app-price" value="${price}" placeholder="ราคา">
-                    <input type="number" class="app-stock" value="${stock}" placeholder="สต็อก" oninput="updateStockUI(this)">
+                <input type="text" class="p-name" placeholder="ชื่อแพ็กเกจ (เช่น 30 วัน จอส่วนตัว)" value="${name}">
+                <div style="display:flex; gap:10px;">
+                    <input type="number" class="p-price" placeholder="ราคา" value="${price}">
+                    <input type="number" class="p-stock" placeholder="สต็อก" value="${stock}">
                 </div>
-                <button class="btn btn-del" onclick="if(confirm('ลบรายการนี้?')){this.closest('.stock-item').remove()}">🗑️ ลบรายการนี้</button>
+                <button class="btn btn-del" onclick="if(confirm('ลบรายการนี้?')) this.parentElement.remove()">🗑️ ลบรายการนี้</button>
             `;
-            container.appendChild(itemDiv);
+            container.appendChild(div);
         }
 
-        function handleFile(input) {
-            const file = input.files[0];
-            if (file) {
+        function handleImg(input) {
+            if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = (e) => {
-                    const preview = input.closest('.stock-item').querySelector('.img-preview');
-                    preview.src = e.target.result;
-                    preview.dataset.base64 = e.target.result;
-                };
-                reader.readAsDataURL(file);
+                reader.onload = (e) => { input.previousElementSibling.src = e.target.result; };
+                reader.readAsDataURL(input.files[0]);
             }
         }
 
-        function saveData() {
-            const status = document.getElementById('shopStatusInput').value;
+        function saveAll() {
             const products = [];
-            // ดึงข้อมูลเดิมจาก LocalStorage เพื่อรักษาข้อมูลตั้งค่าอื่นๆ (โลโก้, ชื่อร้าน)
-            const oldData = JSON.parse(localStorage.getItem('shopData')) || {};
-
             document.querySelectorAll('.stock-item').forEach(item => {
-                const previewImg = item.querySelector('.img-preview');
                 products.push({
-                    subCat: item.querySelector('.app-subcat').value,
-                    name: item.querySelector('.app-name').value,
-                    price: item.querySelector('.app-price').value,
-                    stock: item.querySelector('.app-stock').value,
-                    cat: 'streaming', 
-                    img: previewImg.dataset.base64 || previewImg.src
+                    cat: item.querySelector('.p-cat').value,
+                    subCat: item.querySelector('.p-subcat').value,
+                    name: item.querySelector('.p-name').value,
+                    price: item.querySelector('.p-price').value,
+                    stock: item.querySelector('.p-stock').value,
+                    img: item.querySelector('.img-preview').src
                 });
             });
 
+            const oldData = JSON.parse(localStorage.getItem('shopData')) || {};
             const newData = {
-                ...oldData, // เก็บค่า logo, name, rules เดิมไว้
-                shopStatus: status,
+                ...oldData,
+                name: document.getElementById('shopName').value,
+                line: document.getElementById('shopLine').value,
+                rules: document.getElementById('shopRules').value,
                 products: products
             };
 
             localStorage.setItem('shopData', JSON.stringify(newData));
-            alert('✅ บันทึกสต็อกเรียบร้อย!');
+            alert("✅ บันทึกสต็อกและหมวดหมู่เรียบร้อย!");
         }
 
         function loadData() {
-            const savedData = JSON.parse(localStorage.getItem('shopData'));
-            if(savedData) {
-                if(savedData.shopStatus) document.getElementById('shopStatusInput').value = savedData.shopStatus;
-                if(savedData.products) {
-                    const container = document.getElementById('stock-container');
-                    container.innerHTML = '';
-                    savedData.products.forEach(p => addAppItem(p.name, p.price, p.stock, p.cat, p.img, p.subCat));
-                }
+            const data = JSON.parse(localStorage.getItem('shopData')) || {};
+            document.getElementById('shopName').value = data.name || "";
+            document.getElementById('shopLine').value = data.line || "";
+            document.getElementById('shopRules').value = data.rules || "";
+            
+            const container = document.getElementById('stock-container');
+            container.innerHTML = '';
+            if (data.products && data.products.length > 0) {
+                data.products.forEach(p => addItem(p.cat, p.subCat, p.name, p.price, p.stock, p.img));
+            } else {
+                addItem(); // เพิ่มช่องเปล่า 1 ช่องถ้าไม่มีข้อมูล
             }
         }
-
-        window.onload = () => { if (sessionStorage.getItem("isLoggedIn") === "true") unlockAdmin(); };
     </script>
 </body>
 </html>
