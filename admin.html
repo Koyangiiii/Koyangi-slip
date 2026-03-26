@@ -28,6 +28,9 @@
         select, input { width: 100%; padding: 10px 15px; background: #1a1a1a; border: 1.2px solid #444; border-radius: 12px; color: #fff; outline: none; font-size: 14px; transition: 0.3s; }
         select:focus, input:focus { border-color: var(--main); }
 
+        /* ปรับแต่ง Select ให้พอดีกับตัวหนังสือ */
+        .app-cat { width: auto !important; min-width: 120px; padding-right: 30px; }
+
         /* --- Stock Item Style --- */
         .stock-item { background: #2d2d2d; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #444; position: relative; transition: 0.3s; }
         .stock-item.out-of-stock { opacity: 0.6; filter: grayscale(0.8); border: 1px solid var(--red); }
@@ -41,8 +44,19 @@
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .btn { border: none; border-radius: 12px; font-weight: 500; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
         
-        .floating-save { position: fixed; bottom: 25px; right: 20px; left: 20px; max-width: 460px; margin: 0 auto; z-index: 900; background: var(--main); color: white; padding: 16px; font-size: 16px; box-shadow: 0 8px 25px var(--glow); border-radius: 18px; border: 2px solid rgba(255,255,255,0.2); }
-        .floating-save:active { transform: scale(0.95); }
+        /* ปุ่มบันทึกแบบวงกลมด้านซ้าย */
+        .floating-save-circle { 
+            position: fixed; bottom: 30px; left: 20px; 
+            width: 65px; height: 65px; border-radius: 50%;
+            z-index: 1000; background: var(--main); color: white; 
+            font-size: 24px; box-shadow: 0 8px 25px var(--glow); 
+            border: 3px solid rgba(255,255,255,0.2);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .floating-save-circle:hover { transform: scale(1.1) rotate(15deg); }
+        .floating-save-circle:active { transform: scale(0.9); }
+        .floating-save-circle.success { background: var(--green); transform: scale(1.1); }
 
         .btn-add { background: transparent; color: var(--main); border: 2.5px dashed var(--main); padding: 12px; margin-bottom: 40px; border-radius: 20px; }
         
@@ -60,7 +74,6 @@
         .bottom-nav-box { margin-top: 30px; border-top: 1px solid #444; padding-top: 20px; text-align: center; }
         .back-link-btn { display: inline-flex; align-items: center; gap: 8px; background: #333; color: #ccc; padding: 12px 25px; border-radius: 50px; text-decoration: none; font-size: 14px; transition: 0.3s; }
 
-        /* ป้องกันการแอบดูรหัส */
         #safePinInput {
             font-size: 24px; text-align: center; letter-spacing: 10px; 
             margin-bottom: 20px; background: #1a1a1a; color: var(--main); 
@@ -80,14 +93,19 @@
         <div onclick="toggleMenu()" class="nav-item active" style="cursor:pointer;">⚙️ ตั้งค่าระบบ</div>
     </nav>
 
-    <!-- Login Overlay พร้อมรหัสผ่านใหม่ -->
+    <!-- Login Overlay -->
     <div id="login-overlay">
         <div class="login-card">
             <h3>🔐 Admin Access</h3>
             <p style="font-size: 12px; color: var(--dark); margin-bottom: 15px;">กรุณากรอกรหัสผ่าน 4 หลัก</p>
             <input type="tel" id="safePinInput" placeholder="••••" maxlength="4" autocomplete="off" inputmode="numeric" readonly onfocus="this.removeAttribute('readonly');">
-            <button class="btn btn-save" style="background:var(--main); color:white; padding:12px; margin-top:10px;" onclick="checkPass()">ปลดล็อกระบบ</button>
+            <button class="btn" style="background:var(--main); color:white; padding:12px; margin-top:10px;" onclick="checkPass()">ปลดล็อกระบบ</button>
         </div>
+    </div>
+
+    <!-- ปุ่มบันทึกวงกลมด้านซ้าย -->
+    <div class="floating-save-circle" id="saveCircle" onclick="saveData()" title="บันทึกข้อมูล">
+        💾
     </div>
 
     <div id="main-admin" class="admin-container" style="display:none;">
@@ -102,10 +120,6 @@
             <button class="btn btn-add" onclick="addAppItem()">➕ เพิ่มสินค้าใหม่</button>
         </div>
 
-        <button class="btn floating-save" onclick="saveData()">
-            💾 บันทึกการเปลี่ยนแปลงทั้งหมด
-        </button>
-
         <div class="bottom-nav-box">
             <a href="portfolio.html" class="back-link-btn">⬅️ กลับไปหน้าสินค้า</a>
             <p style="font-size: 11px; color: #666; margin-top: 15px;">ระบบจะบันทึกลงใน Browser นี้เท่านั้น</p>
@@ -113,7 +127,6 @@
     </div>
 
     <script>
-        // อัปเดตรหัสผ่านเป็น 2546 เรียบร้อยแล้ว
         const PIN = "2546"; 
 
         function toggleMenu() {
@@ -172,6 +185,7 @@
                         <div style="position:absolute; bottom:-5px; right:-5px; background:var(--main); border-radius:50%; width:22px; height:22px; font-size:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; border: 2px solid #2d2d2d;" onclick="this.previousElementSibling.click()">📷</div>
                     </div>
                     <div style="flex-grow:1;">
+                        <!-- ปรับแต่ง Select ให้กว้างพอดีคำ -->
                         <select class="app-cat" style="margin-bottom:5px; height:35px; border-color:var(--main);">
                             <option value="streaming" ${cat === 'streaming' ? 'selected' : ''}>📺 Streaming</option>
                             <option value="working" ${cat === 'working' ? 'selected' : ''}>💼 Working</option>
@@ -184,10 +198,10 @@
                 <input type="text" class="app-name" placeholder="ชื่อแพ็กเกจ (เช่น 30 วัน / 1 จอ)" value="${name}">
                 
                 <div class="form-grid">
-                    <div style="font-size:11px; color:var(--dark);">ราคา (บาท)
+                    <div style="font-size:11px; color:var(--dark);">ราคา (฿)
                         <input type="number" class="app-price" value="${price}" placeholder="ราคา">
                     </div>
-                    <div style="font-size:11px; color:var(--dark);">สต็อก (ชิ้น)
+                    <div style="font-size:11px; color:var(--dark);">สต็อก (ตัว)
                         <input type="number" class="app-stock" value="${stock}" placeholder="สต็อก" oninput="checkStockStatus(this)">
                     </div>
                 </div>
@@ -204,8 +218,7 @@
 
         function toggleHide(btn) {
             const item = btn.closest('.stock-item');
-            const isCurrentlyHidden = item.dataset.hidden === "true";
-            const newState = !isCurrentlyHidden;
+            const newState = !(item.dataset.hidden === "true");
             item.dataset.hidden = newState;
             item.classList.toggle('hidden-item', newState);
             btn.classList.toggle('active', newState);
@@ -243,12 +256,13 @@
             const newData = { ...oldData, products: products };
             localStorage.setItem('shopData', JSON.stringify(newData));
             
-            const saveBtn = document.querySelector('.floating-save');
-            saveBtn.innerHTML = "✅ บันทึกสำเร็จ!";
-            saveBtn.style.background = "var(--green)";
+            // เอฟเฟกต์ปุ่มบันทึก
+            const saveBtn = document.getElementById('saveCircle');
+            saveBtn.innerHTML = "✅";
+            saveBtn.classList.add('success');
             setTimeout(() => {
-                saveBtn.innerHTML = "💾 บันทึกการเปลี่ยนแปลงทั้งหมด";
-                saveBtn.style.background = "var(--main)";
+                saveBtn.innerHTML = "💾";
+                saveBtn.classList.remove('success');
             }, 2000);
         }
 
