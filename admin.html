@@ -28,58 +28,42 @@
         select, input { width: 100%; padding: 10px 15px; background: #1a1a1a; border: 1.2px solid #444; border-radius: 12px; color: #fff; outline: none; font-size: 14px; transition: 0.3s; }
         select:focus, input:focus { border-color: var(--main); }
 
-        /* ปรับแต่งความสูงและความกว้างให้พอดีกับตัวหนังสือ */
-        .app-cat { 
-            width: auto !important; 
-            height: auto !important; 
-            padding: 2px 25px 2px 10px !important; /* ลด padding แนวตั้ง */
-            min-width: 100px; 
-            line-height: 1.2;
-            display: inline-block;
-        }
+        /* Shop Status Toggle */
+        .status-toggle { display: flex; background: #1a1a1a; border-radius: 15px; padding: 5px; margin-top: 10px; border: 1px solid #444; }
+        .status-btn { flex: 1; padding: 10px; border-radius: 10px; border: none; background: transparent; color: #666; cursor: pointer; font-size: 14px; transition: 0.3s; font-weight: 500; }
+        .status-btn.active-open { background: var(--green); color: white; }
+        .status-btn.active-closed { background: var(--red); color: white; }
+
+        .app-cat { width: auto !important; height: auto !important; padding: 4px 25px 4px 12px !important; min-width: 120px; margin-bottom: 8px !important; }
 
         /* --- Stock Item Style --- */
-        .stock-item { background: #2d2d2d; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #444; position: relative; transition: 0.3s; }
+        .stock-item { background: #2d2d2d; border-radius: 20px; padding: 15px; margin-bottom: 15px; border: 1px solid #444; position: relative; }
         .stock-item.out-of-stock { opacity: 0.6; filter: grayscale(0.8); border: 1px solid var(--red); }
         .stock-item.out-of-stock::after { content: "SOLD OUT"; position: absolute; top: 10px; right: 10px; background: var(--red); color: white; font-size: 10px; padding: 2px 8px; border-radius: 5px; font-weight: bold; }
         .stock-item.hidden-item { opacity: 0.5; border-style: dashed; }
 
-        .item-header { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
         .img-box { position: relative; width: 65px; height: 65px; flex-shrink: 0; }
         .img-preview { width: 100%; height: 100%; border-radius: 12px; object-fit: cover; background: #1a1a1a; border: 1px solid #444; }
         
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .btn { border: none; border-radius: 12px; font-weight: 500; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
         
-        /* ปุ่มบันทึกแบบวงกลมด้านซ้าย */
         .floating-save-circle { 
             position: fixed; bottom: 30px; left: 20px; 
-            width: 60px; height: 60px; border-radius: 50%;
+            width: 65px; height: 65px; border-radius: 50%;
             z-index: 1000; background: var(--main); color: white; 
             font-size: 24px; box-shadow: 0 8px 25px var(--glow); 
             border: 3px solid rgba(255,255,255,0.2);
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer; transition: 0.4s;
         }
-        .floating-save-circle:hover { transform: scale(1.1); }
-        .floating-save-circle.success { background: var(--green); }
+        .floating-save-circle.success { background: var(--green); transform: scale(1.1); }
 
         .btn-add { background: transparent; color: var(--main); border: 2.5px dashed var(--main); padding: 12px; margin-bottom: 40px; border-radius: 20px; }
         
-        .action-btns { display: flex; gap: 8px; margin-top: 12px; }
-        .btn-mini { padding: 8px; font-size: 12px; border-radius: 10px; flex: 1; }
-        .btn-hide { background: #444; color: #fff; }
-        .btn-hide.active { background: #ff9800; }
-        .btn-del { background: rgba(255, 82, 82, 0.1); color: var(--red); }
-
         #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 9999; display: flex; justify-content: center; align-items: center; }
         .login-card { background: var(--white); padding: 40px 30px; border-radius: 30px; width: 90%; max-width: 360px; border: 2px solid var(--main); text-align: center; }
-        
-        #safePinInput {
-            font-size: 24px; text-align: center; letter-spacing: 10px; 
-            margin-bottom: 20px; background: #1a1a1a; color: var(--main); 
-            width: 100%; -webkit-text-security: disc;
-        }
+        #safePinInput { font-size: 24px; text-align: center; letter-spacing: 10px; margin-bottom: 20px; background: #1a1a1a; color: var(--main); width: 100%; -webkit-text-security: disc; }
     </style>
 </head>
 <body>
@@ -94,7 +78,6 @@
         <div onclick="toggleMenu()" class="nav-item active" style="cursor:pointer;">⚙️ ตั้งค่าระบบ</div>
     </nav>
 
-    <!-- Login Overlay -->
     <div id="login-overlay">
         <div class="login-card">
             <h3>🔐 Admin Access</h3>
@@ -104,13 +87,21 @@
         </div>
     </div>
 
-    <!-- ปุ่มบันทึกวงกลมด้านซ้าย -->
     <div class="floating-save-circle" id="saveCircle" onclick="saveData()">💾</div>
 
     <div id="main-admin" class="admin-container" style="display:none;">
-        <div style="text-align:center; margin-bottom:30px;">
+        <div style="text-align:center; margin-bottom:20px;">
             <h1 style="color: var(--main);">🛠️ Control Panel</h1>
-            <p style="font-size: 13px; color: var(--dark);">อัปเดตสต็อกและสถานะสินค้า</p>
+        </div>
+
+        <!-- Shop Status Card -->
+        <div class="section-card" style="border-color: #555;">
+            <h3 style="font-size: 16px; margin-bottom: 5px;">🏪 สถานะการเปิดร้าน</h3>
+            <p style="font-size: 12px; color: var(--dark); margin-bottom: 10px;">ตั้งค่าเพื่อเปิดหรือปิดการรับออเดอร์หน้าเว็บ</p>
+            <div class="status-toggle">
+                <button class="status-btn" id="status-open" onclick="setStatus('open')">🟢 เปิดร้าน</button>
+                <button class="status-btn" id="status-closed" onclick="setStatus('closed')">🔴 ปิดร้าน</button>
+            </div>
         </div>
 
         <div class="section-card">
@@ -119,13 +110,23 @@
             <button class="btn btn-add" onclick="addAppItem()">➕ เพิ่มสินค้าใหม่</button>
         </div>
 
-        <div class="bottom-nav-box">
-            <a href="portfolio.html" class="back-link-btn">⬅️ กลับไปหน้าสินค้า</a>
+        <div class="bottom-nav-box" style="text-align:center; margin-top:30px;">
+            <a href="portfolio.html" class="back-link-btn" style="text-decoration:none; background:#333; color:#ccc; padding:10px 20px; border-radius:50px;">⬅️ กลับไปหน้าสินค้า</a>
         </div>
     </div>
 
     <script>
         const PIN = "2546"; 
+        let currentStatus = "open";
+
+        function setStatus(val) {
+            currentStatus = val;
+            document.getElementById('status-open').classList.remove('active-open');
+            document.getElementById('status-closed').classList.remove('active-closed');
+            
+            if(val === 'open') document.getElementById('status-open').classList.add('active-open');
+            else document.getElementById('status-closed').classList.add('active-closed');
+        }
 
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('active');
@@ -134,14 +135,10 @@
         }
 
         function checkPass() {
-            const input = document.getElementById("safePinInput");
-            if (input.value === PIN) {
+            if (document.getElementById("safePinInput").value === PIN) {
                 sessionStorage.setItem("isLoggedIn", "true");
                 unlockAdmin();
-            } else { 
-                alert("❌ รหัสผ่านไม่ถูกต้อง!"); 
-                input.value = ""; 
-            }
+            } else { alert("❌ รหัสไม่ถูกต้อง!"); }
         }
 
         function unlockAdmin() {
@@ -153,23 +150,18 @@
         function addAppItem(data = {}) {
             const container = document.getElementById('stock-container');
             const itemDiv = document.createElement('div');
-            
-            const {
-                name = '', price = '', stock = '', 
-                cat = 'streaming', img = 'https://via.placeholder.com/150', 
-                subCat = '', isHidden = false
-            } = data;
+            const { name='', price='', stock='', cat='streaming', img='https://via.placeholder.com/150', subCat='', isHidden=false } = data;
 
             const isOut = (stock !== '' && parseInt(stock) <= 0);
             itemDiv.className = `stock-item ${isHidden ? 'hidden-item' : ''} ${isOut ? 'out-of-stock' : ''}`;
             itemDiv.dataset.hidden = isHidden;
             
             itemDiv.innerHTML = `
-                <div class="item-header">
+                <div class="item-header" style="display:flex; gap:12px; margin-bottom:10px;">
                     <div class="img-box">
                         <img src="${img}" class="img-preview" data-base64="${img}">
                         <input type="file" accept="image/*" style="display:none" onchange="handleFile(this)">
-                        <div style="position:absolute; bottom:-5px; right:-5px; background:var(--main); border-radius:50%; width:22px; height:22px; font-size:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; border: 2px solid #2d2d2d;" onclick="this.previousElementSibling.click()">📷</div>
+                        <div style="position:absolute; bottom:-5px; right:-5px; background:var(--main); border-radius:50%; width:22px; height:22px; font-size:10px; display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="this.previousElementSibling.click()">📷</div>
                     </div>
                     <div style="flex-grow:1;">
                         <select class="app-cat">
@@ -177,22 +169,17 @@
                             <option value="working" ${cat === 'working' ? 'selected' : ''}>💼 Working</option>
                             <option value="education" ${cat === 'education' ? 'selected' : ''}>🎓 Education</option>
                         </select>
-                        <input type="text" class="app-subcat" placeholder="ชื่อแอป" value="${subCat}" style="margin-top:5px;">
+                        <input type="text" class="app-subcat" placeholder="ชื่อแอป" value="${subCat}">
                     </div>
                 </div>
-                
-                <input type="text" class="app-name" placeholder="ชื่อแพ็กเกจ" value="${name}">
-                
+                <input type="text" class="app-name" placeholder="ชื่อแพ็กเกจ" value="${name}" style="margin-bottom:10px;">
                 <div class="form-grid">
                     <input type="number" class="app-price" value="${price}" placeholder="ราคา">
                     <input type="number" class="app-stock" value="${stock}" placeholder="สต็อก" oninput="checkStockStatus(this)">
                 </div>
-
-                <div class="action-btns">
-                    <button class="btn btn-mini btn-hide ${isHidden ? 'active' : ''}" onclick="toggleHide(this)">
-                        ${isHidden ? '👁️‍🗨️ ซ่อนอยู่' : '👁️ แสดงอยู่'}
-                    </button>
-                    <button class="btn btn-mini btn-del" onclick="if(confirm('ลบรายการนี้?')){this.closest('.stock-item').remove()}">🗑️ ลบ</button>
+                <div class="action-btns" style="display:flex; gap:8px; margin-top:10px;">
+                    <button class="btn btn-mini btn-hide ${isHidden ? 'active' : ''}" onclick="toggleHide(this)" style="background:#444; color:white; padding:8px; font-size:12px;">${isHidden ? '👁️‍🗨️ ซ่อนอยู่' : '👁️ แสดงอยู่'}</button>
+                    <button class="btn btn-mini btn-del" onclick="if(confirm('ลบ?')){this.closest('.stock-item').remove()}" style="background:rgba(255,82,82,0.1); color:var(--red); padding:8px; font-size:12px;">🗑️ ลบ</button>
                 </div>
             `;
             container.appendChild(itemDiv);
@@ -209,7 +196,6 @@
             const newState = !(item.dataset.hidden === "true");
             item.dataset.hidden = newState;
             item.classList.toggle('hidden-item', newState);
-            btn.classList.toggle('active', newState);
             btn.innerHTML = newState ? '👁️‍🗨️ ซ่อนอยู่' : '👁️ แสดงอยู่';
         }
 
@@ -240,29 +226,32 @@
                     isHidden: item.dataset.hidden === "true"
                 });
             });
-            localStorage.setItem('shopData', JSON.stringify({products}));
+            
+            localStorage.setItem('shopData', JSON.stringify({
+                status: currentStatus,
+                products: products
+            }));
             
             const btn = document.getElementById('saveCircle');
-            btn.innerHTML = "✅";
-            btn.classList.add('success');
-            setTimeout(() => {
-                btn.innerHTML = "💾";
-                btn.classList.remove('success');
-            }, 2000);
+            btn.innerHTML = "✅"; btn.classList.add('success');
+            setTimeout(() => { btn.innerHTML = "💾"; btn.classList.remove('success'); }, 2000);
         }
 
         function loadData() {
             const savedData = JSON.parse(localStorage.getItem('shopData'));
-            if(savedData && savedData.products) {
-                const container = document.getElementById('stock-container');
-                container.innerHTML = '';
-                savedData.products.forEach(p => addAppItem(p));
+            if(savedData) {
+                if(savedData.status) setStatus(savedData.status);
+                if(savedData.products) {
+                    const container = document.getElementById('stock-container');
+                    container.innerHTML = '';
+                    savedData.products.forEach(p => addAppItem(p));
+                }
+            } else {
+                setStatus('open');
             }
         }
 
-        window.onload = () => { 
-            if (sessionStorage.getItem("isLoggedIn") === "true") unlockAdmin();
-        };
+        window.onload = () => { if (sessionStorage.getItem("isLoggedIn") === "true") unlockAdmin(); };
     </script>
 </body>
 </html>
