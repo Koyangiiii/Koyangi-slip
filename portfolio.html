@@ -12,7 +12,7 @@
 
         .container{ max-width:500px; width:100%; padding:20px 15px 100px; position: relative; }
         
-        /* --- 🏠 Home Button (ปรับจากปุ่มย้อนกลับ) --- */
+        /* --- 🏠 Home Button --- */
         .home-btn {
             position: absolute; top: 20px; left: 15px;
             background: var(--main); color: #fff;
@@ -89,7 +89,7 @@
         .btn-main{display:block;text-align:center;padding:14px;border-radius:25px;text-decoration:none;margin-top:15px;font-weight:500; background:var(--main);color:#fff;}
         .small{font-size:12px;opacity:.7;margin-top:10px;color:var(--dark);white-space: pre-line;}
 
-        /* Admin Login Modal */
+        /* Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
         .modal-content { background: var(--white); border: 2px solid var(--main); border-radius: 25px; padding: 30px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 40px var(--glow); }
         #adminPassInput { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #444; background: #333; color: var(--main); text-align: center; font-size: 24px; letter-spacing: 10px; margin-bottom: 20px; outline: none; -webkit-text-security: disc; }
@@ -101,7 +101,6 @@
 </head>
 <body>
 
-<!-- ✅ เปลี่ยนจากปุ่มลูกศรเป็นรูปบ้าน 🏠 -->
 <a href="index.html" class="home-btn" title="กลับหน้าหลัก">🏠</a>
 
 <div class="hamburger" onclick="toggleMenu()">
@@ -131,7 +130,6 @@
         <p id="disp-slogan" style="color:var(--dark);opacity:.8;margin:5px 0 15px; font-size: 14px;">ค้นหาแอปที่ต้องการได้เลย</p>
     </div>
 
-    <!-- ✅ ช่องค้นหา -->
     <div class="search-container">
         <span class="search-icon">🔍</span>
         <input type="text" id="searchInput" class="search-input" placeholder="ค้นชื่อแอป หรือแพ็กเกจ..." oninput="filterProducts()">
@@ -165,6 +163,7 @@
 
 <script>
     const PIN = "2003";
+    const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxoQETP0HK6BJLlfmWXgvfb6I17vmbvdiTheVUcAWp4V3C7OJJ9LZloPuyVx-tBD9Dj/exec";
     let allProducts = [];
 
     function toggleMenu() {
@@ -201,22 +200,33 @@
         { id: 'education', title: 'Education', icon: '🎓' }
     ];
 
-    function loadContent() {
-        const savedData = JSON.parse(localStorage.getItem('shopData'));
-        if(!savedData) return;
+    async function loadContent() {
+        const container = document.getElementById('app-list-container');
+        container.innerHTML = '<p style="text-align:center; font-size:14px; color:#888;">📡 กำลังดึงข้อมูลจากระบบ...</p>';
 
-        allProducts = savedData.products || [];
-        document.getElementById('disp-name').innerText = savedData.name || "Premium Store";
-        document.getElementById('disp-rules').innerText = savedData.rules || "";
-        document.getElementById('link-line-btn').href = savedData.line || '#';
-        if(savedData.logo) document.getElementById('disp-logo').src = savedData.logo;
-        
-        renderProducts(allProducts);
+        try {
+            const response = await fetch(SHEET_API_URL);
+            if (!response.ok) throw new Error('Network response was not ok');
+            allProducts = await response.json();
+
+            const savedData = JSON.parse(localStorage.getItem('shopData')) || {};
+            document.getElementById('disp-name').innerText = savedData.name || "Koyangi App Store";
+            document.getElementById('disp-rules').innerText = savedData.rules || "รอการอัปเดตกฎการรับประกัน";
+            document.getElementById('link-line-btn').href = savedData.line || '#';
+            if(savedData.logo) document.getElementById('disp-logo').src = savedData.logo;
+            
+            renderProducts(allProducts);
+
+        } catch (error) {
+            console.error("Error loading sheets:", error);
+            container.innerHTML = '<p style="text-align:center; color:var(--red); padding: 20px;">❌ ไม่สามารถเชื่อมต่อฐานข้อมูลได้<br><small>กรุณาตรวจสอบการตั้งค่า Google Sheets</small></p>';
+        }
     }
 
     function renderProducts(productsToDisplay) {
         const container = document.getElementById('app-list-container');
-        const savedData = JSON.parse(localStorage.getItem('shopData'));
+        const savedData = JSON.parse(localStorage.getItem('shopData')) || {};
+        const contactLine = savedData.line || "#";
         container.innerHTML = '';
         
         let visibleCount = 0;
@@ -240,8 +250,11 @@
                     
                     grouped[subCatName].forEach(product => {
                         visibleCount++;
-                        const isOut = parseInt(product.stock) <= 0;
-                        let displayImg = product.img ? `<img src="${product.img}">` : '🎬';
+                        const stockNum = parseInt(product.stock) || 0;
+                        const isOut = stockNum <= 0;
+                        
+                        let displayImg = product.img ? `<img src="${product.img}" onerror="this.src='https://via.placeholder.com/40?text=App'">` : '🎬';
+                        
                         catHtml += `
                             <div class="app-item ${isOut ? 'out-of-stock' : ''}">
                                 <div class="app-icon">${displayImg}</div>
@@ -249,10 +262,15 @@
                                     <div class="app-name">${product.name}</div>
                                     <div class="app-price">
                                         ${product.price}.- 
-                                        <span class="stock-tag">${isOut ? '(หมด)' : 'คลัง: '+product.stock}</span>
+                                        <span class="stock-tag">${isOut ? '(หมด)' : 'คลัง: ' + stockNum}</span>
                                     </div>
                                 </div>
-                                <a href="${isOut ? '#' : savedData.line}" class="btn-buy" target="_blank">${isOut ? 'หมด' : 'ซื้อ'}</a>
+                                <a href="${isOut ? '#' : contactLine}" 
+                                   class="btn-buy" 
+                                   ${isOut ? 'style="background:#666; cursor:not-allowed;"' : 'target="_blank"'}
+                                >
+                                    ${isOut ? 'หมด' : 'ซื้อ'}
+                                </a>
                             </div>`;
                     });
                     catHtml += `</div>`;
@@ -271,7 +289,7 @@
     function filterProducts() {
         const query = document.getElementById('searchInput').value.toLowerCase();
         const filtered = allProducts.filter(p => 
-            p.name.toLowerCase().includes(query) || 
+            (p.name && p.name.toLowerCase().includes(query)) || 
             (p.subCat && p.subCat.toLowerCase().includes(query))
         );
         renderProducts(filtered);
