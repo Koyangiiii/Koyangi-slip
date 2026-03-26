@@ -59,6 +59,13 @@
         .nav-item { text-decoration: none; color: var(--dark); display: flex; align-items: center; padding: 15px 20px; margin-bottom: 10px; border-radius: 15px; font-size: 16px; transition: 0.3s; gap: 15px; }
         .bottom-nav-box { margin-top: 30px; border-top: 1px solid #444; padding-top: 20px; text-align: center; }
         .back-link-btn { display: inline-flex; align-items: center; gap: 8px; background: #333; color: #ccc; padding: 12px 25px; border-radius: 50px; text-decoration: none; font-size: 14px; transition: 0.3s; }
+
+        /* ป้องกันการแอบดูรหัส */
+        #safePinInput {
+            font-size: 24px; text-align: center; letter-spacing: 10px; 
+            margin-bottom: 20px; background: #1a1a1a; color: var(--main); 
+            width: 100%; -webkit-text-security: disc;
+        }
     </style>
 </head>
 <body>
@@ -73,12 +80,12 @@
         <div onclick="toggleMenu()" class="nav-item active" style="cursor:pointer;">⚙️ ตั้งค่าระบบ</div>
     </nav>
 
-    <!-- Login Overlay พร้อมรหัสผ่านภาษาไทย -->
+    <!-- Login Overlay พร้อมรหัสผ่านใหม่ -->
     <div id="login-overlay">
         <div class="login-card">
             <h3>🔐 Admin Access</h3>
-            <input type="text" id="safePinInput" placeholder="กรอกรหัสผ่าน" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" 
-            style="font-size: 24px; text-align: center; letter-spacing: 2px; -webkit-text-security: disc; margin-bottom: 20px; background: #1a1a1a; color: var(--main); width: 100%;">
+            <p style="font-size: 12px; color: var(--dark); margin-bottom: 15px;">กรุณากรอกรหัสผ่าน 4 หลัก</p>
+            <input type="tel" id="safePinInput" placeholder="••••" maxlength="4" autocomplete="off" inputmode="numeric" readonly onfocus="this.removeAttribute('readonly');">
             <button class="btn btn-save" style="background:var(--main); color:white; padding:12px; margin-top:10px;" onclick="checkPass()">ปลดล็อกระบบ</button>
         </div>
     </div>
@@ -106,8 +113,8 @@
     </div>
 
     <script>
-        // เปลี่ยนรหัสผ่านที่นี่
-        const PIN = "แอดมินออม"; 
+        // อัปเดตรหัสผ่านเป็น 2546 เรียบร้อยแล้ว
+        const PIN = "2546"; 
 
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('active');
