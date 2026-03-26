@@ -32,6 +32,15 @@
         select, input { width: 100%; padding: 12px 15px; background: #1a1a1a; border: 1.5px solid #444; border-radius: 12px; color: #fff; outline: none; font-size: 14px; transition: 0.3s; }
         select:focus, input:focus { border-color: var(--main); }
 
+        /* ป้องกันไอคอนรหัสผ่าน Safari/Chrome */
+        input::-webkit-contacts-auto-fill-button, 
+        input::-webkit-credentials-auto-fill-button {
+            visibility: hidden;
+            pointer-events: none;
+            position: absolute;
+            right: 0;
+        }
+
         .stock-item { background: #2d2d2d; border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid #444; transition: 0.4s; }
         .stock-item.out-of-stock { opacity: 0.5; filter: grayscale(1); border-color: #333; }
 
@@ -48,7 +57,13 @@
 
         #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 9999; display: flex; justify-content: center; align-items: center; }
         .login-card { background: var(--white); padding: 40px 30px; border-radius: 30px; width: 90%; max-width: 360px; border: 2px solid var(--main); text-align: center; box-shadow: 0 0 30px var(--glow); }
-        .login-input { font-size: 32px; text-align: center; letter-spacing: 10px; -webkit-text-security: disc; margin-bottom: 20px; background: #1a1a1a; border: 1.5px solid #444; color: var(--main); }
+        
+        /* เปลี่ยน ID input */
+        #safePinInput { 
+            font-size: 32px; text-align: center; letter-spacing: 10px; 
+            -webkit-text-security: disc; margin-bottom: 20px; 
+            background: #1a1a1a; border: 1.5px solid #444; color: var(--main); 
+        }
     </style>
 </head>
 <body>
@@ -56,7 +71,6 @@
     <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-    <!-- ✅ ปรับเมนูสินค้าให้อยู่อันดับที่ 2 -->
     <nav class="sidebar" id="sidebar">
         <a href="index.html" class="nav-item">🏠 หน้าหลัก</a>
         <a href="portfolio.html" class="nav-item">📦 สินค้า</a>
@@ -64,10 +78,19 @@
         <div onclick="toggleMenu()" class="nav-item active">⚙️ ตั้งค่าระบบ</div>
     </nav>
 
+    <!-- ปรับปรุงส่วน Login Overlay -->
     <div id="login-overlay">
         <div class="login-card">
             <h3>🔐 Admin Access</h3>
-            <input type="tel" id="passInput" class="login-input" placeholder="••••" maxlength="4">
+            <input type="tel" 
+                   id="safePinInput" 
+                   placeholder="••••" 
+                   maxlength="4" 
+                   inputmode="numeric" 
+                   autocomplete="off" 
+                   name="no-save-pin"
+                   readonly 
+                   onfocus="this.removeAttribute('readonly');">
             <button class="btn btn-save" onclick="checkPass()">ปลดล็อกระบบ</button>
         </div>
     </div>
@@ -104,11 +127,17 @@
             document.querySelector('.hamburger').classList.toggle('active');
         }
 
+        // ปรับปรุงฟังก์ชันเช็ครหัสผ่าน
         function checkPass() {
-            if (document.getElementById("passInput").value === PIN) {
+            const input = document.getElementById("safePinInput");
+            if (input.value === PIN) {
                 sessionStorage.setItem("isLoggedIn", "true");
                 unlockAdmin();
-            } else { alert("❌ รหัสผ่านไม่ถูกต้อง!"); document.getElementById("passInput").value = ""; }
+            } else { 
+                alert("❌ รหัสผ่านไม่ถูกต้อง!"); 
+                input.value = ""; 
+                input.focus();
+            }
         }
 
         function unlockAdmin() {
@@ -171,7 +200,6 @@
         function saveData() {
             const status = document.getElementById('shopStatusInput').value;
             const products = [];
-            // ดึงข้อมูลเดิมจาก LocalStorage เพื่อรักษาข้อมูลตั้งค่าอื่นๆ (โลโก้, ชื่อร้าน)
             const oldData = JSON.parse(localStorage.getItem('shopData')) || {};
 
             document.querySelectorAll('.stock-item').forEach(item => {
@@ -187,7 +215,7 @@
             });
 
             const newData = {
-                ...oldData, // เก็บค่า logo, name, rules เดิมไว้
+                ...oldData,
                 shopStatus: status,
                 products: products
             };
@@ -208,7 +236,18 @@
             }
         }
 
-        window.onload = () => { if (sessionStorage.getItem("isLoggedIn") === "true") unlockAdmin(); };
+        // เพิ่ม EventListener สำหรับการกด Enter
+        document.getElementById('safePinInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') checkPass();
+        });
+
+        window.onload = () => { 
+            if (sessionStorage.getItem("isLoggedIn") === "true") {
+                unlockAdmin();
+            } else {
+                document.getElementById('safePinInput').setAttribute('readonly', true);
+            }
+        };
     </script>
 </body>
 </html>
